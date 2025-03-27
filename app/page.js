@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function Home() {
 	return (
-		<main className="min-h-screen bg-[#24282B] text-white flex items-center justify-center px-6">
+		<main className="min-h-screen bg-[#15191C] text-white flex items-center justify-center px-6">
 			<div className="max-w-xl text-center space-y-6">
 				<Image
 					src="/OhmMadeTransparentLogo.png"
@@ -17,7 +17,6 @@ export default function Home() {
 					From Circuits to Code — All in One Place
 				</p>
 
-				{/* Coming Soon */}
 				<h2 className="text-lg mt-8 text-[#ff7939] font-bold">
 					Coming Soon
 				</h2>
