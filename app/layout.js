@@ -1,7 +1,8 @@
-import { Inter } from 'next/font/google';
-import './globals.css';
-import '@fortawesome/fontawesome-svg-core/styles.css';
 import { config } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import { Inter } from 'next/font/google';
+import Nav from './components/Nav';
+import './globals.css';
 config.autoAddCss = false;
 
 const inter = Inter({
@@ -17,7 +18,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
 	return (
 		<html lang="en">
-			<body className={`${inter.className} antialiased`}>{children}</body>
+			<body className={`${inter.className} antialiased`}>
+				<Nav />
+				{children}
+			</body>
 		</html>
 	);
 }
