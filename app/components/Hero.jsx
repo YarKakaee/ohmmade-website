@@ -87,7 +87,7 @@ export default function Hero() {
 						>
 							<Link
 								href="/learn"
-								className="bg-[#27BBFF] text-[#101014] px-5 py-3 rounded-md text-sm font-medium hover:bg-[#72D3FF] transition-colors"
+								className="bg-[#27BBFF] text-[#101014] px-5 py-3 rounded-md text-sm font-medium"
 							>
 								Start Learning
 							</Link>
@@ -98,7 +98,7 @@ export default function Hero() {
 						>
 							<Link
 								href="/projects"
-								className="bg-[#101014]/0 text-[#FFFFFF]/65 px-5 py-3 border-[#5C5C5E] border-1 rounded-md text-sm font-medium hover:bg-[#38383B] hover:border-[#a7a7a7] transition-colors"
+								className="bg-[#101014]/0 text-[#FFFFFF]/65 px-5 py-3 border-[#5C5C5E] border-1 rounded-md text-sm font-medium"
 							>
 								Explore Projects
 							</Link>

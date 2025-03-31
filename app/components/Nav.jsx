@@ -12,28 +12,27 @@ export default function Nav() {
 			<div className="mx-auto max-w-[1700px] px-8 sm:px-16 h-18 flex items-center justify-between">
 				{/* Left Section: Logo */}
 				<div className="flex items-center space-x-2">
-					<Image
-						src="/assets/OMLogo2.png"
-						alt="OhmMade Logo"
-						width={28}
-						height={28}
-						className="object-contain mb-2"
-						priority
-					/>
-					<span className="text-white font-extrabold text-lg">
-						OhmMade
-					</span>
+					<Link
+						href="/"
+						className="flex items-center space-x-2 cursor-pointer"
+					>
+						<Image
+							src="/assets/OMLogo2.png"
+							alt="OhmMade Logo"
+							width={28}
+							height={28}
+							className="object-contain mb-2"
+							priority
+						/>
+						<span className="text-white font-extrabold text-lg">
+							OhmMade
+						</span>
+					</Link>
 				</div>
 
 				{/* Right Section: Nav Links + Sign In Button */}
 				<nav className="flex items-center space-x-6 text-white font-normal text-sm">
 					{/* Individual Links with Hover Effect */}
-					<Link
-						href="/"
-						className="transition-colors duration-200 hover:text-[#ACACAD]"
-					>
-						Home
-					</Link>
 
 					{/* Learn (Dropdown) */}
 					<div className="relative group">
@@ -42,7 +41,7 @@ export default function Nav() {
 							<FontAwesomeIcon
 								icon={faAngleDown}
 								size="xs"
-								className="ml-1 transform transition-transform duration-200 group-hover:rotate-180"
+								className="ml-1.5 transform transition-transform duration-200 group-hover:rotate-180"
 							/>
 						</div>
 						<div className="invisible absolute top-full left-[-12px] mt-2 w-45 bg-[#2c2d2e] backdrop-blur-3xl border border-[#454547] text-white text-sm rounded-lg p-2 shadow-lg opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:visible z-50">
@@ -80,7 +79,7 @@ export default function Nav() {
 							<FontAwesomeIcon
 								icon={faAngleDown}
 								size="xs"
-								className="ml-1 transform transition-transform duration-200 group-hover:rotate-180"
+								className="ml-1.5 transform transition-transform duration-200 group-hover:rotate-180"
 							/>
 						</div>
 						<div className="invisible absolute top-full left-[-12px] mt-2 w-40 bg-[#2c2d2e] backdrop-blur-3xl border border-[#454547] text-white text-sm rounded-lg p-2 shadow-lg opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:visible z-50">
@@ -131,7 +130,7 @@ export default function Nav() {
 						whileTap={{ scale: 0.9 }}
 					>
 						<Link href="/signin">
-							<button className="bg-[#27BBFF] text-[#101014] font-medium px-4 py-2 rounded-md hover:bg-[#72D3FF] transition-colors cursor-pointer">
+							<button className="bg-[#27BBFF] text-[#101014] font-medium px-4 py-2 rounded-md cursor-pointer ml-10">
 								Sign in
 							</button>
 						</Link>

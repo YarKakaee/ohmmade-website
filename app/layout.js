@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import Nav from './components/Nav';
 import './globals.css';
 config.autoAddCss = false;
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({
 	subsets: ['latin'],
@@ -21,6 +22,7 @@ export default function RootLayout({ children }) {
 			<body className={`${inter.className} antialiased`}>
 				<Nav />
 				{children}
+				<Toaster position="top-center" reverseOrder={false} />
 			</body>
 		</html>
 	);

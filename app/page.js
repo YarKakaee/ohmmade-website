@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Hero from './components/Hero';
 import OurTeam from './components/OurTeam';
 import './globals.css';
+import ContactUs from './components/ContactUs';
 
 export default function Home() {
 	return (
@@ -22,6 +23,7 @@ export default function Home() {
 				</div>
 				<Hero />
 				<OurTeam />
+				<ContactUs />
 			</div>
 		</section>
 	);
