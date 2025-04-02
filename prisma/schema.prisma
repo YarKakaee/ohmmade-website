@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum ProjectStatus {
+  draft
+  published
+  archived
+}
+
+model Project {
+  id    Int    @id @default(dbgenerated("floor(random() * 90000000) + 10000000"))
+  title       String
+  category    String   // e.g., "Arduino UNO", "Raspberry Pi 4"
+  description String   // short intro
+  author      String   // "OhmMade" for now, later connect to User model
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  slug        String @unique // e.g., "traffic-lights-c8c2fd"
+  featured    Boolean // for homepage highlights
+
+  views       Int      @default(0)
+  likes       Int      @default(0)
+  timeToBuild String // e.g. 1 Hour or Weekend Project
+  status      ProjectStatus @default(draft) // Draft
+
+  thumbnailUrl String   // main image shown in card/grid
+  previewImages String[] // 4-5 optional pre-content images
+  content      Json      // step-by-step instructions
+
+  tags String[]  // optional: ["LED", "Sensor", "Beginner"]
+}

@@ -204,12 +204,21 @@ export default function ContactUs() {
 									whileHover={{ scale: 1.05 }}
 									whileTap={{ scale: 0.95 }}
 									type="submit"
-									className="bg-[#27BBFF] text-[#101014] px-5 py-3 rounded-md font-medium cursor-pointer"
+									className={`bg-[#27BBFF] text-[#101014] px-5 py-3 rounded-md font-medium cursor-pointer ${
+										state.submitting
+											? 'opacity-70 cursor-not-allowed'
+											: ''
+									}`}
 									disabled={state.submitting}
 								>
-									{state.submitting
-										? 'Sending...'
-										: 'Send Your Message'}
+									{state.submitting ? (
+										<div className="flex items-center space-x-2">
+											<span>Sending...</span>
+											<div className="animate-spin h-4 w-4 border-t-2 border-white rounded-full"></div>
+										</div>
+									) : (
+										'Send Your Message'
+									)}
 								</motion.button>
 							</motion.div>
 						</motion.form>

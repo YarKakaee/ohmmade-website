@@ -1,0 +1,90 @@
+'use client';
+
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+	faYoutube,
+	faXTwitter,
+	faGithub,
+	faLinkedin,
+	faInstagram,
+	faTiktok,
+} from '@fortawesome/free-brands-svg-icons';
+import { motion } from 'framer-motion';
+
+export default function Footer() {
+	return (
+		<footer className="border-t border-[#2C2C2E] relative w-full py-8 px-8 sm:px-16 lg:px-24">
+			<div className="flex flex-col sm:flex-row items-center justify-between space-y-6 sm:space-y-0 text-[#FFFFFF]/70 text-sm max-w-[1700px] mx-auto px-8 sm:px-16">
+				{/* Left: Copyright */}
+				<p>
+					© {new Date().getFullYear()} OhmMade. All rights reserved.
+				</p>
+
+				{/* Center: Social Icons */}
+				<div className="flex space-x-4 text-lg">
+					{[
+						{
+							href: 'https://www.youtube.com/@OhmMadeTechs',
+							icon: faYoutube,
+							label: 'YouTube',
+						},
+						{
+							href: 'https://x.com/OhmMadeTech',
+							icon: faXTwitter,
+							label: 'Twitter/X',
+						},
+						{
+							href: 'https://github.com/OhmMadeTech',
+							icon: faGithub,
+							label: 'GitHub',
+						},
+						{
+							href: 'https://www.linkedin.com/company/ohmmade/',
+							icon: faLinkedin,
+							label: 'LinkedIn',
+						},
+						{
+							href: 'https://www.instagram.com/ohmmade.ca/',
+							icon: faInstagram,
+							label: 'Instagram',
+						},
+						{
+							href: 'https://www.tiktok.com/@ohmmadetech',
+							icon: faTiktok,
+							label: 'TikTok',
+						},
+					].map((item, idx) => (
+						<motion.a
+							key={idx}
+							href={item.href}
+							target="_blank"
+							aria-label={item.label}
+							whileHover={{ scale: 1.1, color: '#ffffff' }}
+							whileTap={{ scale: 0.9 }}
+							className="text-[#FFFFFF]/70 ease-in-out"
+						>
+							<FontAwesomeIcon icon={item.icon} />
+						</motion.a>
+					))}
+				</div>
+
+				{/* Right: Legal Links */}
+				<div className="flex space-x-6">
+					<Link
+						href="/terms-of-use"
+						className="hover:text-white transition"
+					>
+						Terms of Use
+					</Link>
+					<Link
+						href="/privacy-policy"
+						className="hover:text-white transition"
+					>
+						Privacy Policy
+					</Link>
+				</div>
+			</div>
+		</footer>
+	);
+}

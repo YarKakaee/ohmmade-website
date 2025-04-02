@@ -62,8 +62,9 @@ export default function Hero() {
 						variants={fadeInUp}
 						className={`text-4xl sm:text-[54px] font-[850] leading-tight ${interTight.className}`}
 					>
-						Inspiring Curiosity. <br />
-						Building Technology.
+						Tech Made Simple.
+						<br />
+						Projects Made Possible.
 					</motion.h1>
 
 					<motion.p

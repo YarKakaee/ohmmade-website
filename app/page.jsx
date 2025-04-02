@@ -3,6 +3,9 @@ import Hero from './components/Hero';
 import OurTeam from './components/OurTeam';
 import './globals.css';
 import ContactUs from './components/ContactUs';
+import Learn from './components/Learn';
+import ProjectsSectionServer from './components/projects/ProjectsSectionServer';
+import Footer from './components/Footer';
 
 export default function Home() {
 	return (
@@ -23,7 +26,10 @@ export default function Home() {
 				</div>
 				<Hero />
 				<OurTeam />
+				<Learn />
+				<ProjectsSectionServer />
 				<ContactUs />
+				<Footer />
 			</div>
 		</section>
 	);
