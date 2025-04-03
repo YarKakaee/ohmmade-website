@@ -20,25 +20,30 @@ enum ProjectStatus {
   archived
 }
 
+model User {
+  id       String    @id @default(uuid()) @db.Uuid
+  email    String    @unique
+  name     String?
+  projects Project[]
+}
+
 model Project {
-  id    Int    @id @default(dbgenerated("floor(random() * 90000000) + 10000000"))
-  title       String
-  category    String   // e.g., "Arduino UNO", "Raspberry Pi 4"
-  description String   // short intro
-  author      String   // "OhmMade" for now, later connect to User model
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  slug        String @unique // e.g., "traffic-lights-c8c2fd"
-  featured    Boolean // for homepage highlights
-
-  views       Int      @default(0)
-  likes       Int      @default(0)
-  timeToBuild String // e.g. 1 Hour or Weekend Project
-  status      ProjectStatus @default(draft) // Draft
-
-  thumbnailUrl String   // main image shown in card/grid
-  previewImages String[] // 4-5 optional pre-content images
-  content      Json      // step-by-step instructions
-
-  tags String[]  // optional: ["LED", "Sensor", "Beginner"]
+  id              Int      @id @default(dbgenerated("floor(random() * 90000000) + 10000000"))
+  title           String
+  category        String
+  description     String
+  authorId        String   @db.Uuid
+  author          User     @relation(fields: [authorId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  slug            String   @unique
+  featured        Boolean
+  views           Int      @default(0)
+  likes           Int      @default(0)
+  timeToBuild     String
+  difficultyLevel String
+  status          ProjectStatus @default(draft)
+  thumbnailUrl    String
+  content         Json
+  tags            String[]
 }
