@@ -1,168 +1,163 @@
-'use client'; // For Next.js App Router with client components
+'use client';
 
-import { useEffect, useState } from 'react';
-import { faAngleDown, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabaseClient';
+import { useAuth } from '@/app/context/AuthContext';
+import {
+	faAngleDown,
+	faGlobe,
+	faSignOutAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useRef } from 'react';
 
 export default function Nav() {
 	const [scrolled, setScrolled] = useState(false);
 	const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+	const [showUserDropdown, setShowUserDropdown] = useState(false);
 	const languageRef = useRef(null);
+	const userRef = useRef(null);
+	const router = useRouter();
+	const { user } = useAuth();
 
 	useEffect(() => {
-		const handleScroll = () => {
-			setScrolled(window.scrollY > 10);
-		};
+		const handleScroll = () => setScrolled(window.scrollY > 10);
+		window.addEventListener('scroll', handleScroll);
 
-		const handleClickOutside = (event) => {
+		const handleClickOutside = (e) => {
 			if (
 				languageRef.current &&
-				!languageRef.current.contains(event.target)
+				!languageRef.current.contains(e.target)
 			) {
 				setShowLanguageMenu(false);
 			}
+			if (userRef.current && !userRef.current.contains(e.target)) {
+				setShowUserDropdown(false);
+			}
 		};
 
-		window.addEventListener('scroll', handleScroll);
 		document.addEventListener('mousedown', handleClickOutside);
 
-		// Cleanup both listeners
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
 
+	const handleSignOut = async () => {
+		await supabase.auth.signOut();
+		router.push('/');
+	};
+
+	const getInitials = (nameOrEmail) => {
+		if (!nameOrEmail) return 'U';
+		const words = nameOrEmail.split(' ');
+		if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+		return (words[0][0] + words[1][0]).toUpperCase();
+	};
+
 	return (
 		<header
 			className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-				scrolled
-					? 'bg-[#101014]/70 backdrop-blur-lg'
-					: 'bg-transparent backdrop-blur-0'
+				scrolled ? 'bg-[#101014]/70 backdrop-blur-lg' : 'bg-transparent'
 			}`}
 		>
 			<div className="mx-auto max-w-[1700px] px-8 sm:px-16 h-18 flex items-center justify-between">
-				{/* Left Section: Logo */}
-				<div className="flex items-center space-x-2">
-					<Link
-						href="/"
-						className="flex items-center space-x-2 cursor-pointer"
-					>
-						<Image
-							src="/assets/OMLogo2.png"
-							alt="OhmMade Logo"
-							width={28}
-							height={28}
-							className="object-contain mb-2"
-							priority
-						/>
-						<span className="text-white font-extrabold text-lg">
-							OhmMade
-						</span>
-					</Link>
-				</div>
+				{/* Logo */}
+				<Link href="/" className="flex items-center space-x-2">
+					<Image
+						src="/assets/OMLogo2.png"
+						alt="OhmMade Logo"
+						width={28}
+						height={28}
+						className="object-contain mb-2"
+						priority
+					/>
+					<span className="text-white font-extrabold text-lg">
+						OhmMade
+					</span>
+				</Link>
 
-				{/* Right Section: Nav Links + Sign In Button */}
+				{/* Nav */}
 				<nav className="flex items-center space-x-6 text-white font-normal text-sm">
-					{/* Learn (Dropdown) */}
+					{/* Learn Dropdown */}
 					<div className="relative group">
-						<div className="px-2 py-2 flex items-center cursor-pointer transition-colors duration-200 hover:text-[#ACACAD]">
-							<span>Learn</span>
+						<div className="flex items-center px-2 py-2 cursor-pointer hover:text-[#ACACAD]">
+							Learn
 							<FontAwesomeIcon
 								icon={faAngleDown}
 								size="xs"
-								className="ml-1.5 transform transition-transform duration-200 group-hover:rotate-180"
+								className="ml-1.5 transition-transform duration-200 group-hover:rotate-180"
 							/>
 						</div>
-						<div className="invisible absolute top-full left-[-12px] mt-2 w-45 bg-[#2c2d2e] backdrop-blur-3xl border border-[#454547] text-white text-sm rounded-lg p-2 shadow-lg opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:visible z-50">
-							<Link
-								href="/learn/basic-electronics"
-								className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e] transition-colors duration-100 ease-in-out"
-							>
-								Basic Electronics
-							</Link>
-							<Link
-								href="/learn/arduino-uno"
-								className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e] transition-colors duration-100 ease-in-out"
-							>
-								Arduino UNO
-							</Link>
-							<Link
-								href="/learn/raspberry-pi-4"
-								className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e] transition-colors duration-100 ease-in-out"
-							>
-								Raspberry Pi 4
-							</Link>
-							<Link
-								href="/learn/raspberry-pi-pico-w"
-								className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e] transition-colors duration-100 ease-in-out"
-							>
-								Raspberry Pi Pico W
-							</Link>
+						<div className="absolute top-full left-[-12px] mt-2 w-45 bg-[#2c2d2e] border border-[#454547] text-white text-sm rounded-lg p-2 z-50 backdrop-blur-3xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+							{[
+								'basic-electronics',
+								'arduino-uno',
+								'raspberry-pi-4',
+								'raspberry-pi-pico-w',
+							].map((path) => (
+								<Link
+									key={path}
+									href={`/learn/${path}`}
+									className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e]"
+								>
+									{path
+										.replace(/-/g, ' ')
+										.replace(/\b\w/g, (c) =>
+											c.toUpperCase()
+										)}
+								</Link>
+							))}
 						</div>
 					</div>
 
-					{/* Projects (Dropdown) */}
+					{/* Projects Dropdown */}
 					<div className="relative group">
-						<div className="px-2 py-2 flex items-center cursor-pointer transition-colors duration-200 hover:text-[#ACACAD]">
-							<span>Projects</span>
+						<div className="flex items-center px-2 py-2 cursor-pointer hover:text-[#ACACAD]">
+							Projects
 							<FontAwesomeIcon
 								icon={faAngleDown}
 								size="xs"
-								className="ml-1.5 transform transition-transform duration-200 group-hover:rotate-180"
+								className="ml-1.5 transition-transform duration-200 group-hover:rotate-180"
 							/>
 						</div>
-						<div className="invisible absolute top-full left-[-12px] mt-2 w-40 bg-[#2c2d2e] backdrop-blur-3xl border border-[#454547] text-white text-sm rounded-lg p-2 shadow-lg opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:visible z-50">
+						<div className="absolute top-full left-[-12px] mt-2 w-40 bg-[#2c2d2e] border border-[#454547] text-white text-sm rounded-lg p-2 z-50 backdrop-blur-3xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
 							<Link
 								href="/projects"
-								className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e] transition-colors duration-100 ease-in-out"
+								className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e]"
 							>
 								Explore Projects
 							</Link>
 							<Link
 								href="/projects/publish"
-								className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e] transition-colors duration-100 ease-in-out"
+								className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e]"
 							>
 								Publish Your Own
 							</Link>
 						</div>
 					</div>
 
-					{/* Static Links */}
-					<Link
-						href="/blog"
-						className="hover:text-[#ACACAD] transition-colors duration-200"
-					>
-						Blog
-					</Link>
-					<Link
-						href="/forum"
-						className="hover:text-[#ACACAD] transition-colors duration-200"
-					>
-						Forum
-					</Link>
-					<Link
-						href="/about"
-						className="hover:text-[#ACACAD] transition-colors duration-200"
-					>
-						About
-					</Link>
-					<Link
-						href="/contact"
-						className="hover:text-[#ACACAD] transition-colors duration-200"
-					>
-						Contact
-					</Link>
+					{/* Static links */}
+					{['blog', 'forum', 'about', 'contact'].map((page) => (
+						<Link
+							key={page}
+							href={`/${page}`}
+							className="hover:text-[#ACACAD] transition"
+						>
+							{page.charAt(0).toUpperCase() + page.slice(1)}
+						</Link>
+					))}
 
+					{/* Search */}
 					<div className="relative backdrop-blur-md rounded-full">
 						<input
 							type="text"
 							placeholder="Search"
-							className="bg-[#1C1C20] backdrop-blur-md text-sm text-white placeholder-[#ACACAD] pl-10 pr-5 w-[35ch] py-2 rounded-full border border-[#3A3A3C]/60 focus:outline-none focus:ring-1 focus:ring-[#FFFFFF] transition duration-200"
+							className="bg-[#1C1C20] text-sm text-white placeholder-[#ACACAD] pl-10 pr-5 w-[35ch] py-2 rounded-full border border-[#3A3A3C]/60 focus:ring-1 focus:outline-none focus:ring-white transition"
 						/>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -175,39 +170,80 @@ export default function Nav() {
 							<path
 								strokeLinecap="round"
 								strokeLinejoin="round"
-								d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"
+								d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"
 							/>
 						</svg>
 					</div>
 
+					{/* Language */}
 					<div className="relative" ref={languageRef}>
 						<button
-							onClick={() => setShowLanguageMenu((prev) => !prev)}
-							className="flex items-center text-[#FFFFFF]/90 hover:text-white transition cursor-pointer"
+							onClick={() =>
+								setShowLanguageMenu(!showLanguageMenu)
+							}
+							className="text-white/90 hover:text-white transition cursor-pointer"
 						>
 							<FontAwesomeIcon icon={faGlobe} size="xl" />
 						</button>
-
 						{showLanguageMenu && (
-							<div className="absolute top-full left-[-12px] mt-4 w-32 bg-[#2c2d2e] backdrop-blur-3xl border border-[#454547] text-white text-sm rounded-lg p-3 shadow-lg z-50">
-								<p className="text-center text-[#FFFFFF]">
-									Coming soon...
-								</p>
+							<div className="absolute top-full left-[-12px] mt-4 w-32 bg-[#2c2d2e] border border-[#454547] text-white text-sm rounded-lg p-3 shadow-lg z-50 backdrop-blur-3xl">
+								<p className="text-center">Coming soon...</p>
 							</div>
 						)}
 					</div>
 
-					{/* Sign In Button */}
-					<motion.div
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.9 }}
-					>
-						<Link href="/signin">
-							<button className="bg-[#27BBFF] text-[#101014] font-medium px-4 py-2 rounded-md cursor-pointer">
-								Sign in
+					{/* User Auth Section */}
+					{user ? (
+						<div className="relative" ref={userRef}>
+							<button
+								onClick={() =>
+									setShowUserDropdown((prev) => !prev)
+								}
+								className="cursor-pointer flex items-center gap-2 text-white hover:text-[#ACACAD]"
+							>
+								{user.user_metadata.avatar_url ? (
+									<Image
+										src={user.user_metadata.avatar_url}
+										alt="Avatar"
+										width={30}
+										height={30}
+										className="rounded-full"
+									/>
+								) : (
+									<div className="w-[35px] h-[35px] rounded-full bg-[#1C1C20] flex items-center justify-center text-xs font-semibold">
+										{getInitials(
+											user.user_metadata.name ||
+												user.email
+										)}
+									</div>
+								)}
+								<span>{user.user_metadata.name || 'User'}</span>
 							</button>
-						</Link>
-					</motion.div>
+
+							{showUserDropdown && (
+								<div className="absolute right-0 top-full mt-2 bg-[#2c2d2e] border border-[#454547] text-white text-sm rounded-lg shadow-lg p-2 z-50 w-40 backdrop-blur-3xl">
+									<button
+										onClick={handleSignOut}
+										className="cursor-pointer w-full text-left px-3 py-2 hover:bg-[#1e1e1e] rounded-md flex items-center gap-2"
+									>
+										<FontAwesomeIcon icon={faSignOutAlt} />
+										Sign Out
+									</button>
+								</div>
+							)}
+						</div>
+					) : (
+						<motion.div
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+						>
+							<Link href="/signin">
+								<button className="bg-[#27BBFF] text-[#101014] font-medium px-4 py-2 rounded-md cursor-pointer">
+									Sign in
+								</button>
+							</Link>
+						</motion.div>
+					)}
 				</nav>
 			</div>
 		</header>

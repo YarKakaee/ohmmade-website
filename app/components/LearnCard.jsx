@@ -24,9 +24,8 @@ export default function LearnCard({ title, image, link, icon }) {
 						<Image
 							src={image}
 							alt={title}
-							layout="fill"
-							objectFit="cover"
-							className="rounded-xl"
+							fill
+							className="rounded-xl object-cover"
 						/>
 						{/* Overlay Effect */}
 						<div className="absolute inset-0 bg-black/40 group-hover:bg-black/45 transition duration-300"></div>

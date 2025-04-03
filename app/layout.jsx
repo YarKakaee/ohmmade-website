@@ -5,6 +5,7 @@ import Nav from './components/Nav';
 import './globals.css';
 config.autoAddCss = false;
 import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from './context/AuthContext';
 
 const inter = Inter({
 	subsets: ['latin'],
@@ -20,9 +21,11 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang="en">
 			<body className={`${inter.className} antialiased`}>
-				<Nav />
-				{children}
-				<Toaster position="top-center" reverseOrder={false} />
+				<AuthProvider>
+					<Nav />
+					{children}
+					<Toaster position="top-center" reverseOrder={false} />
+				</AuthProvider>
 			</body>
 		</html>
 	);

@@ -71,11 +71,8 @@ export default function Footer() {
 
 				{/* Right: Legal Links */}
 				<div className="flex space-x-6">
-					<Link
-						href="/terms-of-use"
-						className="hover:text-white transition"
-					>
-						Terms of Use
+					<Link href="/tos" className="hover:text-white transition">
+						Terms of Service
 					</Link>
 					<Link
 						href="/privacy-policy"
