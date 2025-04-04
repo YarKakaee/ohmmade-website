@@ -1,19 +1,19 @@
 'use client';
+import CodexEditorWrapper from '@/app/components/CodexEditorWrapper';
+import Footer from '@/app/components/Footer';
 import {
 	faArrowUpRightFromSquare,
 	faChevronDown,
-	faUpload,
 	faSpinner,
+	faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Inter_Tight } from 'next/font/google';
-import { useState } from 'react';
-import CodexEditorWrapper from '@/app/components/CodexEditorWrapper';
 import { createClient } from '@supabase/supabase-js';
-import { useRef, useEffect } from 'react';
 import axios from 'axios';
+import { Inter_Tight } from 'next/font/google';
+import { redirect } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import Footer from '@/app/components/Footer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 export default function PublishProjectPage() {
@@ -27,7 +27,7 @@ export default function PublishProjectPage() {
 	const [user, setUser] = useState(null);
 	const [isPublishing, setIsPublishing] = useState(false);
 
-	const MAX_TITLE_LENGTH = 25;
+	const MAX_TITLE_LENGTH = 32;
 	const MAX_DESCRIPTION_LENGTH = 195;
 
 	const editorRef = useRef(null);
@@ -42,7 +42,7 @@ export default function PublishProjectPage() {
 			if (sessionData?.session?.user) {
 				setUser(sessionData.session.user);
 			} else {
-				alert('You must be signed in to publish a project.');
+				redirect('/signin');
 			}
 		};
 		fetchUser();
@@ -71,8 +71,8 @@ export default function PublishProjectPage() {
 			)}`;
 
 			await axios.post('/api/projects/create', {
-				title: title.trim().slice(0, 19),
-				description: description.trim().slice(0, 195),
+				title: title,
+				description: description,
 				category,
 				difficultyLevel,
 				timeToBuild,
@@ -136,7 +136,11 @@ export default function PublishProjectPage() {
 							<button
 								onClick={handlePublish}
 								disabled={isPublishing}
-								className="bg-[#27BBFF] cursor-pointer text-[#101014] px-5 py-2 font-medium rounded-md text-sm hover:brightness-110 transition"
+								className={`px-5 py-2 text-sm font-medium rounded-md transition ${
+									isPublishing
+										? 'bg-[#27BBFF] opacity-50 cursor-not-allowed'
+										: 'bg-[#27BBFF] text-[#101014] hover:brightness-110 cursor-pointer'
+								}`}
 							>
 								{isPublishing ? (
 									<>
@@ -145,7 +149,7 @@ export default function PublishProjectPage() {
 											spin
 											className="text-sm"
 										/>
-										<span className="ml-2 disabled">
+										<span className="ml-2">
 											Publishing...
 										</span>
 									</>
