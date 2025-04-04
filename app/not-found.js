@@ -1,4 +1,4 @@
-'use client'; // Ensures this is a client component
+'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -6,10 +6,8 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 export default function NotFound() {
-	// State to check if running on client side
 	const [isClient, setIsClient] = useState(false);
 
-	// Ensures Image loads only after hydration
 	useEffect(() => {
 		setIsClient(true);
 	}, []);

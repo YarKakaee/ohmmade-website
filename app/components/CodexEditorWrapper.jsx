@@ -1,50 +1,83 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, {
+	useEffect,
+	useRef,
+	forwardRef,
+	useImperativeHandle,
+} from 'react';
 
-let editorInstance = null;
+const CodexEditorWrapper = forwardRef((props, ref) => {
+	const editorInstanceRef = useRef(null);
 
-export const getEditorData = async () => {
-	if (editorInstance) {
-		return await editorInstance.save();
-	}
-	return null;
-};
-
-export default function CodexEditorWrapper() {
-	const editorRef = useRef(null);
+	useImperativeHandle(ref, () => ({
+		save: async () => {
+			if (editorInstanceRef.current) {
+				return await editorInstanceRef.current.save();
+			}
+			throw new Error('Editor not initialized');
+		},
+		clear: async () => {
+			if (editorInstanceRef.current) {
+				await editorInstanceRef.current.clear();
+				await editorInstanceRef.current.render({ blocks: [] });
+			}
+		},
+	}));
 
 	useEffect(() => {
 		let isMounted = true;
 
-		const initEditor = async () => {
+		const init = async () => {
 			const EditorJS = (await import('@editorjs/editorjs')).default;
 			const Header = (await import('@editorjs/header')).default;
 			const List = (await import('@editorjs/list')).default;
-			const Code = (await import('@editorjs/code')).default;
+			const CodeTool = (await import('@editorjs/code')).default;
+			const ImageTool = (await import('@editorjs/image')).default;
 
-			if (!editorRef.current && isMounted) {
-				const editor = new EditorJS({
-					holder: 'codex-editor',
-					placeholder: 'Start writing content here...',
-					tools: {
-						header: Header,
-						list: List,
-						code: Code,
+			// 💡 Import your custom code snippet plugin
+			const CustomCodeSnippet = (
+				await import('@/app/components/CustomCodeSnippet')
+			).default;
+			await import('@/app/components/customCodeSnippet.css'); // 💅 Load CSS
+
+			if (!isMounted) return;
+
+			editorInstanceRef.current = new EditorJS({
+				holder: 'codex-editor',
+				tools: {
+					header: Header,
+					list: List,
+					image: {
+						class: ImageTool,
+						config: {
+							endpoints: {
+								byFile: '/api/uploadFile',
+							},
+						},
 					},
-				});
-				editorRef.current = editor;
-				editorInstance = editor;
-			}
+					codeSnippet: CustomCodeSnippet, // ✅ Register your plugin here
+				},
+				placeholder: 'Start writing content here...',
+			});
 		};
 
-		initEditor();
+		init();
 
 		return () => {
 			isMounted = false;
-			if (editorInstance?.destroy) editorInstance.destroy();
+			if (
+				editorInstanceRef.current &&
+				editorInstanceRef.current.destroy
+			) {
+				editorInstanceRef.current.destroy();
+				editorInstanceRef.current = null;
+			}
 		};
 	}, []);
 
-	return <div id="codex-editor" className="text-white" />;
-}
+	return <div id="codex-editor" className="min-h-[400px]" />;
+});
+
+CodexEditorWrapper.displayName = 'CodexEditorWrapper';
+export default CodexEditorWrapper;

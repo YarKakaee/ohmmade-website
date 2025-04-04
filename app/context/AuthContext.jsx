@@ -1,38 +1,44 @@
 'use client';
-
 import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { createClient } from '@supabase/supabase-js';
 
 const AuthContext = createContext();
+export const useAuth = () => useContext(AuthContext);
 
-export function AuthProvider({ children }) {
+const supabase = createClient(
+	process.env.NEXT_PUBLIC_SUPABASE_URL,
+	process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
+
+export const AuthProvider = ({ children }) => {
 	const [user, setUser] = useState(null);
 
 	useEffect(() => {
-		const getSession = async () => {
-			const { data } = await supabase.auth.getUser();
-			if (data?.user) setUser(data.user);
-		};
-		getSession();
+		// Initial session load
+		supabase.auth.getSession().then(({ data: { session } }) => {
+			setUser(session?.user ?? null);
+		});
 
+		// Listen for changes
 		const { data: listener } = supabase.auth.onAuthStateChange(
 			(event, session) => {
-				setUser(session?.user ?? null);
+				const newUser = session?.user ?? null;
+				setUser((prevUser) => {
+					// ❗ prevent infinite loop: only update if user actually changed
+					if (prevUser?.id !== newUser?.id) {
+						return newUser;
+					}
+					return prevUser;
+				});
 			}
 		);
 
 		return () => {
-			listener?.subscription.unsubscribe();
+			listener.subscription?.unsubscribe();
 		};
 	}, []);
 
 	return (
-		<AuthContext.Provider value={{ user, setUser }}>
-			{children}
-		</AuthContext.Provider>
+		<AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
 	);
-}
-
-export function useAuth() {
-	return useContext(AuthContext);
-}
+};

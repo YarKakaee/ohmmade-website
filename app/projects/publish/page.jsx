@@ -3,26 +3,112 @@ import {
 	faArrowUpRightFromSquare,
 	faChevronDown,
 	faUpload,
+	faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Inter_Tight } from 'next/font/google';
 import { useState } from 'react';
 import CodexEditorWrapper from '@/app/components/CodexEditorWrapper';
 import { createClient } from '@supabase/supabase-js';
+import { useRef, useEffect } from 'react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import Footer from '@/app/components/Footer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
-
 export default function PublishProjectPage() {
-	const [thumbnailUrl, setThumbnailUrl] = useState(null); // 🟡 store uploaded image
+	const [title, setTitle] = useState('');
+	const [description, setDescription] = useState('');
+	const [category, setCategory] = useState('');
+	const [difficultyLevel, setDifficultyLevel] = useState('');
+	const [timeToBuild, setTimeToBuild] = useState('');
+	const [tags, setTags] = useState('');
+	const [thumbnailUrl, setThumbnailUrl] = useState(null);
+	const [user, setUser] = useState(null);
+	const [isPublishing, setIsPublishing] = useState(false);
+
+	const MAX_TITLE_LENGTH = 25;
+	const MAX_DESCRIPTION_LENGTH = 195;
+
+	const editorRef = useRef(null);
 	const supabase = createClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL,
 		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 	);
-	const [title, setTitle] = useState('');
+
+	useEffect(() => {
+		const fetchUser = async () => {
+			const { data: sessionData } = await supabase.auth.getSession();
+			if (sessionData?.session?.user) {
+				setUser(sessionData.session.user);
+			} else {
+				alert('You must be signed in to publish a project.');
+			}
+		};
+		fetchUser();
+	}, []);
+
+	const handlePublish = async () => {
+		if (
+			!title ||
+			!description ||
+			!category ||
+			!difficultyLevel ||
+			!thumbnailUrl
+		) {
+			toast.error('Please fill out all required fields.');
+			return;
+		}
+
+		try {
+			setIsPublishing(true); // Start loading
+
+			const editorData = await editorRef.current.save();
+
+			const slugBase = title.trim().toLowerCase().replace(/\s+/g, '-');
+			const slug = `${slugBase}-${Math.floor(
+				10000000 + Math.random() * 90000000
+			)}`;
+
+			await axios.post('/api/projects/create', {
+				title: title.trim().slice(0, 19),
+				description: description.trim().slice(0, 195),
+				category,
+				difficultyLevel,
+				timeToBuild,
+				tags: tags.split(',').map((t) => t.trim()),
+				thumbnailUrl,
+				content: editorData,
+				slug,
+				userId: user.id,
+				username:
+					user.user_metadata?.full_name || user.email?.split('@')[0],
+				email: user.email,
+				status: 'published',
+			});
+
+			toast.success('Project published!');
+
+			// Clear everything
+			await editorRef.current.clear();
+			setTitle('');
+			setDescription('');
+			setCategory('');
+			setDifficultyLevel('');
+			setTimeToBuild('');
+			setTags('');
+			setThumbnailUrl(null);
+		} catch (err) {
+			console.error('Error publishing project:', err);
+			toast.error('Something went wrong while publishing.');
+		} finally {
+			setIsPublishing(false); // Stop loading
+		}
+	};
 
 	return (
 		<div className="relative min-h-screen bg-[#101014] overflow-hidden">
-			<section className="relative w-full py-16 px-8 sm:px-16 lg:px-24">
+			<section className="relative w-full pt-16 px-8 sm:px-16 lg:px-24">
 				<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-20">
 					<h2
 						className={`text-[44px] font-extrabold mb-4 text-white leading-tight ${interTight.className}`}
@@ -30,20 +116,42 @@ export default function PublishProjectPage() {
 						Publish Your Project
 					</h2>
 
-					<div className="w-full h-17 flex items-center justify-between px-8 border-b border-white/60">
+					<div className="w-full h-20 flex items-center justify-between px-8 border-b border-white/60">
 						<input
 							type="text"
 							value={title}
-							onChange={(e) => setTitle(e.target.value)}
+							onChange={(e) =>
+								setTitle(
+									e.target.value.slice(0, MAX_TITLE_LENGTH)
+								)
+							}
 							placeholder="Enter title here..."
-							className="bg-transparent text-white text-[17px] placeholder-white/50 focus:outline-none w-2/3 font-medium"
+							className="bg-transparent text-white text-[17px] placeholder-white/50 focus:outline-none w-2/3 font-medium mt-4"
 						/>
+
 						<div className="space-x-2">
 							<button className="bg-[#343437] cursor-pointer text-white px-5 py-2 font-medium rounded-md text-sm hover:bg-[#3A3A3A] transition">
 								Save draft
 							</button>
-							<button className="bg-[#27BBFF] cursor-pointer text-[#101014] px-5 py-2 font-medium rounded-md text-sm hover:brightness-110 transition">
-								Publish
+							<button
+								onClick={handlePublish}
+								disabled={isPublishing}
+								className="bg-[#27BBFF] cursor-pointer text-[#101014] px-5 py-2 font-medium rounded-md text-sm hover:brightness-110 transition"
+							>
+								{isPublishing ? (
+									<>
+										<FontAwesomeIcon
+											icon={faSpinner}
+											spin
+											className="text-sm"
+										/>
+										<span className="ml-2 disabled">
+											Publishing...
+										</span>
+									</>
+								) : (
+									<span>Publish</span>
+								)}
 							</button>
 						</div>
 					</div>
@@ -51,18 +159,14 @@ export default function PublishProjectPage() {
 					{/* Main Content Area */}
 					<div className="flex">
 						{/* Left: Editor */}
-						<div className="w-2/3 border-r border-white/60 min-h-[600px] p-8 text-white/50">
-							<CodexEditorWrapper />
+						<div className="w-3/4 border-r border-white/60 min-h-[600px] p-8 text-white/50">
+							<CodexEditorWrapper ref={editorRef} />
 						</div>
 
 						{/* Right: Sidebar */}
-						<div className="w-1/3 space-y-6">
-							<div className="px-8 pt-4.5 text-sm text-white">
-								<p className="text-sm text-[#055160]/90 bg-[#CFF4FC] px-3 py-2 rounded-md mb-4">
-									Please note that your tutorial will be
-									posted after review.
-								</p>
-								<h3 className="text-white font-bold text-lg mb-2">
+						<div className="w-1/4 space-y-6">
+							<div className="px-8 pt-5 text-sm text-white">
+								<h3 className="text-white font-extrabold text-[20px] mb-2">
 									Thank you for sharing your knowledge!
 								</h3>
 								<p className="text-[#FFFFFF]/60 mb-3">
@@ -127,16 +231,19 @@ export default function PublishProjectPage() {
 									<div className="relative">
 										<select
 											className="cursor-pointer w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 pr-10 text-white/50 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:ring-offset-0 font-medium text-[14px]"
-											defaultValue=""
+											value={category}
+											onChange={(e) =>
+												setCategory(e.target.value)
+											}
 										>
 											<option value="" disabled>
 												Select...
 											</option>
-											<option>General Circuitry</option>
+											<option>Basic Circuits</option>
 											<option>Arduino UNO</option>
 											<option>Raspberry Pi 4</option>
 											<option>Raspberry Pi Pico W</option>
-											<option>Others</option>
+											<option>Other</option>
 										</select>
 
 										<div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
@@ -157,11 +264,22 @@ export default function PublishProjectPage() {
 									</label>
 									<textarea
 										className="w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 resize-none h-30 placeholder:text-white/50 text-[14px]"
-										maxLength={195}
+										value={description}
+										onChange={(e) =>
+											setDescription(
+												e.target.value.slice(
+													0,
+													MAX_DESCRIPTION_LENGTH
+												)
+											)
+										}
+										maxLength={MAX_DESCRIPTION_LENGTH}
 										placeholder="A quick summary of what the project is and what it does. Shown on cards/search."
 									/>
 									<p className="text-xs text-white/50 mt-1">
-										Description is limited to 195 characters
+										{MAX_DESCRIPTION_LENGTH -
+											description.length}{' '}
+										characters remaining
 									</p>
 								</div>
 
@@ -187,8 +305,7 @@ export default function PublishProjectPage() {
 												file
 											</p>
 											<p className="text-white/25 text-xs mt-1">
-												JPG, PNG (recommended size:
-												1580x1060)
+												Recommended size: 1580x1060
 											</p>
 										</label>
 
@@ -261,7 +378,12 @@ export default function PublishProjectPage() {
 									<div className="relative">
 										<select
 											className="cursor-pointer w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 pr-10 text-white/50 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:ring-offset-0 font-medium text-[14px]"
-											defaultValue=""
+											value={difficultyLevel}
+											onChange={(e) =>
+												setDifficultyLevel(
+													e.target.value
+												)
+											}
 										>
 											<option value="">Select...</option>
 											<option>Beginner</option>
@@ -284,17 +406,25 @@ export default function PublishProjectPage() {
 									</label>
 									<input
 										type="text"
+										value={timeToBuild}
+										onChange={(e) =>
+											setTimeToBuild(e.target.value)
+										}
 										className="w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 placeholder:text-white/50 text-[14px]"
 										placeholder="e.g., 30 minutes, 2 hours – sets expectations."
 									/>
 								</div>
 
-								<div className="mb-10">
+								<div className="mb-4">
 									<label className="block mb-1.5 text-white/60">
 										Tags
 									</label>
 									<input
 										type="text"
+										value={tags}
+										onChange={(e) =>
+											setTags(e.target.value)
+										}
 										className="w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 placeholder:text-white/50 text-[14px]"
 										placeholder="e.g., arduino, RGB LED - helpful for search."
 									/>
@@ -305,6 +435,7 @@ export default function PublishProjectPage() {
 					{/* End main row */}
 				</div>
 			</section>
+			<Footer />
 		</div>
 	);
 }

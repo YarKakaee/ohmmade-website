@@ -21,9 +21,10 @@ enum ProjectStatus {
 }
 
 model User {
-  id       String    @id @default(uuid()) @db.Uuid
+  id       String    @id @default(uuid())
   email    String    @unique
   name     String?
+  image String?
   projects Project[]
 }
 
@@ -32,18 +33,19 @@ model Project {
   title           String
   category        String
   description     String
-  authorId        String   @db.Uuid
-  author          User     @relation(fields: [authorId], references: [id])
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  slug            String   @unique
-  featured        Boolean
-  views           Int      @default(0)
-  likes           Int      @default(0)
+  slug            String  @unique
+  featured        Boolean @default(false)
+  views           Int     @default(0)
+  likes           Int     @default(0)
   timeToBuild     String
   difficultyLevel String
   status          ProjectStatus @default(draft)
   thumbnailUrl    String
   content         Json
   tags            String[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  authorId        String
+  author          User          @relation(fields: [authorId], references: [id])
 }

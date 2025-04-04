@@ -90,7 +90,7 @@ export default function SignInPage() {
 				<div className="mt-4 text-center">
 					<button
 						onClick={handleGoogle}
-						className="flex items-center justify-center gap-2 w-full bg-white text-black font-medium px-4 py-3 rounded-md transition hover:brightness-95"
+						className="cursor-pointer flex items-center justify-center gap-2 w-full bg-white text-black font-medium px-4 py-3 rounded-md transition hover:brightness-95"
 					>
 						<FontAwesomeIcon icon={faGoogle} />
 						<span>Sign in with Google</span>

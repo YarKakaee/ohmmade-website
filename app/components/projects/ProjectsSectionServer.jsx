@@ -10,7 +10,24 @@ export default async function ProjectsSectionServer() {
 		where: { featured: true, status: 'published' },
 		orderBy: { createdAt: 'desc' },
 		take: 4,
+		include: {
+			author: {
+				select: {
+					name: true,
+					image: true,
+					email: true,
+				},
+			},
+		},
 	});
+
+	const categoryColors = {
+		'Arduino UNO': '#2081C3',
+		'Raspberry Pi 4': '#E03D5C',
+		'Raspberry Pi Pico W': '#892034',
+		'Basic Circuits': '#2B752E',
+		Other: '#363636',
+	};
 
 	return (
 		<section className="relative w-full py-20 px-8 sm:px-16 lg:px-24">
@@ -27,11 +44,11 @@ export default async function ProjectsSectionServer() {
 							description={project.description}
 							imageUrl={project.thumbnailUrl}
 							categoryColor={
-								project.category === 'Arduino UNO'
-									? '#2081C3'
-									: '#E03D5C'
+								categoryColors[project.category] || '#999999'
 							}
-							author={project.author}
+							authorName={project.author?.name}
+							authorImage={project.author?.image}
+							authorEmail={project.author?.email}
 							views={project.views}
 							likes={project.likes}
 							slug={project.slug}
