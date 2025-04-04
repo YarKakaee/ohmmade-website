@@ -27,6 +27,8 @@ export default function PublishProjectPage() {
 	const [user, setUser] = useState(null);
 	const [isPublishing, setIsPublishing] = useState(false);
 
+	const [checkingSession, setCheckingSession] = useState(true);
+
 	const MAX_TITLE_LENGTH = 32;
 	const MAX_DESCRIPTION_LENGTH = 195;
 
@@ -44,9 +46,12 @@ export default function PublishProjectPage() {
 			} else {
 				redirect('/signin');
 			}
+			setCheckingSession(false);
 		};
 		fetchUser();
 	}, []);
+
+	if (checkingSession) return null;
 
 	const handlePublish = async () => {
 		if (
@@ -210,10 +215,10 @@ export default function PublishProjectPage() {
 								</p>
 
 								<a
-									href="/project-guidelines"
+									href="/publishing-guidelines"
 									className="inline-flex items-center mt-4 text-sm bg-[#343437] rounded-md px-3 py-2 text-white hover:bg-[#2F2F31] transition"
 								>
-									Project Guidelines{' '}
+									Publishing Guidelines{' '}
 									<FontAwesomeIcon
 										icon={faArrowUpRightFromSquare}
 										className="ml-2 text-xs"
