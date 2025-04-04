@@ -21,19 +21,37 @@
 
 /* /styles/editor.css */
 .ce-block h1 {
-	font-weight: 800;
-	font-size: 26px;
+	font-weight: 1000;
+	font-size: 36px;
 	color: white;
 }
 
 .ce-block h2 {
+	font-weight: 900;
+	font-size: 32px;
+	color: white;
+}
+
+.ce-block h3 {
+	font-weight: 800;
+	font-size: 28px;
+	color: white;
+}
+
+.ce-block h4 {
 	font-weight: 700;
 	font-size: 24px;
 	color: white;
 }
 
-.ce-block h3 {
+.ce-block h5 {
 	font-weight: 600;
+	font-size: 22px;
+	color: white;
+}
+
+.ce-block h6 {
+	font-weight: 500;
 	font-size: 20px;
 	color: white;
 }
@@ -52,4 +70,12 @@
 .ce-block__content,
 .ce-toolbar__content {
 	max-width: 90% !important;
+}
+
+.ce-inline-tool-input {
+	color: #1c1c20;
+}
+
+.cdx-search-field__input {
+	color: #1c1c20;
 }

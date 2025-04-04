@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { createClient } from '@supabase/supabase-js';
 import axios from 'axios';
 import { Inter_Tight } from 'next/font/google';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -116,10 +117,20 @@ export default function PublishProjectPage() {
 			<section className="relative w-full pt-16 px-8 sm:px-16 lg:px-24">
 				<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-20">
 					<h2
-						className={`text-[44px] font-extrabold mb-4 text-white leading-tight ${interTight.className}`}
+						className={`text-[44px] font-black mb-4 text-white leading-tight relative z-10 ${interTight.className}`}
 					>
 						Publish Your Project
 					</h2>
+					<div className="absolute top-[100px] left-1/2 -translate-x-1/2 z-0 w-full max-w-[1400px]">
+						<Image
+							src="https://edc-cdn.net/assets/images/bg-header-epic-indies.png"
+							alt="Gradient"
+							width={1200}
+							height={1000}
+							className="w-full h-auto opacity-60 blur-[120px] pointer-events-none select-none"
+							priority
+						/>
+					</div>
 
 					<div className="w-full h-20 flex items-center justify-between px-8 border-b border-white/60">
 						<input
@@ -135,8 +146,8 @@ export default function PublishProjectPage() {
 						/>
 
 						<div className="space-x-2">
-							<button className="bg-[#343437] cursor-pointer text-white px-5 py-2 font-medium rounded-md text-sm hover:bg-[#3A3A3A] transition">
-								Save draft
+							<button className="bg-[#343437] disabled cursor-pointer text-white px-5 py-2 font-medium rounded-md text-sm hover:bg-[#3A3A3A] transition">
+								Save draft (coming soon)
 							</button>
 							<button
 								onClick={handlePublish}
@@ -144,7 +155,7 @@ export default function PublishProjectPage() {
 								className={`px-5 py-2 text-sm font-medium rounded-md transition ${
 									isPublishing
 										? 'bg-[#27BBFF] opacity-50 cursor-not-allowed'
-										: 'bg-[#27BBFF] text-[#101014] hover:brightness-110 cursor-pointer'
+										: 'bg-[#27BBFF] text-[#101014] hover:brightness-80 cursor-pointer'
 								}`}
 							>
 								{isPublishing ? (

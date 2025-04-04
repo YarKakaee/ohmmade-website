@@ -39,7 +39,6 @@ const CodexEditorWrapper = forwardRef((props, ref) => {
 			const CustomCodeSnippet = (
 				await import('@/app/components/CustomCodeSnippet')
 			).default;
-			await import('@/app/components/customCodeSnippet.css'); // 💅 Load CSS
 
 			if (!isMounted) return;
 

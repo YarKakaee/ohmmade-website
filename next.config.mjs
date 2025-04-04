@@ -12,7 +12,7 @@ const nextConfig = {
 			},
 			{
 				protocol: 'https',
-				hostname: 'pimylifeup.com',
+				hostname: 'edc-cdn.net',
 			},
 			{
 				protocol: 'https',
