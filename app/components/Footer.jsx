@@ -1,16 +1,16 @@
 'use client';
 
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-	faYoutube,
-	faXTwitter,
 	faGithub,
-	faLinkedin,
 	faInstagram,
+	faLinkedin,
 	faTiktok,
+	faXTwitter,
+	faYoutube,
 } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function Footer() {
 	return (

@@ -1,11 +1,6 @@
 'use client';
 
-import React, {
-	useEffect,
-	useRef,
-	forwardRef,
-	useImperativeHandle,
-} from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 const CodexEditorWrapper = forwardRef((props, ref) => {
 	const editorInstanceRef = useRef(null);

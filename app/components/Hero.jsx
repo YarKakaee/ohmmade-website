@@ -1,8 +1,8 @@
 'use client'; // For Next.js App Router with client components
 
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 
 import { Inter_Tight } from 'next/font/google';
 

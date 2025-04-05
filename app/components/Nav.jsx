@@ -1,18 +1,18 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/app/context/AuthContext';
+import { supabase } from '@/lib/supabaseClient';
 import {
 	faAngleDown,
 	faGlobe,
 	faSignOutAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Nav() {
 	const [scrolled, setScrolled] = useState(false);

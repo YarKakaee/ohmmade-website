@@ -1,12 +1,11 @@
 'use client'; // For Next.js App Router with client components
 
-import Image from 'next/image';
-import { Inter_Tight } from 'next/font/google';
-import { motion } from 'framer-motion';
 import { useForm } from '@formspree/react';
-import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Inter_Tight } from 'next/font/google';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useEffect } from 'react';
 
 const interTight = Inter_Tight({
 	subsets: ['latin'],

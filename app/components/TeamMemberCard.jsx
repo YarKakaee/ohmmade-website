@@ -1,13 +1,13 @@
 'use client'; // For Next.js App Router with client components
 
-import Image from 'next/image';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+	faGithub,
 	faInstagram,
 	faLinkedin,
-	faGithub,
 } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 export default function TeamMemberCard({
 	name,

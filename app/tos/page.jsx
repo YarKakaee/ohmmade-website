@@ -1,7 +1,6 @@
 'use client';
 
 import { Inter_Tight } from 'next/font/google';
-import { motion } from 'framer-motion';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 

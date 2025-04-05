@@ -1,7 +1,6 @@
 'use client';
 
 import { Inter_Tight } from 'next/font/google';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Footer from '../components/Footer';
 

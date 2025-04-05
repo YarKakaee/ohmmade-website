@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Inter_Tight } from 'next/font/google';
 import { signUpWithEmail } from '@/lib/auth';
+import { Inter_Tight } from 'next/font/google';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });

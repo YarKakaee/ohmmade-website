@@ -1,10 +1,10 @@
 'use client'; // For Next.js App Router with client components
 
+import { faCircleArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { faCircleArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { motion } from 'framer-motion';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function LearnCard({ title, image, link, icon }) {
 	return (

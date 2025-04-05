@@ -1,11 +1,11 @@
 import Image from 'next/image';
-import Hero from './components/Hero';
-import OurTeam from './components/OurTeam';
-import './globals.css';
 import ContactUs from './components/ContactUs';
-import Learn from './components/Learn';
-import ProjectsSectionServer from './components/projects/ProjectsSectionServer';
 import Footer from './components/Footer';
+import Hero from './components/Hero';
+import Learn from './components/Learn';
+import OurTeam from './components/OurTeam';
+import ProjectsSectionServer from './components/projects/ProjectsSectionServer';
+import './globals.css';
 
 export default function Home() {
 	return (

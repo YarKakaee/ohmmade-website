@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { signInWithEmail, signInWithGoogle } from '@/lib/auth';
-import { Inter_Tight } from 'next/font/google';
-import toast, { Toaster } from 'react-hot-toast';
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Inter_Tight } from 'next/font/google';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 

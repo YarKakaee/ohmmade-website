@@ -1,8 +1,8 @@
 'use client'; // For Next.js App Router with client components
 
 import { motion } from 'framer-motion';
-import LearnCard from './LearnCard';
 import { Inter_Tight } from 'next/font/google';
+import LearnCard from './LearnCard';
 
 const interTight = Inter_Tight({
 	subsets: ['latin'],

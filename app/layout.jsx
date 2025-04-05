@@ -1,11 +1,11 @@
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { Inter } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
 import Nav from './components/Nav';
+import { AuthProvider } from './context/AuthContext';
 import './globals.css';
 config.autoAddCss = false;
-import { Toaster } from 'react-hot-toast';
-import { AuthProvider } from './context/AuthContext';
 
 const inter = Inter({
 	subsets: ['latin'],

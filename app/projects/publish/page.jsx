@@ -1,6 +1,7 @@
 'use client';
 import CodexEditorWrapper from '@/app/components/CodexEditorWrapper';
 import Footer from '@/app/components/Footer';
+import { supabase } from '@/lib/supabaseClient';
 import {
 	faArrowUpRightFromSquare,
 	faChevronDown,
@@ -8,10 +9,8 @@ import {
 	faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { createClient } from '@supabase/supabase-js';
 import axios from 'axios';
 import { Inter_Tight } from 'next/font/google';
-import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -34,10 +33,6 @@ export default function PublishProjectPage() {
 	const MAX_DESCRIPTION_LENGTH = 195;
 
 	const editorRef = useRef(null);
-	const supabase = createClient(
-		process.env.NEXT_PUBLIC_SUPABASE_URL,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-	);
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -121,16 +116,14 @@ export default function PublishProjectPage() {
 					>
 						Publish Your Project
 					</h2>
-					<div className="absolute top-[100px] left-1/2 -translate-x-1/2 z-0 w-full max-w-[1400px]">
-						<Image
-							src="https://edc-cdn.net/assets/images/bg-header-epic-indies.png"
-							alt="Gradient"
-							width={1200}
-							height={1000}
-							className="w-full h-auto opacity-60 blur-[120px] pointer-events-none select-none"
-							priority
-						/>
-					</div>
+					<div
+						className="absolute top-[100px] left-1/2 -translate-x-1/2 z-0 w-full max-w-[1500px] h-[500px] bg-center bg-no-repeat bg-cover opacity-40 pointer-events-none select-none"
+						style={{
+							backgroundImage:
+								'url(https://edc-cdn.net/assets/images/bg-header-epic-indies.png)',
+							filter: 'blur(60px)',
+						}}
+					/>
 
 					<div className="w-full h-20 flex items-center justify-between px-8 border-b border-white/60">
 						<input
@@ -243,7 +236,7 @@ export default function PublishProjectPage() {
 							<div className="px-8 space-y-4 text-[12.5px] text-white">
 								<div>
 									<label className="block mb-1.5 text-white/60">
-										Category / Device{' '}
+										Category / Microcontroller{' '}
 										<span className="text-[#FFC008]">
 											*
 										</span>

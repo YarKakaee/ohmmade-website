@@ -1,9 +1,9 @@
 // app/components/ProjectsSectionServer.jsx
 
+import categoryColors from '@/lib/constants/categoryColors';
+import prisma from '@/prisma/client'; // Adjust this path if needed
 import ProjectCard from './ProjectCard';
 import ProjectsHeader from './ProjectHeader';
-import prisma from '@/prisma/client'; // Adjust this path if needed
-import { motion } from 'framer-motion';
 
 export default async function ProjectsSectionServer() {
 	const featuredProjects = await prisma.project.findMany({
@@ -20,14 +20,6 @@ export default async function ProjectsSectionServer() {
 			},
 		},
 	});
-
-	const categoryColors = {
-		'Arduino UNO': '#2081C3',
-		'Raspberry Pi 4': '#E03D5C',
-		'Raspberry Pi Pico W': '#892034',
-		'Basic Circuits': '#2B752E',
-		Other: '#363636',
-	};
 
 	return (
 		<section className="relative w-full py-20 px-8 sm:px-16 lg:px-24">
