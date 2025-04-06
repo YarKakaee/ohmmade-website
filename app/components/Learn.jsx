@@ -1,4 +1,4 @@
-'use client'; // For Next.js App Router with client components
+'use client';
 
 import { motion } from 'framer-motion';
 import { Inter_Tight } from 'next/font/google';
@@ -12,22 +12,22 @@ const interTight = Inter_Tight({
 const cardData = [
 	{
 		title: 'Basic Electronics',
-		image: '/assets/breadboard.png', // Replace with your image path
+		image: '/assets/breadboard.png',
 		link: '/basic-electronics',
 	},
 	{
 		title: 'Raspberry Pi 4',
-		image: '/assets/rp4.png', // Replace with your image path
+		image: '/assets/rp4.png',
 		link: '/raspberry-pi-4',
 	},
 	{
 		title: 'Raspberry Pi Pico',
-		image: '/assets/rpico.png', // Replace with your image path
+		image: '/assets/rpico.png',
 		link: '/raspberry-pi-pico',
 	},
 	{
 		title: 'Arduino UNO',
-		image: '/assets/arduinouno.png', // Replace with your image path
+		image: '/assets/arduinouno.png',
 		link: '/arduino-uno',
 	},
 ];

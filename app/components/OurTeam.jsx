@@ -38,6 +38,15 @@ const teamMembers = [
 		instagram: 'https://www.instagram.com/_serkannur_/',
 		linkedin: 'https://www.linkedin.com/in/serkan-nur-32710424a/',
 	},
+	{
+		name: 'Andres Holmes',
+		role: 'Marketing Director',
+		description:
+			'Andres is a soon-to-be 2nd-year student studying DAN Management and Organizational Studies with a specialization in Finance at Western University. He brings a creative and strategic mindset to OhmMade, focusing on marketing, branding, and outreach. With a passion for connecting people and ideas, Andres helps shape the way OhmMade engages with the community, ensuring our mission reaches learners and makers everywhere.',
+		image: '/assets/Andres.jpeg',
+		instagram: 'https://www.instagram.com/ig.andres/',
+		linkedin: 'https://www.linkedin.com/in/andresholmes/',
+	},
 ];
 
 export default function OurTeam() {

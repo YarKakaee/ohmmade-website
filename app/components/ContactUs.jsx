@@ -1,4 +1,4 @@
-'use client'; // For Next.js App Router with client components
+'use client';
 
 import { useForm } from '@formspree/react';
 import { motion } from 'framer-motion';

@@ -1,5 +1,3 @@
-// app/components/ProjectsSectionServer.jsx
-
 import categoryColors from '@/lib/constants/categoryColors';
 import prisma from '@/prisma/client'; // Adjust this path if needed
 import ProjectCard from './ProjectCard';

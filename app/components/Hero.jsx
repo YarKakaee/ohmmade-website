@@ -1,4 +1,4 @@
-'use client'; // For Next.js App Router with client components
+'use client';
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
