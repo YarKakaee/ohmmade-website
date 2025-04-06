@@ -24,7 +24,13 @@ export default function RootLayout({ children }) {
 				<AuthProvider>
 					<Nav />
 					{children}
-					<Toaster position="top-center" reverseOrder={false} />
+					<Toaster
+						position="top-center"
+						reverseOrder={false}
+						containerStyle={{
+							top: '80px',
+						}}
+					/>
 				</AuthProvider>
 			</body>
 		</html>

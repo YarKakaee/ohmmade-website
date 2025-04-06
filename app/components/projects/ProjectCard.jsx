@@ -28,12 +28,12 @@ export default function ProjectCard({
 	const imageHeight = isSmall
 		? 'h-36 sm:h-32 md:h-36 lg:h-44'
 		: 'h-48 sm:h-52 md:h-56 lg:h-60';
-	const titleTextSize = isSmall ? 'text-[12.5px]' : 'text-[16px]';
+	const titleTextSize = isSmall ? 'text-[12.5px]' : 'text-[16.5px]';
 	const descTextSize = isSmall ? 'text-[11px]' : 'text-[14px]';
 	const padding = isSmall ? 'p-4' : 'p-5';
 	const avatarSize = isSmall ? 20 : 24;
 	const divHeight = isSmall ? 'h-[calc(100%-178px)]' : 'h-[calc(100%-240px)]';
-	const categoryTextSize = isSmall ? 'text-[10px]' : 'text-xs';
+	const categoryTextSize = isSmall ? 'text-[10px]' : 'text-[13px]';
 
 	return (
 		<Link href={`/projects/${slug}`}>
@@ -94,13 +94,13 @@ export default function ProjectCard({
 								<Image
 									src={authorImage}
 									alt={authorName || 'Author'}
-									width={avatarSize}
-									height={avatarSize}
+									width={24}
+									height={24}
 									className="rounded-full object-cover"
 								/>
 							) : (
 								<div
-									className={`w-[${avatarSize}px] h-[${avatarSize}px] rounded-full bg-[#343437] flex items-center justify-center text-white text-[11px] font-bold`}
+									className={`w-[24px] h-[24px] rounded-full bg-[#343437] flex items-center justify-center text-white text-[11px] font-bold`}
 								>
 									{authorName?.[0]?.toUpperCase() || 'U'}
 								</div>

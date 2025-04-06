@@ -8,10 +8,13 @@ import {
 	faChevronDown,
 	faCirclePlus,
 	faFilter,
+	faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import { LayoutGrid, List } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
+import Footer from '../components/Footer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 
@@ -30,6 +33,28 @@ export default function ExploreProjectsPage() {
 		};
 		fetchProjects();
 	}, []);
+
+	const difficultyLevels = ['Beginner', 'Intermediate', 'Advanced'];
+	const componentList = [
+		'Breadboards',
+		'LEDs',
+		'Resistors',
+		'Capacitors',
+		'Buttons',
+		'Potentiometers',
+		'Buzzers',
+		'Ultrasonic Sensors',
+		'Servos / Motors',
+		'OLED / LCD Displays',
+		'Other',
+	];
+	const languageList = [
+		'C',
+		'C++',
+		'Python / MicroPython',
+		'JavaScript',
+		'Other',
+	];
 
 	return (
 		<div className="relative min-h-screen bg-[#101014] overflow-hidden">
@@ -98,13 +123,16 @@ export default function ExploreProjectsPage() {
 								</div>
 							</div>
 
-							<button className="cursor-pointer bg-[#27BBFF] text-[#101014] text-sm font-medium px-4 py-2 rounded-md hover:brightness-110 transition flex items-center gap-2">
+							<Link
+								href="/projects/publish"
+								className="cursor-pointer bg-[#27BBFF] text-[#101014] text-sm font-medium px-4 py-2 rounded-md hover:brightness-110 transition flex items-center gap-2"
+							>
 								<FontAwesomeIcon
 									icon={faCirclePlus}
 									className="text-sm"
 								/>
 								Publish
-							</button>
+							</Link>
 
 							<div className="flex gap-3">
 								<button className="cursor-pointer p-2.5 rounded-md bg-[#34343B] text-white hover:brightness-150 transition">
@@ -118,7 +146,7 @@ export default function ExploreProjectsPage() {
 					</div>
 
 					{/* Main Content */}
-					<div className="flex flex-col lg:flex-row gap-8">
+					<div className="flex flex-col lg:flex-row gap-12">
 						<div
 							className={`grid w-full ${
 								filtersOpen
@@ -149,46 +177,64 @@ export default function ExploreProjectsPage() {
 
 						{/* Filters Sidebar */}
 						{filtersOpen && (
-							<div className="hidden lg:block w-full max-w-[270px] space-y-6 text-white/80 text-sm">
-								<h3 className="text-white text-base font-semibold">
+							<div className="hidden lg:block w-full max-w-[270px] space-y-6 text-sm">
+								<h3 className="text-white text-[20px] font-bold">
 									Filters
 								</h3>
 								{/* Author Filter */}
 								<div>
-									<p className="mb-2 font-medium">Author</p>
-									<div className="space-y-1">
-										<label className="block">
+									<div className="space-y-2">
+										<label className="flex items-center gap-2 cursor-pointer text-white/60 text-sm">
 											<input
 												type="checkbox"
-												className="mr-2"
+												className="hidden peer"
 											/>
+											<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+												<FontAwesomeIcon
+													icon={faCheck}
+													className="text-[#101014] text-[11px] hidden peer-checked:block"
+												/>
+											</span>
 											OhmMade
 										</label>
-										<label className="block">
+
+										<label className="flex items-center gap-2 cursor-pointer text-white/60 text-sm">
 											<input
 												type="checkbox"
-												className="mr-2"
+												className="hidden peer"
 											/>
+											<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+												<FontAwesomeIcon
+													icon={faCheck}
+													className="text-[#101014] text-[11px] hidden peer-checked:block"
+												/>
+											</span>
 											Community
 										</label>
 									</div>
 								</div>
 								{/* Category Filter */}
 								<div>
-									<p className="mb-2 font-medium">
+									<p className="mb-3 font-medium text-white">
 										Category / Microcontroller
 									</p>
-									<div className="space-y-1">
+									<div className="space-y-2">
 										{Object.keys(categoryColors).map(
 											(cat) => (
 												<label
 													key={cat}
-													className="block"
+													className="flex items-center gap-2 cursor-pointer text-white/60 text-sm"
 												>
 													<input
 														type="checkbox"
-														className="mr-2"
+														className="hidden peer"
 													/>
+													<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+														<FontAwesomeIcon
+															icon={faCheck}
+															className="text-[#101014] text-[11px] hidden peer-checked:block"
+														/>
+													</span>
 													{cat}
 												</label>
 											)
@@ -197,24 +243,78 @@ export default function ExploreProjectsPage() {
 								</div>
 								{/* Difficulty Filter */}
 								<div>
-									<p className="mb-2 font-medium">
-										Difficulty
+									<p className="mb-3 font-medium text-white">
+										Difficulty Level
 									</p>
-									<div className="space-y-1">
-										{[
-											'Beginner',
-											'Intermediate',
-											'Advanced',
-										].map((level) => (
+									<div className="space-y-2">
+										{difficultyLevels.map((level) => (
 											<label
 												key={level}
-												className="block"
+												className="flex items-center gap-2 cursor-pointer text-white/60 text-sm"
 											>
 												<input
 													type="checkbox"
-													className="mr-2"
+													className="hidden peer"
 												/>
+												<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+													<FontAwesomeIcon
+														icon={faCheck}
+														className="text-[#101014] text-[11px] hidden peer-checked:block"
+													/>
+												</span>
 												{level}
+											</label>
+										))}
+									</div>
+								</div>
+								{/* Component Filter */}
+								<div>
+									<p className="mb-3 font-medium text-white">
+										Component(s) Used
+									</p>
+									<div className="space-y-2">
+										{componentList.map((component) => (
+											<label
+												key={component}
+												className="flex items-center gap-2 cursor-pointer text-white/60 text-sm"
+											>
+												<input
+													type="checkbox"
+													className="hidden peer"
+												/>
+												<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+													<FontAwesomeIcon
+														icon={faCheck}
+														className="text-[#101014] text-[11px] hidden peer-checked:block"
+													/>
+												</span>
+												{component}
+											</label>
+										))}
+									</div>
+								</div>
+								{/* Language Filter */}
+								<div>
+									<p className="mb-3 font-medium text-white">
+										Language(s) Used
+									</p>
+									<div className="space-y-2">
+										{languageList.map((language) => (
+											<label
+												key={language}
+												className="flex items-center gap-2 cursor-pointer text-white/60 text-sm"
+											>
+												<input
+													type="checkbox"
+													className="hidden peer"
+												/>
+												<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+													<FontAwesomeIcon
+														icon={faCheck}
+														className="text-[#101014] text-[11px] hidden peer-checked:block"
+													/>
+												</span>
+												{language}
 											</label>
 										))}
 									</div>
@@ -224,6 +324,7 @@ export default function ExploreProjectsPage() {
 					</div>
 				</div>
 			</section>
+			<Footer />
 		</div>
 	);
 }
