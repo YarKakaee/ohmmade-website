@@ -9,8 +9,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -24,28 +24,59 @@ model User {
   id       String    @id @default(uuid())
   email    String    @unique
   name     String?
-  image String?
+  image    String?
   projects Project[]
+
+  userLikes UserLike[]
+  userViews UserView[]
 }
 
 model Project {
-  id              Int      @id @default(dbgenerated("floor(random() * 90000000) + 10000000"))
+  id              Int           @id @default(dbgenerated("floor(random() * 90000000) + 10000000"))
   title           String
   category        String
   description     String
-  slug            String  @unique
-  featured        Boolean @default(false)
-  views           Int     @default(0)
-  likes           Int     @default(0)
+  slug            String        @unique
+  featured        Boolean       @default(false)
+  views           Int           @default(0)
+  likes           Int           @default(0)
   timeToBuild     String
   difficultyLevel String
-  status          ProjectStatus @default(draft)
+  status          ProjectStatus @default(published)
   thumbnailUrl    String
   content         Json
   tags            String[]
   createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  updatedAt       DateTime      @default(now())
+  componentsUsed  String[]
 
-  authorId        String
-  author          User          @relation(fields: [authorId], references: [id])
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  userLikes UserLike[]
+  userViews UserView[]
+}
+
+model UserLike {
+  id        String   @id @default(cuid())
+  userId    String
+  projectId Int
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+
+  @@unique([userId, projectId]) // Prevent multiple likes
+}
+
+model UserView {
+  id        String   @id @default(cuid())
+  userId    String
+  projectId Int
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+
+  @@unique([userId, projectId]) // Prevent multiple views
 }

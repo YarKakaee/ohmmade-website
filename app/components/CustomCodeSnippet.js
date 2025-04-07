@@ -1,12 +1,13 @@
 export default class CustomCodeSnippet {
-	constructor({ data, api }) {
+	constructor({ data, api, readOnly }) {
 		this.api = api;
+		this.readOnly = readOnly;
 		this.data = {
 			language: data.language || 'cpp',
 			title: data.title || '',
 			description: data.description || '',
 			code: data.code || '',
-			showPreview: data.showPreview || false,
+			showPreview: data.showPreview ?? false,
 		};
 		this.wrapper = undefined;
 	}
@@ -14,77 +15,158 @@ export default class CustomCodeSnippet {
 	static get toolbox() {
 		return {
 			title: 'Code',
-			icon: `<svg width="17" height="17" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 13l-4-4 4-4m4 8l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none" fill-rule="evenodd"/></svg>`,
+			icon: `<svg width="17" height="17"><path d="M6.5 13l-4-4 4-4m4 8l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg>`,
 		};
+	}
+
+	static get isReadOnlySupported() {
+		return true;
 	}
 
 	render() {
 		this.wrapper = document.createElement('div');
 		this.wrapper.className = 'w-full relative';
 
-		this.wrapper.innerHTML = `
-			<div class="snippet-form ${this.data.showPreview ? 'hidden' : ''}">
-				<label class="block text-white/60 text-sm font-medium relative">
-					Type <span class="text-[#FFC008]">*</span>
-					<div class="relative mt-2">
-						<select class="snippet-language cursor-pointer w-full border border-[#6B6B6D] appearance-none rounded-md px-3 py-2 pr-10 text-white/70 bg-[#1C1C20] focus:outline-none focus:ring-2 focus:ring-[#27BBFF] font-medium text-sm">
+		// Load highlight.js + line numbers (safe one-time inject)
+		if (!document.getElementById('hljs-style')) {
+			const link = document.createElement('link');
+			link.id = 'hljs-style';
+			link.rel = 'stylesheet';
+			link.href =
+				'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css';
+			document.head.appendChild(link);
+		}
+		if (!document.getElementById('recursive-mono-font')) {
+			const fontLink = document.createElement('link');
+			fontLink.id = 'recursive-mono-font';
+			fontLink.rel = 'stylesheet';
+			fontLink.href =
+				'https://fonts.googleapis.com/css2?family=Recursive+Mono:wght@400;600&display=swap';
+			document.head.appendChild(fontLink);
+		}
+		if (!window.hljsLoaded) {
+			const script = document.createElement('script');
+			script.src =
+				'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js';
+			script.onload = () => {
+				window.hljs.initHighlightingOnLoad();
+				window.hljsLoaded = true;
+			};
+			document.head.appendChild(script);
+
+			const lnScript = document.createElement('script');
+			lnScript.src =
+				'https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js';
+			document.head.appendChild(lnScript);
+		}
+
+		if (!document.getElementById('hljs-ln-align-fix')) {
+			const style = document.createElement('style');
+			style.id = 'hljs-ln-align-fix';
+			style.textContent = `
+				/* Align line numbers right and fix spacing */
+				.hljs-ln-numbers {
+					text-align: right;
+					padding-right: 12px !important;
+					color: #757575;
+					user-select: none;
+					width: 2.5em; /* fixed width for clean alignment */
+					vertical-align: top;
+					box-sizing: content-box;
+				}
+				.hljs-ln-code {
+					padding-left: 0.75rem !important; /* tighter spacing */
+				}
+			`;
+			document.head.appendChild(style);
+		}
+
+		if (this.readOnly || this.data.showPreview) {
+			this.wrapper.innerHTML = `
+				<div class="snippet-preview mt-4">
+					<div class="rounded-xl bg-[#18181C] p-4 mb-4 border border-white/10">
+						<div class="flex items-center gap-4 mb-4">
+							<span class="lang-badge text-xs font-semibold bg-[#303034] text-white px-2 py-1 rounded">${this._formatLang(
+								this.data.language
+							)}</span>
+							<p class="preview-title text-white font-black text-xl">${this.data.title}</p>
+						</div>
+						<pre 
+	class="whitespace-pre-wrap overflow-auto -mt-6 text-white" 
+	style="background-color: #18181C !important; font-family: 'Recursive Mono', monospace; font-size: 14px;"
+>
+	<code 
+		class="hljs language-${this.data.language}" 
+		style="background-color: transparent !important; font-family: 'Recursive Mono', monospace; font-size: 14px;"
+	>
+		${this._escapeHtml(this.data.code)}
+	</code>
+</pre>
+${
+	this.data.description.trim()
+		? `
+	<p class="preview-desc text-white/70 text-sm mt-3">${this.data.description}</p>
+`
+		: '<p class="preview-desc text-white/70 text-sm -mt-4" />'
+}
+					</div>
+				</div>
+			`;
+
+			setTimeout(() => {
+				window.hljs?.highlightAll();
+				if (
+					typeof window.hljs !== 'undefined' &&
+					typeof window.hljs.lineNumbersBlock === 'function'
+				) {
+					const codeBlocks =
+						this.wrapper.querySelectorAll('pre code.hljs');
+					codeBlocks.forEach((block) =>
+						window.hljs.lineNumbersBlock(block)
+					);
+				}
+			}, 0);
+		} else {
+			this.wrapper.innerHTML = `
+				<div class="snippet-form">
+					<label class="block text-white/60 text-sm font-medium">
+						Type <span class="text-[#FFC008]">*</span>
+						<select class="snippet-language mt-2 w-full border border-[#6B6B6D] rounded-md px-3 py-2 bg-[#1C1C20] text-white/70">
 							${this._getLanguagesOptions(this.data.language)}
 						</select>
-						
+					</label>
+
+					<label class="block mt-4 text-white/60 text-sm font-medium">
+						Title
+						<input type="text" class="snippet-title mt-2 block w-full bg-[#1C1C20] text-white border border-gray-600 rounded-md px-3 py-2" value="${
+							this.data.title
+						}">
+					</label>
+
+					<label class="block mt-4 text-white/60 text-sm font-medium">
+						Snippet code <span class="text-[#FFC008]">*</span>
+						<textarea rows="10" class="snippet-code mt-2 block w-full bg-[#1C1C20] text-white border border-gray-600 rounded-md px-3 py-2">${
+							this.data.code
+						}</textarea>
+					</label>
+
+					<label class="block mt-4 text-white/60 text-sm font-medium">
+						Description
+						<textarea rows="2" class="snippet-description mt-2 block w-full bg-[#1C1C20] text-white border border-gray-600 rounded-md px-3 py-2">${
+							this.data.description
+						}</textarea>
+					</label>
+
+					<div class="mt-4 flex gap-3 mb-4">
+						<button class="btn-save bg-[#27BBFF] text-[#101014] px-4 py-2 rounded-md text-sm font-semibold hover:brightness-110 transition">Save</button>
 					</div>
-				</label>
-
-				<label class="block mt-4 text-white/60 text-sm font-medium">
-					Title
-					<input type="text" class="snippet-title mt-2 block w-full bg-[#1C1C20] text-white border border-gray-600 rounded-md px-3 py-2" value="${
-						this.data.title
-					}">
-				</label>
-
-				<label class="block mt-4 text-white/60 text-sm font-medium">
-					Snippet code <span class="text-[#FFC008]">*</span>
-					<textarea rows="10" class="resize-none snippet-code mt-2 block w-full bg-[#1C1C20] text-white border border-gray-600 rounded-md px-3 py-2">${
-						this.data.code
-					}</textarea>
-				</label>
-
-				<label class="block mt-4 text-white/60 text-sm font-medium">
-					Description
-					<textarea rows="2" class="resize-none snippet-description mt-2 block w-full bg-[#1C1C20] text-white border border-gray-600 rounded-md px-3 py-2">${
-						this.data.description
-					}</textarea>
-				</label>
-
-				<div class="mt-4 flex gap-3 mb-4">
-					<button class="cursor-pointer btn-save bg-[#27BBFF] text-[#101014] px-4 py-2 rounded-md text-sm font-semibold hover:brightness-110 transition">Save</button>
 				</div>
-			</div>
+			`;
 
-			<div class="snippet-preview ${this.data.showPreview ? '' : 'hidden'}">
-				<div class="rounded-xl bg-[#18181C] p-4 mb-4 border border-white/10">
-					<div class="flex items-center gap-4 mb-4">
-						<span class="lang-badge inline-block text-xs font-semibold bg-[#303034] text-white px-2 py-1 rounded">${this._formatLang(
-							this.data.language
-						)}</span>
-						<p class="preview-title text-white font-black text-xl">${this.data.title}</p>
-					</div>
-
-					<pre class="text-white whitespace-pre-wrap overflow-auto mb-4"><code>${
-						this.data.code
-					}</code></pre>
-
-					<p class="preview-desc text-white/70 text-sm">${this.data.description}</p>
-				</div>
-				
-			</div>
-		`;
-
-		this.wrapper
-			.querySelector('.btn-save')
-			?.addEventListener('click', () => this._savePreview());
-		this.wrapper
-			.querySelector('.btn-cancel')
-			?.addEventListener('click', () => this._cancel());
+			this.wrapper
+				.querySelector('.btn-save')
+				?.addEventListener('click', () => this._savePreview());
+		}
 
 		return this.wrapper;
 	}
@@ -100,51 +182,36 @@ export default class CustomCodeSnippet {
 		};
 
 		const form = this.wrapper.querySelector('.snippet-form');
-		const preview = this.wrapper.querySelector('.snippet-preview');
+		form?.classList.add('hidden');
 
-		if (form && preview) {
-			form.classList.add('hidden');
-			preview.classList.remove('hidden');
-
-			// Update content
-			preview.querySelector('.lang-badge').textContent = this._formatLang(
-				this.data.language
-			);
-			preview.querySelector('.preview-title').textContent =
-				this.data.title;
-			preview.querySelector('pre code').textContent = this.data.code;
-			preview.querySelector('.preview-desc').textContent =
-				this.data.description;
-		}
-	}
-
-	_cancel() {
-		this.data.showPreview = false;
-		const form = this.wrapper.querySelector('.snippet-form');
-		const preview = this.wrapper.querySelector('.snippet-preview');
-
-		if (form && preview) {
-			form.classList.remove('hidden');
-			preview.classList.add('hidden');
-		}
+		this.render(); // Re-render with preview
 	}
 
 	save() {
 		return this.data;
 	}
 
+	_escapeHtml(str) {
+		return str
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#039;');
+	}
+
 	_getLanguagesOptions(selected) {
 		const langs = [
-			'c++',
+			'cpp',
 			'python',
 			'shell',
 			'java',
-			'JavaScript',
-			'c#',
+			'javascript',
+			'csharp',
 			'console_output',
 			'c',
-			'HTML',
-			'CSS',
+			'html',
+			'css',
 		];
 		return langs
 			.map(
@@ -157,6 +224,6 @@ export default class CustomCodeSnippet {
 	}
 
 	_formatLang(lang) {
-		return lang.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+		return lang.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 	}
 }

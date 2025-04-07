@@ -6,6 +6,7 @@ import {
 	faArrowUpRightFromSquare,
 	faChevronDown,
 	faSpinner,
+	faTrashCan,
 	faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,6 +29,21 @@ export default function PublishProjectPage() {
 	const [isPublishing, setIsPublishing] = useState(false);
 
 	const [checkingSession, setCheckingSession] = useState(true);
+
+	const inputRef = useRef(null); // ⬅️ Add this outside return
+
+	const [components, setComponents] = useState([]);
+	const [newComponent, setNewComponent] = useState('');
+
+	const handleAddComponent = () => {
+		if (!newComponent.trim()) return;
+		setComponents([...components, newComponent.trim()]);
+		setNewComponent('');
+	};
+
+	const handleRemoveComponent = (index) => {
+		setComponents(components.filter((_, i) => i !== index));
+	};
 
 	const MAX_TITLE_LENGTH = 32;
 	const MAX_DESCRIPTION_LENGTH = 195;
@@ -86,6 +102,7 @@ export default function PublishProjectPage() {
 					user.user_metadata?.full_name || user.email?.split('@')[0],
 				email: user.email,
 				status: 'published',
+				componentsUsed: components,
 			});
 
 			toast.success('Project published!');
@@ -243,7 +260,7 @@ export default function PublishProjectPage() {
 									</label>
 									<div className="relative">
 										<select
-											className="cursor-pointer w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 pr-10 text-white/50 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:ring-offset-0 font-medium text-[14px]"
+											className="cursor-pointer w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 pr-10 text-white/50 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:ring-offset-0 font-medium text-sm"
 											value={category}
 											onChange={(e) =>
 												setCategory(e.target.value)
@@ -276,7 +293,7 @@ export default function PublishProjectPage() {
 										</span>
 									</label>
 									<textarea
-										className="w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 resize-none h-30 placeholder:text-white/50 text-[14px]"
+										className="w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 resize-none h-30 text-sm text-white/50"
 										value={description}
 										onChange={(e) =>
 											setDescription(
@@ -327,7 +344,7 @@ export default function PublishProjectPage() {
 											<img
 												src={thumbnailUrl}
 												alt="Thumbnail Preview"
-												className="w-[80px] h-[80px] rounded-md object-cover border border-[#6B6B6D]"
+												className="w-[125px] h-[100px] rounded-md object-cover border border-[#6B6B6D]"
 											/>
 										)}
 									</div>
@@ -376,7 +393,7 @@ export default function PublishProjectPage() {
 											);
 											setThumbnailUrl(
 												publicUrlData.publicUrl
-											); // 🟢 update preview
+											);
 										}}
 									/>
 								</div>
@@ -390,7 +407,7 @@ export default function PublishProjectPage() {
 									</label>
 									<div className="relative">
 										<select
-											className="cursor-pointer w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 pr-10 text-white/50 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:ring-offset-0 font-medium text-[14px]"
+											className="cursor-pointer w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 pr-10 text-white/50 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:ring-offset-0 font-medium text-sm"
 											value={difficultyLevel}
 											onChange={(e) =>
 												setDifficultyLevel(
@@ -413,6 +430,94 @@ export default function PublishProjectPage() {
 									</div>
 								</div>
 
+								<div className="mb-4">
+									<label className="block mb-1.5 text-white/60">
+										Components Used
+									</label>
+
+									<div className="flex gap-2 mb-2">
+										<input
+											ref={inputRef}
+											type="text"
+											placeholder="e.g., 2 x 220Ω Resistors"
+											value={newComponent}
+											onChange={(e) =>
+												setNewComponent(e.target.value)
+											}
+											className="flex-1 bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 text-white/50 text-sm"
+										/>
+
+										{/* Insert Ω button */}
+										<button
+											type="button"
+											title="Insert Ohm Symbol"
+											onClick={() => {
+												const input = inputRef.current;
+												if (!input) return;
+
+												const start =
+													input.selectionStart;
+												const end = input.selectionEnd;
+
+												const newValue =
+													newComponent.slice(
+														0,
+														start
+													) +
+													'Ω' +
+													newComponent.slice(end);
+												setNewComponent(newValue);
+
+												// Move cursor after the Ω
+												setTimeout(() => {
+													input.setSelectionRange(
+														start + 1,
+														start + 1
+													);
+													input.focus();
+												}, 0);
+											}}
+											className="px-3 py-2 bg-[#343437] text-white rounded-md text-sm hover:bg-[#2F2F31] transition cursor-pointer"
+										>
+											Ω
+										</button>
+
+										{/* Add Button */}
+										<button
+											type="button"
+											onClick={handleAddComponent}
+											className="bg-[#27BBFF] text-[#101014] px-3 py-2 cursor-pointer rounded-md text-sm font-medium hover:brightness-110"
+										>
+											Add
+										</button>
+									</div>
+
+									<ul className="list-disc ml-6 text-white/70 text-sm -space-y-1">
+										{components.map((item, idx) => (
+											<li key={idx} className="relative">
+												<div className="flex justify-between items-center gap-2">
+													<span className="ml-2">
+														{item}
+													</span>
+													<button
+														type="button"
+														onClick={() =>
+															handleRemoveComponent(
+																idx
+															)
+														}
+														className="text-[#FF4B4B] px-3 py-2 cursor-pointer rounded-md text-sm font-medium transition-transform duration-200 hover:scale-110"
+													>
+														<FontAwesomeIcon
+															icon={faTrashCan}
+														/>
+													</button>
+												</div>
+											</li>
+										))}
+									</ul>
+								</div>
+
 								<div>
 									<label className="block mb-1.5 text-white/60">
 										Estimated Time to Build
@@ -420,11 +525,11 @@ export default function PublishProjectPage() {
 									<input
 										type="text"
 										value={timeToBuild}
+										placeholder="e.g., 30 minutes, 2 hours – sets expectations."
 										onChange={(e) =>
 											setTimeToBuild(e.target.value)
 										}
-										className="w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 placeholder:text-white/50 text-[14px]"
-										placeholder="e.g., 30 minutes, 2 hours – sets expectations."
+										className="w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 text-sm text-white/50"
 									/>
 								</div>
 
@@ -438,7 +543,7 @@ export default function PublishProjectPage() {
 										onChange={(e) =>
 											setTags(e.target.value)
 										}
-										className="w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 placeholder:text-white/50 text-[14px]"
+										className="w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 text-sm text-white/50"
 										placeholder="e.g., arduino, RGB LED - helpful for search."
 									/>
 								</div>

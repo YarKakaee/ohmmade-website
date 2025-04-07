@@ -29,6 +29,7 @@ export async function POST(req) {
 				thumbnailUrl: body.thumbnailUrl,
 				slug: body.slug,
 				content: body.content,
+				componentsUsed: body.componentsUsed,
 				status: body.status || 'published',
 				views: 0,
 				likes: 0,

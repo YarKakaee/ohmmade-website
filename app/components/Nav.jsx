@@ -1,6 +1,5 @@
 'use client';
 
-import { useAuth } from '@/app/context/AuthContext';
 import { supabase } from '@/lib/supabaseClient';
 import {
 	faAngleDown,
@@ -13,15 +12,29 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 
 export default function Nav() {
+	const session = useSession();
+	const supabaseClient = useSupabaseClient();
+	const router = useRouter();
+	const userRef = useRef(null);
+	const languageRef = useRef(null);
+
+	const [user, setUser] = useState(session?.user || null);
 	const [scrolled, setScrolled] = useState(false);
 	const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 	const [showUserDropdown, setShowUserDropdown] = useState(false);
-	const languageRef = useRef(null);
-	const userRef = useRef(null);
-	const router = useRouter();
-	const { user } = useAuth();
+
+	useEffect(() => {
+		const refreshSession = async () => {
+			const { data } = await supabaseClient.auth.getSession();
+			if (data.session?.user) setUser(data.session.user);
+		};
+
+		if (!session) refreshSession();
+		else setUser(session.user);
+	}, [session, supabaseClient]);
 
 	useEffect(() => {
 		const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -48,7 +61,12 @@ export default function Nav() {
 	}, []);
 
 	const handleSignOut = async () => {
-		await supabase.auth.signOut();
+		await supabaseClient.auth.signOut(); // ✅ use supabaseClient instead of supabase
+		setUser(null); // instantly update UI
+
+		// Optionally refetch session to make sure context is synced
+		await supabaseClient.auth.getSession();
+
 		router.push('/');
 	};
 
@@ -118,12 +136,14 @@ export default function Nav() {
 					{/* Projects Dropdown */}
 					<div className="relative group">
 						<div className="flex items-center px-2 py-2 cursor-pointer hover:text-[#ACACAD]">
-							Projects
-							<FontAwesomeIcon
-								icon={faAngleDown}
-								size="xs"
-								className="ml-1.5 transition-transform duration-200 group-hover:rotate-180"
-							/>
+							<Link href="/projects">
+								Projects
+								<FontAwesomeIcon
+									icon={faAngleDown}
+									size="xs"
+									className="ml-1.5 transition-transform duration-200 group-hover:rotate-180"
+								/>
+							</Link>
 						</div>
 						<div className="absolute top-full left-[-12px] mt-2 w-40 bg-[#2c2d2e] border border-[#454547] text-white text-sm rounded-lg p-2 z-50 backdrop-blur-3xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
 							<Link

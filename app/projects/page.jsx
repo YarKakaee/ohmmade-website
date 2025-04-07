@@ -15,6 +15,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Footer from '../components/Footer';
+import { checkSession } from '@/lib/auth';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 
@@ -23,6 +24,7 @@ export default function ExploreProjectsPage() {
 	const [filtersOpen, setFiltersOpen] = useState(false);
 
 	useEffect(() => {
+		checkSession();
 		const fetchProjects = async () => {
 			try {
 				const res = await axios.get('/api/projects');
