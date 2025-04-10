@@ -3,7 +3,7 @@ export default class CustomCodeSnippet {
 		this.api = api;
 		this.readOnly = readOnly;
 		this.data = {
-			language: data.language || 'cpp',
+			language: data.language || 'c++',
 			title: data.title || '',
 			description: data.description || '',
 			code: data.code || '',
@@ -45,19 +45,24 @@ export default class CustomCodeSnippet {
 			document.head.appendChild(fontLink);
 		}
 		if (!window.hljsLoaded) {
-			const script = document.createElement('script');
-			script.src =
+			const hljsScript = document.createElement('script');
+			hljsScript.src =
 				'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js';
-			script.onload = () => {
+			hljsScript.onload = () => {
 				window.hljs.initHighlightingOnLoad();
 				window.hljsLoaded = true;
-			};
-			document.head.appendChild(script);
 
-			const lnScript = document.createElement('script');
-			lnScript.src =
-				'https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js';
-			document.head.appendChild(lnScript);
+				// Now load line numbers only after hljs is available
+				const lnScript = document.createElement('script');
+				lnScript.src =
+					'https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js';
+				lnScript.onload = () => {
+					// optional: you could set a flag if needed
+					window.hljsLineNumbersLoaded = true;
+				};
+				document.head.appendChild(lnScript);
+			};
+			document.head.appendChild(hljsScript);
 		}
 
 		if (!document.getElementById('hljs-ln-align-fix')) {
@@ -91,16 +96,12 @@ export default class CustomCodeSnippet {
 							)}</span>
 							<p class="preview-title text-white font-black text-xl">${this.data.title}</p>
 						</div>
-						<pre 
-	class="whitespace-pre-wrap overflow-auto -mt-6 text-white" 
-	style="background-color: #18181C !important; font-family: 'Recursive Mono', monospace; font-size: 14px;"
->
-	<code 
-		class="hljs language-${this.data.language}" 
-		style="background-color: transparent !important; font-family: 'Recursive Mono', monospace; font-size: 14px;"
-	>
-		${this._escapeHtml(this.data.code)}
-	</code>
+						<pre class="whitespace-pre-wrap overflow-auto -mt-6 text-white" style="background-color: #18181C !important; font-family: 'Recursive Mono', monospace; font-size: 14px;">
+<code class="hljs language-${
+				this.data.language
+			}" style="background-color: transparent !important;">${this._escapeHtml(
+				this.data.code
+			)}</code>
 </pre>
 ${
 	this.data.description.trim()
@@ -114,16 +115,22 @@ ${
 			`;
 
 			setTimeout(() => {
-				window.hljs?.highlightAll();
-				if (
-					typeof window.hljs !== 'undefined' &&
-					typeof window.hljs.lineNumbersBlock === 'function'
-				) {
-					const codeBlocks =
-						this.wrapper.querySelectorAll('pre code.hljs');
-					codeBlocks.forEach((block) =>
-						window.hljs.lineNumbersBlock(block)
-					);
+				const blocks = this.wrapper.querySelectorAll('pre code.hljs');
+
+				if (window.hljs) {
+					blocks.forEach((block) => {
+						window.hljs.highlightElement(block);
+
+						requestAnimationFrame(() => {
+							if (
+								window.hljs.lineNumbersBlock &&
+								typeof window.hljs.lineNumbersBlock ===
+									'function'
+							) {
+								window.hljs.lineNumbersBlock(block);
+							}
+						});
+					});
 				}
 			}, 0);
 		} else {
@@ -158,7 +165,7 @@ ${
 					</label>
 
 					<div class="mt-4 flex gap-3 mb-4">
-						<button class="btn-save bg-[#27BBFF] text-[#101014] px-4 py-2 rounded-md text-sm font-semibold hover:brightness-110 transition">Save</button>
+						<button class="cursor-pointer btn-save bg-[#27BBFF] text-[#101014] px-4 py-2 rounded-md text-sm font-semibold hover:brightness-110 transition">Save</button>
 					</div>
 				</div>
 			`;
@@ -181,10 +188,47 @@ ${
 			showPreview: true,
 		};
 
-		const form = this.wrapper.querySelector('.snippet-form');
-		form?.classList.add('hidden');
+		// Replace the innerHTML of this.wrapper directly
+		this.wrapper.innerHTML = `
+			<div class="snippet-preview mt-4">
+				<div class="rounded-xl bg-[#18181C] p-4 mb-4 border border-white/10">
+					<div class="flex items-center gap-4 mb-4">
+						<span class="lang-badge text-xs font-semibold bg-[#303034] text-white px-2 py-1 rounded">${this._formatLang(
+							this.data.language
+						)}</span>
+						<p class="preview-title text-white font-black text-xl">${this.data.title}</p>
+					</div>
+					<pre class="whitespace-pre-wrap overflow-auto -mt-6 text-white" style="background-color: #18181C !important; font-family: 'Recursive Mono', monospace; font-size: 14px;">
+	<code class="hljs language-${
+		this.data.language
+	}" style="background-color: transparent !important; font-family: 'Recursive Mono', monospace; font-size: 14px;">${this._escapeHtml(
+			this.data.code
+		)}</code></pre>
+					${
+						this.data.description.trim()
+							? `<p class="preview-desc text-white/70 text-sm mt-3">${this.data.description}</p>`
+							: ''
+					}
+				</div>
+			</div>
+		`;
 
-		this.render(); // Re-render with preview
+		// Highlight and line numbers
+		setTimeout(() => {
+			if (window.hljs) {
+				window.hljs.highlightAll();
+			}
+			if (
+				window.hljs &&
+				typeof window.hljs.lineNumbersBlock === 'function'
+			) {
+				const codeBlocks =
+					this.wrapper.querySelectorAll('pre code.hljs');
+				codeBlocks.forEach((block) => {
+					window.hljs.lineNumbersBlock(block);
+				});
+			}
+		}, 0);
 	}
 
 	save() {
@@ -202,16 +246,16 @@ ${
 
 	_getLanguagesOptions(selected) {
 		const langs = [
-			'cpp',
-			'python',
-			'shell',
-			'java',
-			'javascript',
-			'csharp',
+			'C++',
+			'Python',
+			'Shell',
+			'Java',
+			'JavaScript',
+			'C#',
 			'console_output',
-			'c',
-			'html',
-			'css',
+			'C',
+			'HTML',
+			'CSS',
 		];
 		return langs
 			.map(

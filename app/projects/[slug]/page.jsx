@@ -1,14 +1,13 @@
+import CodexViewer from '@/app/components/CodexViewer';
 import ProjectSlugHeader from '@/app/components/projects/ProjectSlugHeader';
 import prisma from '@/prisma/client';
-import { notFound } from 'next/navigation';
-import ProjectContentRenderer from '@/app/components/projects/ProjectContentRenderer';
-import CodexViewer from '@/app/components/CodexViewer';
 import {
-	faGaugeHigh,
-	faClock,
 	faCheck,
+	faClock,
+	faGaugeHigh,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { notFound } from 'next/navigation';
 
 export default async function ProjectPage({ params }) {
 	const { slug } = await params;

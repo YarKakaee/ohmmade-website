@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import ClientVerifiedIcon from '@/app/components/ClientVerifiedIcon';
-import Image from 'next/image';
 import categoryColors from '@/lib/constants/categoryColors';
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
+import {
+	faEye,
+	faHeart as solidHeart,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 export default function ProjectSlugHeader({ project }) {
 	const [likesCount, setLikesCount] = useState(project.likes);
@@ -128,7 +130,8 @@ export default function ProjectSlugHeader({ project }) {
 					<div className="flex -mt-2 text-white/70 text-sm gap-4">
 						<span className="flex items-center gap-2">
 							<FontAwesomeIcon icon={faEye} />
-							{project.views} Views
+							{project.views}{' '}
+							{project.views === 1 ? 'View' : 'Views'}
 						</span>
 						<motion.button
 							onClick={toggleLike}

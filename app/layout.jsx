@@ -12,9 +12,48 @@ const inter = Inter({
 });
 
 export const metadata = {
-	title: 'OhmMade - From Circuits to Code, All in One Place',
+	title: 'OhmMade | Electronics Made Simple. Projects Worth Sharing.',
 	description:
-		'OhmMade is a hands-on tech education platform for beginners and makers. Learn electronics, circuits, coding, and microcontroller projects with Raspberry Pi, Arduino, and more — all in one place.',
+		'OhmMade is where makers publish, discover, and share electronics projects with the world. From Raspberry Pi builds to Arduino tutorials, OhmMade gives you the tools to showcase your work, inspire others, and explore step-by-step guides — all in one beginner-friendly, beautifully designed platform.',
+	keywords: [
+		'OhmMade',
+		'electronics projects',
+		'Arduino',
+		'Raspberry Pi',
+		'microcontroller',
+		'engineering',
+		'maker',
+		'DIY electronics',
+		'tutorials',
+		'project sharing',
+	],
+	metadataBase: new URL('https://ohmmade.ca'),
+	icons: {
+		icon: '/favicon.ico',
+	},
+	openGraph: {
+		title: 'OhmMade | Electronics Made Simple. Projects Worth Sharing.',
+		description:
+			'OhmMade is where makers publish, discover, and share electronics projects with the world. From Raspberry Pi builds to Arduino tutorials, OhmMade gives you the tools to showcase your work, inspire others, and explore step-by-step guides — all in one beginner-friendly, beautifully designed platform.',
+		url: 'https://ohmmade.ca',
+		siteName: 'OhmMade',
+		images: [
+			{
+				url: '/assets/og-image.png',
+				width: 1200,
+				height: 630,
+				alt: 'OhmMade Image',
+			},
+		],
+		type: 'website',
+	},
+	twitter: {
+		card: 'summary_large_image',
+		title: 'OhmMade | Electronics Made Simple. Projects Worth Sharing.',
+		description:
+			'Discover, build, and share your electronics projects with OhmMade.',
+		images: ['/assets/og-image.png'],
+	},
 };
 
 export default function RootLayout({ children }) {

@@ -55,26 +55,26 @@ export default function Hero() {
 						variants={fadeInUp}
 						className="text-[15px] text-[#FFFFFF]/70 font-medium"
 					>
-						From Circuits to Code - All in One Place.
+						From Spark to Circuit. From Idea to Impact.
 					</motion.p>
 
 					<motion.h1
 						variants={fadeInUp}
 						className={`text-4xl sm:text-[54px] font-[850] leading-tight ${interTight.className}`}
 					>
-						Tech Made Simple.
+						Built for Makers.
 						<br />
-						Projects Made Possible.
+						Loved by Creators.
 					</motion.h1>
 
 					<motion.p
 						variants={fadeInUp}
 						className="text-[#FFFFFF]/65 max-w-lg font-normal text-[17px]"
 					>
-						OhmMade is a hands-on learning platform where
-						enthusiasts, students, and makers learn to create
-						electronics and software solutions, from Raspberry Pi to
-						Arduino and beyond.
+						A platform where ideas become hardware. Whether you’re
+						lighting LEDs or building medical tech, your knowledge
+						can inspire someone. With OhmMade, you teach while you
+						build.
 					</motion.p>
 
 					{/* CTA Buttons with Staggered Animation */}

@@ -1,11 +1,13 @@
 import Image from 'next/image';
 import ContactUs from './components/ContactUs';
+import FeatureSection from './components/FeatureSection';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import Learn from './components/Learn';
 import OurTeam from './components/OurTeam';
 import ProjectsSectionServer from './components/projects/ProjectsSectionServer';
 import './globals.css';
+import CreatorSection from './components/CreatorSection';
 
 export default function Home() {
 	return (
@@ -24,10 +26,13 @@ export default function Home() {
 						/>
 					</div>
 				</div>
+
 				<Hero />
+				<FeatureSection />
 				<OurTeam />
 				<Learn />
 				<ProjectsSectionServer />
+				<CreatorSection />
 				<ContactUs />
 				<Footer />
 			</div>
