@@ -242,6 +242,12 @@ export default function Nav() {
 
 							{showUserDropdown && (
 								<div className="absolute right-0 top-full mt-2 bg-[#2c2d2e] border border-[#454547] text-white text-sm rounded-lg shadow-lg p-2 z-50 w-40 backdrop-blur-3xl">
+									<Link
+										href="/user"
+										className="block px-3 py-2 hover:bg-[#1e1e1e] rounded-md"
+									>
+										Dashboard
+									</Link>
 									<button
 										onClick={handleSignOut}
 										className="cursor-pointer w-full text-left px-3 py-2 hover:bg-[#1e1e1e] rounded-md flex items-center gap-2"

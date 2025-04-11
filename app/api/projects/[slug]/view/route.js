@@ -48,40 +48,36 @@ export async function POST(req, { params }) {
 			},
 		});
 
-		// Check if view already exists
-		const existingView = await prisma.userView.findUnique({
-			where: {
-				userId_projectId: {
-					userId,
-					projectId: project.id,
+		// Check if view already exists and increment view count in a single transaction
+		const result = await prisma.$transaction(async (tx) => {
+			const existingView = await tx.userView.findUnique({
+				where: {
+					userId_projectId: {
+						userId,
+						projectId: project.id,
+					},
 				},
-			},
-		});
+			});
 
-		try {
 			if (!existingView) {
-				await prisma.userView.create({
+				await tx.userView.create({
 					data: {
 						userId,
 						projectId: project.id,
 					},
 				});
 
-				await prisma.project.update({
+				await tx.project.update({
 					where: { id: project.id },
 					data: { views: { increment: 1 } },
 				});
+				return { viewAdded: true };
 			}
-		} catch (error) {
-			if (error.code === 'P2002') {
-				// Duplicate view - no problem
-				console.log('View already recorded');
-			} else {
-				console.error('Unexpected view error:', err);
-			}
-		}
 
-		return NextResponse.json({ viewAdded: true });
+			return { viewAdded: false };
+		});
+
+		return NextResponse.json(result);
 	} catch (err) {
 		console.error('View insert error:', err);
 		return NextResponse.json(

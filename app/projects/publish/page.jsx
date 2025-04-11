@@ -55,8 +55,6 @@ export default function PublishProjectPage() {
 			const { data: sessionData } = await supabase.auth.getSession();
 			if (sessionData?.session?.user) {
 				setUser(sessionData.session.user);
-			} else {
-				redirect('/signin');
 			}
 			setCheckingSession(false);
 		};

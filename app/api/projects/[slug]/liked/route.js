@@ -23,14 +23,12 @@ export async function GET(req, { params }) {
 	const project = await prisma.project.findUnique({ where: { slug } });
 	if (!project) return NextResponse.json({ liked: false });
 
-	const like = await prisma.userLike.findUnique({
+	const likeCount = await prisma.userLike.count({
 		where: {
-			userId_projectId: {
-				userId,
-				projectId: project.id,
-			},
+			userId: userId,
+			projectId: project.id,
 		},
 	});
 
-	return NextResponse.json({ liked: !!like });
+	return NextResponse.json({ liked: likeCount > 0 });
 }

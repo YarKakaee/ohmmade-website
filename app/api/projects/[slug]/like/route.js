@@ -38,35 +38,39 @@ export async function POST(req, { params }) {
 		create: { id: userId, email, name, image },
 	});
 
-	// Check if already liked
-	const existingLike = await prisma.userLike.findUnique({
-		where: {
-			userId_projectId: {
-				userId,
-				projectId: project.id,
+	// Check if already liked and perform like/unlike in a single transaction
+	const result = await prisma.$transaction(async (tx) => {
+		const existingLike = await tx.userLike.findUnique({
+			where: {
+				userId_projectId: {
+					userId,
+					projectId: project.id,
+				},
 			},
-		},
+		});
+
+		if (existingLike) {
+			// Unlike
+			await tx.userLike.delete({
+				where: { userId_projectId: { userId, projectId: project.id } },
+			});
+			await tx.project.update({
+				where: { id: project.id },
+				data: { likes: { decrement: 1 } },
+			});
+			return { liked: false };
+		} else {
+			// Like
+			await tx.userLike.create({
+				data: { userId, projectId: project.id },
+			});
+			await tx.project.update({
+				where: { id: project.id },
+				data: { likes: { increment: 1 } },
+			});
+			return { liked: true };
+		}
 	});
 
-	if (existingLike) {
-		// Unlike
-		await prisma.userLike.delete({
-			where: { userId_projectId: { userId, projectId: project.id } },
-		});
-		await prisma.project.update({
-			where: { id: project.id },
-			data: { likes: { decrement: 1 } },
-		});
-		return NextResponse.json({ liked: false });
-	} else {
-		// Like
-		await prisma.userLike.create({
-			data: { userId, projectId: project.id },
-		});
-		await prisma.project.update({
-			where: { id: project.id },
-			data: { likes: { increment: 1 } },
-		});
-		return NextResponse.json({ liked: true });
-	}
+	return NextResponse.json(result);
 }

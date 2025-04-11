@@ -8,6 +8,7 @@ import OurTeam from './components/OurTeam';
 import ProjectsSectionServer from './components/projects/ProjectsSectionServer';
 import './globals.css';
 import CreatorSection from './components/CreatorSection';
+import AboutUs from './components/AboutUs';
 
 export default function Home() {
 	return (
@@ -28,7 +29,7 @@ export default function Home() {
 				</div>
 
 				<Hero />
-				<FeatureSection />
+				<AboutUs />
 				<OurTeam />
 				<Learn />
 				<ProjectsSectionServer />

@@ -9,6 +9,9 @@ import {
 	faCirclePlus,
 	faFilter,
 	faCheck,
+	faSearch,
+	faChevronLeft,
+	faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { LayoutGrid, List } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -16,25 +19,52 @@ import axios from 'axios';
 import Link from 'next/link';
 import Footer from '../components/Footer';
 import { checkSession } from '@/lib/auth';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 
-export default function ExploreProjectsPage() {
-	const [projects, setProjects] = useState([]);
-	const [filtersOpen, setFiltersOpen] = useState(false);
+const SkeletonCard = () => (
+	<div className="bg-[#1E2025] border border-[#2C2F36] p-6 rounded-2xl animate-pulse">
+		<div className="flex flex-col gap-4">
+			<div className="w-full h-48 bg-[#2C2F36] rounded-lg" />
+			<div className="flex-1">
+				<div className="h-6 w-3/4 bg-[#2C2F36] rounded mb-2" />
+				<div className="h-4 w-full bg-[#2C2F36] rounded" />
+			</div>
+		</div>
+	</div>
+);
 
-	useEffect(() => {
-		checkSession();
-		const fetchProjects = async () => {
-			try {
-				const res = await axios.get('/api/projects');
-				setProjects(res.data);
-			} catch (err) {
-				console.error('Failed to fetch:', err);
-			}
-		};
-		fetchProjects();
-	}, []);
+export default function ExploreProjectsPage() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const [projects, setProjects] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [filtersOpen, setFiltersOpen] = useState(false);
+	const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
+	const [filters, setFilters] = useState({
+		category:
+			searchParams.get('category')?.split(',').filter(Boolean) || [],
+		difficulty:
+			searchParams.get('difficulty')?.split(',').filter(Boolean) || [],
+		components:
+			searchParams.get('components')?.split(',').filter(Boolean) || [],
+		languages:
+			searchParams.get('languages')?.split(',').filter(Boolean) || [],
+		author: searchParams.get('author')?.split(',').filter(Boolean) || [],
+	});
+	const [sortBy, setSortBy] = useState(
+		searchParams.get('sort') || 'trending'
+	);
+	const [currentPage, setCurrentPage] = useState(
+		Number(searchParams.get('page')) || 1
+	);
+	const [viewMode, setViewMode] = useState('grid');
+	const [totalItems, setTotalItems] = useState(0);
+	const [error, setError] = useState(null);
+	const [isInitialLoad, setIsInitialLoad] = useState(true);
+	const [pageSize, setPageSize] = useState(12);
 
 	const difficultyLevels = ['Beginner', 'Intermediate', 'Advanced'];
 	const componentList = [
@@ -57,6 +87,139 @@ export default function ExploreProjectsPage() {
 		'JavaScript',
 		'Other',
 	];
+
+	// Update URL when filters, sort, or page changes
+	useEffect(() => {
+		if (isInitialLoad) {
+			setIsInitialLoad(false);
+			return;
+		}
+
+		const params = new URLSearchParams();
+		if (searchQuery) params.set('q', searchQuery);
+		if (filters.category.length)
+			params.set('category', filters.category.join(','));
+		if (filters.difficulty.length)
+			params.set('difficulty', filters.difficulty.join(','));
+		if (filters.components.length)
+			params.set('components', filters.components.join(','));
+		if (filters.languages.length)
+			params.set('languages', filters.languages.join(','));
+		if (filters.author.length)
+			params.set('author', filters.author.join(','));
+
+		// Always include sort and page parameters
+		params.set('sort', sortBy);
+		params.set('page', currentPage.toString());
+
+		// Use replace instead of push to avoid adding to history stack
+		router.replace(`?${params.toString()}`, { scroll: false });
+	}, [searchQuery, filters, sortBy, currentPage, router, isInitialLoad]);
+
+	// Fetch projects with debounce
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			fetchProjects();
+		}, 300);
+
+		return () => clearTimeout(timer);
+	}, [searchQuery, filters, sortBy, currentPage]);
+
+	const fetchProjects = async () => {
+		setLoading(true);
+		setError(null);
+		try {
+			const params = {
+				q: searchQuery,
+				category: filters.category.join(','),
+				difficulty: filters.difficulty.join(','),
+				components: filters.components.join(','),
+				languages: filters.languages.join(','),
+				author: filters.author.join(','),
+				sort: sortBy,
+				page: currentPage,
+				limit: pageSize,
+			};
+
+			// Remove empty parameters
+			Object.keys(params).forEach((key) => {
+				if (!params[key]) delete params[key];
+			});
+
+			const res = await axios.get('/api/projects', { params });
+			setProjects(res.data?.projects || []);
+			setTotalItems(res.data?.total || 0);
+		} catch (err) {
+			console.error('Failed to fetch:', err);
+			setError('Failed to load projects. Please try again later.');
+			setProjects([]);
+			setTotalItems(0);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const handleFilterChange = (filterType, value) => {
+		setFilters((prev) => {
+			const newFilters = {
+				...prev,
+				[filterType]: prev[filterType].includes(value)
+					? prev[filterType].filter((v) => v !== value)
+					: [...prev[filterType], value],
+			};
+			return newFilters;
+		});
+		setCurrentPage(1);
+	};
+
+	const handleSearchChange = (e) => {
+		setSearchQuery(e.target.value);
+		setCurrentPage(1);
+	};
+
+	const handleSortChange = (e) => {
+		setSortBy(e.target.value);
+		setCurrentPage(1);
+	};
+
+	const handleClearFilters = () => {
+		setSearchQuery('');
+		setFilters({
+			category: [],
+			difficulty: [],
+			components: [],
+			languages: [],
+			author: [],
+		});
+		setSortBy('trending');
+		setCurrentPage(1);
+	};
+
+	const totalPages = Math.ceil(totalItems / pageSize);
+
+	// Add intersection observer for Framer Motion
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('animate-in');
+					}
+				});
+			},
+			{
+				rootMargin: '0px',
+				threshold: 0.1,
+			}
+		);
+
+		const elements = document.querySelectorAll('.project-card');
+		elements.forEach((el) => observer.observe(el));
+
+		return () => {
+			elements.forEach((el) => observer.unobserve(el));
+		};
+	}, [projects]); // Re-run when projects change
 
 	return (
 		<div className="relative min-h-screen bg-[#101014] overflow-hidden">
@@ -85,16 +248,41 @@ export default function ExploreProjectsPage() {
 
 					{/* Controls */}
 					<div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-8">
-						<input
-							type="text"
-							placeholder="Filter by keyword..."
-							className="bg-[#1E2025] text-white text-sm px-4 py-2 rounded-md border border-[#6B6B6D] placeholder:text-white/50 focus:outline-none w-full lg:w-[220px]"
-						/>
+						<div className="relative flex-1">
+							<FontAwesomeIcon
+								icon={faSearch}
+								className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+							/>
+							<input
+								type="text"
+								value={searchQuery}
+								onChange={handleSearchChange}
+								placeholder="Filter by keyword..."
+								className="bg-[#1E2025] text-white text-sm px-4 py-2 pl-12 rounded-md border border-[#6B6B6D] placeholder:text-white/50 focus:outline-none w-full lg:w-[220px]"
+							/>
+						</div>
 
 						<div className="flex flex-wrap gap-4 items-center justify-end">
 							<span className="text-white/60 text-sm hidden lg:block">
-								{projects.length} results
+								{totalItems} results
 							</span>
+
+							{(searchQuery ||
+								Object.values(filters).some(
+									(arr) => arr.length > 0
+								) ||
+								sortBy !== 'trending') && (
+								<button
+									onClick={handleClearFilters}
+									className="cursor-pointer text-sm font-medium px-4 py-2 rounded-md transition flex items-center gap-2 bg-[#34343B] text-[#FFFFFF] hover:brightness-150"
+								>
+									<span>Clear Filters</span>
+									<FontAwesomeIcon
+										icon={faFilter}
+										className="text-sm"
+									/>
+								</button>
+							)}
 
 							<button
 								onClick={() => setFiltersOpen(!filtersOpen)}
@@ -112,10 +300,19 @@ export default function ExploreProjectsPage() {
 							</button>
 
 							<div className="relative">
-								<select className="cursor-pointer w-full bg-[#1E2025] border border-[#6B6B6D] rounded-md px-3 py-2 pr-8 text-white/50 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] font-medium text-[14px]">
-									<option>Trending</option>
-									<option>Newest</option>
-									<option>Most Liked</option>
+								<select
+									value={sortBy}
+									onChange={handleSortChange}
+									className="cursor-pointer w-full bg-[#1E2025] border border-[#6B6B6D] rounded-md px-3 py-2 pr-8 text-white/50 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] font-medium text-[14px]"
+								>
+									<option value="trending">Trending</option>
+									<option value="newest">Newest</option>
+									<option value="most_liked">
+										Most Liked
+									</option>
+									<option value="most_viewed">
+										Most Viewed
+									</option>
 								</select>
 								<div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
 									<FontAwesomeIcon
@@ -137,10 +334,24 @@ export default function ExploreProjectsPage() {
 							</Link>
 
 							<div className="flex gap-3">
-								<button className="cursor-pointer p-2.5 rounded-md bg-[#34343B] text-white hover:brightness-150 transition">
+								<button
+									onClick={() => setViewMode('grid')}
+									className={`cursor-pointer p-2.5 rounded-md transition ${
+										viewMode === 'grid'
+											? 'bg-[#27BBFF] text-[#101014]'
+											: 'bg-[#34343B] text-white hover:brightness-150'
+									}`}
+								>
 									<LayoutGrid strokeWidth="1.4" size="16" />
 								</button>
-								<button className="cursor-pointer p-2 rounded-md bg-[#34343B] text-white hover:brightness-150 transition">
+								<button
+									onClick={() => setViewMode('list')}
+									className={`cursor-pointer p-2 rounded-md transition ${
+										viewMode === 'list'
+											? 'bg-[#27BBFF] text-[#101014]'
+											: 'bg-[#34343B] text-white hover:brightness-150'
+									}`}
+								>
 									<List strokeWidth="1.4" size="20" />
 								</button>
 							</div>
@@ -151,30 +362,73 @@ export default function ExploreProjectsPage() {
 					<div className="flex flex-col lg:flex-row gap-12">
 						<div
 							className={`grid w-full ${
-								filtersOpen
-									? 'lg:w-[78%] grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-									: 'lg:w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+								filtersOpen ? 'lg:w-[78%]' : 'lg:w-full'
+							} ${
+								viewMode === 'grid'
+									? filtersOpen
+										? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+										: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+									: 'grid-cols-1 gap-4'
 							} gap-6`}
 						>
-							{projects.map((project) => (
-								<ProjectCard
-									key={project.id}
-									title={project.title}
-									category={project.category}
-									description={project.description}
-									imageUrl={project.thumbnailUrl}
-									categoryColor={
-										categoryColors[project.category] ||
-										'#999999'
-									}
-									authorName={project.author?.name}
-									authorImage={project.author?.image}
-									authorEmail={project.author?.email}
-									views={project.views}
-									likes={project.likes}
-									slug={project.slug}
-								/>
-							))}
+							<AnimatePresence mode="wait">
+								{error ? (
+									<div className="col-span-full text-center py-8">
+										<p className="text-red-500">{error}</p>
+									</div>
+								) : loading ? (
+									<>
+										{[...Array(12)].map((_, i) => (
+											<SkeletonCard key={i} />
+										))}
+									</>
+								) : projects.length === 0 ? (
+									<div className="col-span-full text-center py-8">
+										<p className="text-white/60">
+											No projects found matching your
+											criteria.
+										</p>
+									</div>
+								) : (
+									projects.map((project) => (
+										<motion.div
+											key={project.id}
+											className="project-card"
+											initial={{ opacity: 0, y: 20 }}
+											whileInView={{ opacity: 1, y: 0 }}
+											viewport={{ once: true }}
+											transition={{ duration: 0.3 }}
+										>
+											<ProjectCard
+												title={project.title}
+												category={project.category}
+												description={
+													project.description
+												}
+												imageUrl={project.thumbnailUrl}
+												categoryColor={
+													categoryColors[
+														project.category
+													] || '#999999'
+												}
+												authorName={
+													project.author?.name
+												}
+												authorImage={
+													project.author?.image
+												}
+												authorEmail={
+													project.author?.email
+												}
+												views={project.views}
+												likes={project.likes}
+												slug={project.slug}
+												viewMode={viewMode}
+											/>
+										</motion.div>
+									))
+								)}
+							</AnimatePresence>
 						</div>
 
 						{/* Filters Sidebar */}
@@ -185,10 +439,22 @@ export default function ExploreProjectsPage() {
 								</h3>
 								{/* Author Filter */}
 								<div>
+									<p className="mb-3 font-medium text-white">
+										Author
+									</p>
 									<div className="space-y-2">
 										<label className="flex items-center gap-2 cursor-pointer text-white/60 text-sm">
 											<input
 												type="checkbox"
+												checked={filters.author.includes(
+													'ohmmade'
+												)}
+												onChange={() =>
+													handleFilterChange(
+														'author',
+														'ohmmade'
+													)
+												}
 												className="hidden peer"
 											/>
 											<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
@@ -199,10 +465,18 @@ export default function ExploreProjectsPage() {
 											</span>
 											OhmMade
 										</label>
-
 										<label className="flex items-center gap-2 cursor-pointer text-white/60 text-sm">
 											<input
 												type="checkbox"
+												checked={filters.author.includes(
+													'community'
+												)}
+												onChange={() =>
+													handleFilterChange(
+														'author',
+														'community'
+													)
+												}
 												className="hidden peer"
 											/>
 											<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
@@ -229,6 +503,15 @@ export default function ExploreProjectsPage() {
 												>
 													<input
 														type="checkbox"
+														checked={filters.category.includes(
+															cat
+														)}
+														onChange={() =>
+															handleFilterChange(
+																'category',
+																cat
+															)
+														}
 														className="hidden peer"
 													/>
 													<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
@@ -256,6 +539,15 @@ export default function ExploreProjectsPage() {
 											>
 												<input
 													type="checkbox"
+													checked={filters.difficulty.includes(
+														level
+													)}
+													onChange={() =>
+														handleFilterChange(
+															'difficulty',
+															level
+														)
+													}
 													className="hidden peer"
 												/>
 												<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
@@ -282,6 +574,15 @@ export default function ExploreProjectsPage() {
 											>
 												<input
 													type="checkbox"
+													checked={filters.components.includes(
+														component
+													)}
+													onChange={() =>
+														handleFilterChange(
+															'components',
+															component
+														)
+													}
 													className="hidden peer"
 												/>
 												<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
@@ -308,6 +609,15 @@ export default function ExploreProjectsPage() {
 											>
 												<input
 													type="checkbox"
+													checked={filters.languages.includes(
+														language
+													)}
+													onChange={() =>
+														handleFilterChange(
+															'languages',
+															language
+														)
+													}
 													className="hidden peer"
 												/>
 												<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
@@ -324,6 +634,91 @@ export default function ExploreProjectsPage() {
 							</div>
 						)}
 					</div>
+
+					{/* Pagination */}
+					{totalPages > 1 && (
+						<div className="flex flex-col items-center gap-4 mt-12">
+							<div className="flex items-center gap-2">
+								<button
+									onClick={() =>
+										setCurrentPage((prev) =>
+											Math.max(prev - 1, 1)
+										)
+									}
+									disabled={currentPage === 1}
+									className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
+								>
+									<FontAwesomeIcon icon={faChevronLeft} />
+								</button>
+								<div className="flex items-center gap-1">
+									{[...Array(totalPages)].map((_, i) => {
+										const page = i + 1;
+										const isCurrentPage =
+											currentPage === page;
+										const isNearCurrentPage =
+											Math.abs(currentPage - page) <= 2;
+										const isFirstPage = page === 1;
+										const isLastPage = page === totalPages;
+
+										if (
+											isFirstPage ||
+											isLastPage ||
+											isNearCurrentPage
+										) {
+											return (
+												<button
+													key={i}
+													onClick={() =>
+														setCurrentPage(page)
+													}
+													className={`px-4 py-2 rounded-lg transition-colors cursor-pointer ${
+														isCurrentPage
+															? 'bg-[#27BBFF] text-white'
+															: 'bg-[#13151A] border border-[#2C2F36] text-gray-400 hover:bg-[#1E2025]'
+													}`}
+												>
+													{page}
+												</button>
+											);
+										} else if (
+											page === currentPage - 3 ||
+											page === currentPage + 3
+										) {
+											return (
+												<span
+													key={i}
+													className="px-4 py-2 text-gray-400"
+												>
+													...
+												</span>
+											);
+										}
+										return null;
+									})}
+								</div>
+								<button
+									onClick={() =>
+										setCurrentPage((prev) =>
+											Math.min(prev + 1, totalPages)
+										)
+									}
+									disabled={currentPage === totalPages}
+									className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
+								>
+									<FontAwesomeIcon icon={faChevronRight} />
+								</button>
+							</div>
+							<p className="text-sm text-white/60">
+								Showing{' '}
+								{Math.min(
+									(currentPage - 1) * pageSize + 1,
+									totalItems
+								)}{' '}
+								- {Math.min(currentPage * pageSize, totalItems)}{' '}
+								of {totalItems} projects
+							</p>
+						</div>
+					)}
 				</div>
 			</section>
 			<Footer />
