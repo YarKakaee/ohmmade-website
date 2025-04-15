@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
+import AuthModal from './AuthModal';
 
 export default function Nav() {
 	const session = useSession();
@@ -25,6 +26,7 @@ export default function Nav() {
 	const [scrolled, setScrolled] = useState(false);
 	const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 	const [showUserDropdown, setShowUserDropdown] = useState(false);
+	const [showAuthModal, setShowAuthModal] = useState(false);
 
 	useEffect(() => {
 		const refreshSession = async () => {
@@ -263,15 +265,20 @@ export default function Nav() {
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
 						>
-							<Link href="/signin">
-								<button className="bg-[#27BBFF] text-[#101014] font-medium px-4 py-2 rounded-md cursor-pointer">
-									Sign in
-								</button>
-							</Link>
+							<button
+								onClick={() => setShowAuthModal(true)}
+								className="bg-[#27BBFF] text-[#101014] font-medium px-4 py-2 rounded-md cursor-pointer"
+							>
+								Sign in
+							</button>
 						</motion.div>
 					)}
 				</nav>
 			</div>
+			<AuthModal
+				isOpen={showAuthModal}
+				onClose={() => setShowAuthModal(false)}
+			/>
 		</header>
 	);
 }

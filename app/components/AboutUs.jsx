@@ -8,6 +8,10 @@ import {
 	faCode,
 	faShieldAlt,
 	faChartLine,
+	faCompass,
+	faBookOpen,
+	faShareNodes,
+	faFireFlameCurved,
 } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
 import { Inter_Tight } from 'next/font/google';
@@ -43,46 +47,47 @@ const fadeInUp = {
 export default function AboutUs() {
 	const features = [
 		{
-			icon: faRocket,
-			title: 'Innovation at Speed',
-			description:
-				'We move fast and break things, but always with purpose. Our platform evolves daily to meet your needs.',
-			color: '#FF6B6B',
-		},
-		{
 			icon: faLightbulb,
 			title: 'Brilliant Ideas',
 			description:
-				'Every project starts with a spark. We provide the tools to turn that spark into something extraordinary.',
-			color: '#4ECDC4',
+				'Tutorials aren’t just steps — they’re stories. We give you the tools to turn your ideas into polished, publishable walkthroughs with live code, media, and structure.',
+			color: '#27BBFF',
+		},
+
+		{
+			icon: faCompass,
+			title: 'Discover Real Projects',
+			description:
+				'Explore hands-on projects made by makers around the world — from Arduino to Raspberry Pi. Filter by device, difficulty, and tags.',
+			color: '#27BBFF',
+		},
+		{
+			icon: faBookOpen,
+			title: 'Learn by Building',
+			description:
+				'Dive into beginner-friendly guides that teach electronics and microcontrollers the way they’re meant to be learned — hands-on.',
+			color: '#27BBFF',
 		},
 		{
 			icon: faUsers,
 			title: 'Community First',
 			description:
-				'Built by makers, for makers. Our community drives innovation and supports growth at every level.',
-			color: '#45B7D1',
+				'OhmMade is built by makers, for makers. Our platform highlights your work, fuels collaboration, and puts creator credit front and center.',
+			color: '#27BBFF',
 		},
 		{
-			icon: faCode,
-			title: 'Technical Excellence',
+			icon: faRocket,
+			title: 'Share your Creations',
 			description:
-				'Clean, efficient, and powerful. Our platform is built with the latest technologies and best practices.',
-			color: '#96CEB4',
-		},
-		{
-			icon: faShieldAlt,
-			title: 'Secure & Reliable',
-			description:
-				'Your work is safe with us. We implement enterprise-grade security to protect your projects.',
-			color: '#FFEEAD',
+				'Turn your project into a polished tutorial. With rich blocks, code snippets, and images, publishing is as easy as building.',
+			color: '#27BBFF',
 		},
 		{
 			icon: faChartLine,
-			title: 'Continuous Growth',
+			title: 'Built for Growth',
 			description:
-				"We're always improving. Regular updates and new features keep you ahead of the curve.",
-			color: '#D4A5A5',
+				'From your first LED to your tenth prototype, OhmMade grows with you. Learn, share, and level up at your own pace.',
+			color: '#27BBFF',
 		},
 	];
 
@@ -119,13 +124,12 @@ export default function AboutUs() {
 						transition={{ duration: 0.6, delay: 0.4 }}
 						viewport={{ once: true }}
 					>
-						Every part of OhmMade is crafted with purpose — from
-						beginner-first tools to polished tutorials. Here’s what
-						makes your experience feel different the moment you
-						start building.
+						At OhmMade, every detail is intentional — from how you
+						share your work to how others learn from it. These
+						aren’t just platform features. They’re pillars of how we
+						empower makers.
 					</motion.p>
 				</motion.div>
-
 				{/* Features Grid */}
 				<motion.div
 					variants={containerVariants}
@@ -139,7 +143,6 @@ export default function AboutUs() {
 							key={i}
 							variants={cardVariants}
 							className="group bg-[#13151A] border border-[#2C2F36] p-8 rounded-2xl relative overflow-hidden hover:shadow-lg transition-all duration-300"
-							style={{ borderColor: feature.color }}
 						>
 							<div className="flex gap-4 items-start">
 								<div
@@ -174,9 +177,8 @@ export default function AboutUs() {
 						</motion.div>
 					))}
 				</motion.div>
-
 				{/* Stats Section */}
-				<motion.div
+				{/* <motion.div
 					className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8"
 					initial={{ opacity: 0, y: 20 }}
 					whileInView={{ opacity: 1, y: 0 }}
@@ -191,9 +193,9 @@ export default function AboutUs() {
 							transition={{ duration: 0.6, delay: 0.2 }}
 							viewport={{ once: true }}
 						>
-							10K+
+							75+
 						</motion.h3>
-						<p className="text-gray-400">Active Makers</p>
+						<p className="text-gray-400">Projects In Progress</p>
 					</div>
 					<div className="text-center">
 						<motion.h3
@@ -203,9 +205,9 @@ export default function AboutUs() {
 							transition={{ duration: 0.6, delay: 0.4 }}
 							viewport={{ once: true }}
 						>
-							500+
+							24/7
 						</motion.h3>
-						<p className="text-gray-400">Projects Created</p>
+						<p className="text-gray-400">Support Available</p>
 					</div>
 					<div className="text-center">
 						<motion.h3
@@ -215,11 +217,11 @@ export default function AboutUs() {
 							transition={{ duration: 0.6, delay: 0.6 }}
 							viewport={{ once: true }}
 						>
-							24/7
+							∞
 						</motion.h3>
-						<p className="text-gray-400">Support Available</p>
+						<p className="text-gray-400">Possibilities</p>
 					</div>
-				</motion.div>
+				</motion.div> */}
 			</div>
 		</section>
 	);

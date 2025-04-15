@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { Inter_Tight } from 'next/font/google';
@@ -25,7 +24,7 @@ const fadeInUp = {
 	visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-const imageVariants = {
+const videoVariants = {
 	hidden: { opacity: 0, scale: 0.95 },
 	visible: { opacity: 1, scale: 1, transition: { duration: 1, delay: 0.3 } },
 };
@@ -62,16 +61,19 @@ export default function Hero() {
 						variants={fadeInUp}
 						className={`text-4xl sm:text-[54px] font-[850] leading-tight ${interTight.className}`}
 					>
-						Built for Makers.
+						{/* Built for Makers.
 						<br />
-						Loved by Creators.
+						Loved by Creators. */}
+						Learn What Matters.
+						<br />
+						Build What's Possible.
 					</motion.h1>
 
 					<motion.p
 						variants={fadeInUp}
 						className="text-[#FFFFFF]/65 max-w-lg font-normal text-[17px]"
 					>
-						A platform where ideas become hardware. Whether you’re
+						A platform where ideas become hardware. Whether you're
 						lighting LEDs or building medical tech, your knowledge
 						can inspire someone. With OhmMade, you teach while you
 						build.
@@ -107,38 +109,48 @@ export default function Hero() {
 					</motion.div>
 				</div>
 
-				{/* Right Side: Hero Image with Blurred Background */}
+				{/* Right Side: Hero Video with Blurred Background */}
 				<div className="hidden md:block relative w-[930px] h-[520px]">
-					{/* Blurred Background Image */}
+					{/* Blurred Background Video */}
 					<motion.div
 						variants={blurVariants}
 						initial="hidden"
 						animate="visible"
-						className="absolute inset-0 w-full h-full overflow-hidden rounded-lg blur-[60px] opacity-60 z-0"
+						className="absolute inset-0 w-full h-full overflow-hidden rounded-lg blur-[60px] opacity-100 z-0"
 					>
-						<Image
-							src="/assets/HeroImage.jpeg"
-							alt="Circuit Board Background"
-							width={950}
-							height={500}
+						<video
+							autoPlay
+							loop
+							muted
+							playsInline
 							className="object-cover w-full h-full"
-						/>
+						>
+							<source
+								src="/assets/herovid.mp4"
+								type="video/mp4"
+							/>
+						</video>
 					</motion.div>
 
-					{/* Main Foreground Image */}
+					{/* Main Foreground Video */}
 					<motion.div
-						variants={imageVariants}
+						variants={videoVariants}
 						initial="hidden"
 						animate="visible"
 						className="absolute inset-0 w-full h-full z-10"
 					>
-						<Image
-							src="/assets/HeroImage.jpeg"
-							alt="Circuit Board"
-							width={950}
-							height={500}
+						<video
+							autoPlay
+							loop
+							muted
+							playsInline
 							className="rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.3)] object-cover w-full h-full"
-						/>
+						>
+							<source
+								src="/assets/herovid.mp4"
+								type="video/mp4"
+							/>
+						</video>
 					</motion.div>
 				</div>
 			</motion.div>

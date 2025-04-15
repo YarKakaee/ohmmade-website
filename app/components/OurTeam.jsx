@@ -12,7 +12,7 @@ const interTight = Inter_Tight({
 const teamMembers = [
 	{
 		name: 'Yar Kakaee',
-		role: 'Co-Founder and Lead Software Engineer',
+		role: 'Founder & Engineering Lead',
 		description:
 			'Yar is a soon-to-be 2nd-year student pursuing Mechatronic Systems Engineering and Artificial Intelligence Systems Engineering (AISE) at Western University. With a strong background in web development, Raspberry Pi, and Arduino, Yar has a deep passion for building innovative microcontroller projects and web applications. His expertise lies in combining hardware and software to create interactive and impactful solutions. At OhmMade, Yar leads the development and design efforts, ensuring the platform delivers an exceptional experience to all users.',
 		image: '/assets/Yar.jpeg',
@@ -22,7 +22,7 @@ const teamMembers = [
 	},
 	{
 		name: 'Tristan Biley',
-		role: 'Co-Founder and Lead Electrical Engineer',
+		role: 'Co-Founder & Chief Financial Officer',
 		description:
 			'Tristan is a soon-to-be 2nd-year Electrical Engineering student, pursuing a dual degree with Ivey HBA at Western University. He has a profound passion for circuit design, microcontrollers, and embedded systems, continuously exploring the intersection of hardware and software. His expertise in circuitry and systems integration helps power OhmMade’s mission to create hands-on learning experiences for makers. As the Lead Electrical Engineer, Tristan drives innovative project ideas and ensures seamless integration of hardware and software, contributing significantly to OhmMade’s growth.',
 		image: '/assets/Tristan.png',
@@ -31,7 +31,7 @@ const teamMembers = [
 	},
 	{
 		name: 'Serkan Nur',
-		role: 'Co-Founder and Chief Creative Officer',
+		role: 'Co-Founder & Lead Electrical Engineer',
 		description:
 			'Serkan is a soon-to-be 2nd-year Electrical and Biomedical Engineering student at Western University. He has a strong passion for coding and game development, with a keen interest in creating interactive learning experiences that combine creativity with technical excellence. Serkan’s contributions to OhmMade focus on designing intuitive interfaces and crafting educational content that empowers users to explore technology confidently.',
 		image: '/assets/Serkan.jpeg',
@@ -40,7 +40,7 @@ const teamMembers = [
 	},
 	{
 		name: 'Andres Holmes',
-		role: 'Marketing Director',
+		role: 'Head of Marketing & Outreach',
 		description:
 			'Andres is a soon-to-be 2nd-year student studying DAN Management and Organizational Studies with a specialization in Finance at Western University. He brings a creative and strategic mindset to OhmMade, focusing on marketing, branding, and outreach. With a passion for connecting people and ideas, Andres helps shape the way OhmMade engages with the community, ensuring our mission reaches learners and makers everywhere.',
 		image: '/assets/Andres.jpeg',

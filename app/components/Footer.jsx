@@ -25,7 +25,7 @@ export default function Footer() {
 				<div className="flex space-x-4 text-lg">
 					{[
 						{
-							href: 'https://www.youtube.com/@OhmMadeTechs',
+							href: 'https://www.youtube.com/@OhmMadeOfficial',
 							icon: faYoutube,
 							label: 'YouTube',
 						},
