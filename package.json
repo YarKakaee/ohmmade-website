@@ -27,6 +27,7 @@
     "@mui/icons-material": "^7.0.1",
     "@mui/material": "^7.0.1",
     "@prisma/client": "^6.5.0",
+    "@radix-ui/react-dialog": "^1.1.7",
     "@rxpm/editor-js-code": "^0.0.1",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/auth-helpers-react": "^0.5.0",
