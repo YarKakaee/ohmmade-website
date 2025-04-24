@@ -12,9 +12,9 @@ const interTight = Inter_Tight({
 const teamMembers = [
 	{
 		name: 'Yar Kakaee',
-		role: 'Founder & Engineering Lead',
+		role: 'Founder, Head of Engineering',
 		description:
-			'Yar is a soon-to-be 2nd-year student pursuing Mechatronic Systems Engineering and Artificial Intelligence Systems Engineering (AISE) at Western University. With a strong background in web development, Raspberry Pi, and Arduino, Yar has a deep passion for building innovative microcontroller projects and web applications. His expertise lies in combining hardware and software to create interactive and impactful solutions. At OhmMade, Yar leads the development and design efforts, ensuring the platform delivers an exceptional experience to all users.',
+			'Yar is a 2nd-year Software Engineering student at Western University with a strong background in web development, Raspberry Pi, and Arduino. He’s passionate about building innovative microcontroller-based projects and full-stack web applications that merge hardware and software in meaningful ways. As the Founder and CEO of OhmMade, Yar leads all development and design efforts — having designed and engineered the platform from the ground up. He continues to shape its direction, ensuring an exceptional experience for makers and creators around the world.',
 		image: '/assets/Yar.jpeg',
 		instagram: 'https://www.instagram.com/yar.kakaee/',
 		linkedin: 'https://www.linkedin.com/in/yar-kakaee/',
@@ -22,18 +22,18 @@ const teamMembers = [
 	},
 	{
 		name: 'Tristan Biley',
-		role: 'Co-Founder & Chief Financial Officer',
+		role: 'Co-Founder, Head of Finance & Strategy',
 		description:
-			'Tristan is a soon-to-be 2nd-year Electrical Engineering student, pursuing a dual degree with Ivey HBA at Western University. He has a profound passion for circuit design, microcontrollers, and embedded systems, continuously exploring the intersection of hardware and software. His expertise in circuitry and systems integration helps power OhmMade’s mission to create hands-on learning experiences for makers. As the Lead Electrical Engineer, Tristan drives innovative project ideas and ensures seamless integration of hardware and software, contributing significantly to OhmMade’s growth.',
+			'Tristan is a 2nd-year Electrical Engineering student, pursuing a dual degree with Ivey HBA at Western University. He has a profound passion for circuit design, microcontrollers, and embedded systems, continuously exploring the intersection of hardware and software. As Co-Founder and Head of Finance & Strategy, he leads the company’s financial planning, resource management, and long-term vision. Tristan plays a critical role in aligning OhmMade’s technical innovation with sustainable business development, helping guide the platform toward lasting impact and scalability.',
 		image: '/assets/Tristan.png',
 		instagram: 'https://www.instagram.com/tristan_biley_/',
 		linkedin: 'https://www.linkedin.com/in/tristan-biley-81928526a/',
 	},
 	{
 		name: 'Serkan Nur',
-		role: 'Co-Founder & Lead Electrical Engineer',
+		role: 'Co-Founder, Head of Hardware & Systems',
 		description:
-			'Serkan is a soon-to-be 2nd-year Electrical and Biomedical Engineering student at Western University. He has a strong passion for coding and game development, with a keen interest in creating interactive learning experiences that combine creativity with technical excellence. Serkan’s contributions to OhmMade focus on designing intuitive interfaces and crafting educational content that empowers users to explore technology confidently.',
+			'Serkan is a second-year Electrical Engineering student at Western University with a passion for building hardware systems and bringing ideas to life through hands-on engineering. At OhmMade, he leads all things hardware — from designing circuits to developing the systems behind our electronics-focused projects. As Co-Founder and Head of Hardware & Systems, Serkan plays a key role in making sure OhmMade bridges the gap between physical tech and maker creativity.',
 		image: '/assets/Serkan.jpeg',
 		instagram: 'https://www.instagram.com/_serkannur_/',
 		linkedin: 'https://www.linkedin.com/in/serkan-nur-32710424a/',
@@ -42,7 +42,7 @@ const teamMembers = [
 		name: 'Andres Holmes',
 		role: 'Head of Marketing & Outreach',
 		description:
-			'Andres is a soon-to-be 2nd-year student studying DAN Management and Organizational Studies with a specialization in Finance at Western University. He brings a creative and strategic mindset to OhmMade, focusing on marketing, branding, and outreach. With a passion for connecting people and ideas, Andres helps shape the way OhmMade engages with the community, ensuring our mission reaches learners and makers everywhere.',
+			'Andres is a 2nd-year student studying DAN Management and Organizational Studies with a specialization in Finance at Western University. He brings a creative and strategic mindset to OhmMade, focusing on marketing, branding, and outreach. With a passion for connecting people and ideas, Andres helps shape the way OhmMade engages with the community, ensuring our mission reaches learners and makers everywhere.',
 		image: '/assets/Andres.jpeg',
 		instagram: 'https://www.instagram.com/ig.andres/',
 		linkedin: 'https://www.linkedin.com/in/andresholmes/',

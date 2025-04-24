@@ -30,12 +30,12 @@ export default function Footer() {
 							label: 'YouTube',
 						},
 						{
-							href: 'https://x.com/OhmMadeTech',
+							href: 'https://x.com/teamohmmade',
 							icon: faXTwitter,
 							label: 'Twitter/X',
 						},
 						{
-							href: 'https://github.com/OhmMadeTech',
+							href: 'https://github.com/teamohmmade',
 							icon: faGithub,
 							label: 'GitHub',
 						},
