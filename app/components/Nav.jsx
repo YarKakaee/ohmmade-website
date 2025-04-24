@@ -258,6 +258,9 @@ export default function Nav() {
 								>
 									<Link
 										href="/dashboard"
+										onClick={() =>
+											setShowUserDropdown(false)
+										}
 										className="px-4 py-2.5 hover:bg-white/5 transition-colors rounded-t-xl flex items-center gap-2"
 									>
 										<FontAwesomeIcon icon={faUser} />

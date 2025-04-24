@@ -25,60 +25,145 @@ export default function UserDashboardPage() {
 	const [user, setUser] = useState(null);
 	const [activities, setActivities] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [totalViews, setTotalViews] = useState(0);
 
 	useEffect(() => {
+		if (!session && !loading) {
+			setLoading(false);
+			return;
+		}
+
+		if (!session) {
+			setLoading(true);
+			return;
+		}
+
+		const authUser = session.user;
+		console.log('Auth user from session:', authUser);
+
 		const fetchData = async () => {
+			setLoading(true);
 			try {
-				const { data } = await supabaseClient.auth.getSession();
-				if (!data.session?.user) {
-					router.push('/login');
-					return;
-				}
+				let userProfile = null;
+				let totalUserViews = 0;
 
-				const { user: authUser } = data.session;
 				if (authUser) {
-					const { data: profile } = await supabaseClient
-						.from('profiles')
-						.select('*')
-						.eq('id', authUser.id)
-						.single();
+					const { data: profile, error: profileError } =
+						await supabaseClient
+							.from('User')
+							.select('*')
+							.eq('id', authUser.id)
+							.single();
 
-					console.log('Auth user:', authUser);
-					console.log('Profile:', profile);
+					if (profileError && profileError.code !== 'PGRST116') {
+						console.error('Error fetching profile:', profileError);
+						console.error('Profile Error Details:', {
+							message: profileError.message,
+							details: profileError.details,
+							hint: profileError.hint,
+							code: profileError.code,
+						});
+					} else {
+						userProfile = profile;
+						console.log('Profile data:', userProfile);
+					}
 
+					// Fetch total views (ensure RLS policy allows this)
+					try {
+						const { data: projects, error: projectsError } =
+							await supabaseClient
+								.from('Project')
+								.select('views')
+								.eq('authorId', authUser.id);
+
+						if (projectsError) {
+							throw new Error(
+								`Projects error: ${projectsError.message}`
+							);
+						}
+						if (projects) {
+							totalUserViews = projects.reduce((sum, project) => {
+								const views = project.views
+									? Number(project.views)
+									: 0;
+								return sum + views;
+							}, 0);
+							console.log(
+								'Calculated total views:',
+								totalUserViews
+							);
+						}
+					} catch (viewError) {
+						console.error(
+							'Error fetching/calculating views:',
+							viewError
+						);
+						// Continue even if views fail to load
+					}
+					setTotalViews(totalUserViews);
+
+					// Set user state using authUser and profile if available
 					setUser({
-						...authUser,
-						...profile,
+						id: authUser.id,
+						email: authUser.email,
 						name:
-							profile?.name ||
+							userProfile?.name ||
 							authUser.user_metadata?.name ||
+							authUser.email?.split('@')[0] ||
 							'User',
 						image:
-							profile?.avatar_url ||
+							userProfile?.avatar_url ||
 							authUser.user_metadata?.avatar_url,
 						username:
-							profile?.username ||
+							userProfile?.username ||
 							authUser.user_metadata?.username,
-						created_at: authUser.iat
-							? new Date(authUser.iat * 1000).toISOString()
-							: null,
+						created_at:
+							userProfile?.created_at ||
+							(authUser.created_at
+								? new Date(authUser.created_at).toISOString()
+								: null),
+						// Include other relevant fields from authUser or profile as needed
+						...userProfile, // Spread profile to include any other fields
 					});
-				}
+					console.log('User state set with:', {
+						name:
+							userProfile?.name ||
+							authUser.user_metadata?.name ||
+							authUser.email?.split('@')[0] ||
+							'User',
+						image:
+							userProfile?.avatar_url ||
+							authUser.user_metadata?.avatar_url,
+					});
 
-				// Fetch user activities
-				const response = await fetch('/api/user/activities?limit=10');
-				if (!response.ok) throw new Error('Failed to fetch activities');
-				const activityData = await response.json();
-				setActivities(activityData);
+					// Fetch user activities (can run concurrently or after setting user)
+					const response = await fetch(
+						'/api/user/activities?limit=10'
+					);
+					if (!response.ok)
+						throw new Error('Failed to fetch activities');
+					const activityData = await response.json();
+					setActivities(activityData);
+				} else {
+					// This case should ideally not be reached if session exists
+					setUser(null);
+					router.push('/signin');
+				}
 			} catch (err) {
-				console.error('Failed to fetch user data:', err);
+				console.error('Failed to fetch dashboard data:', err);
+				// Optionally set an error state to show a message to the user
+				// setErrorState(err.message);
+				setUser(null); // Ensure user is null on error
 			} finally {
 				setLoading(false);
 			}
 		};
 
 		fetchData();
-	}, [router, supabaseClient]);
+
+		// Cleanup function not strictly necessary here but good practice
+		// return () => {};
+	}, [session, supabaseClient, router]); // Depend on the session object
 
 	const handleSignOut = async () => {
 		await supabaseClient.auth.signOut();
@@ -107,6 +192,32 @@ export default function UserDashboardPage() {
 		});
 	};
 
+	const formatActivityTime = (date) => {
+		const activityDate = new Date(date);
+		const now = new Date();
+		const diffInHours =
+			(now.getTime() - activityDate.getTime()) / (1000 * 60 * 60);
+		const diffInDays = diffInHours / 24;
+
+		if (diffInDays < 1) {
+			// Less than 24 hours ago (Today)
+			return formatDistanceToNow(activityDate, { addSuffix: true });
+		} else if (diffInDays < 2) {
+			// Between 24 and 48 hours ago (Yesterday)
+			return 'Yesterday';
+		} else if (diffInDays <= 7) {
+			// Between 2 and 7 days ago
+			return formatDistanceToNow(activityDate, { addSuffix: true });
+		} else {
+			// Older than 7 days
+			return activityDate.toLocaleDateString('en-US', {
+				month: 'short',
+				day: 'numeric',
+				year: 'numeric',
+			});
+		}
+	};
+
 	if (loading) {
 		return (
 			<div className="min-h-screen bg-[#101014] flex items-center justify-center">
@@ -121,7 +232,7 @@ export default function UserDashboardPage() {
 
 	return (
 		<div className="min-h-screen bg-[#101014]">
-			<div className="max-w-[1700px] mx-auto px-8 sm:px-16">
+			<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-16">
 				<div className="flex">
 					{/* Sidebar */}
 					<div className="w-[280px] pt-24 pr-8">
@@ -146,7 +257,7 @@ export default function UserDashboardPage() {
 						<nav className="space-y-2">
 							<Link
 								href="/dashboard"
-								className="flex items-center gap-3 px-4 py-2.5 text-white bg-[#27BBFF] rounded-lg font-medium"
+								className="flex items-center gap-3 px-4 py-2.5 text-[#101014] bg-[#27BBFF] rounded-lg font-medium"
 							>
 								<FontAwesomeIcon icon={faUser} />
 								Overview
@@ -205,15 +316,16 @@ export default function UserDashboardPage() {
 						</div>
 
 						{/* Welcome Section */}
-						<div className="bg-[#1C1C20] rounded-2xl p-8 mb-8 border border-[#3A3A3C]/60">
+						<div className="rounded-2xl mb-8 ">
 							<div className="flex items-start justify-between">
 								<div>
 									<h2 className="text-2xl font-bold text-white mb-2">
-										👋 Welcome back, {user.name}!
+										Welcome back, {user.name} 👋
 									</h2>
 									<p className="text-white/60">
-										Keep building! You've helped {182}{' '}
-										people this week.
+										{totalViews > 0
+											? `Keep contributing! Your work has inspired ${totalViews} people.`
+											: 'Share your projects to inspire people!'}
 									</p>
 								</div>
 								<div className="text-right">
@@ -228,7 +340,7 @@ export default function UserDashboardPage() {
 						</div>
 
 						{/* Recent Activity */}
-						<div className="bg-[#1C1C20] rounded-2xl p-8 border border-[#3A3A3C]/60">
+						<div className="bg-[#13151A] rounded-2xl p-8 border border-[#3A3A3C]/60">
 							<h2 className="text-xl font-bold text-white mb-6">
 								Recent Activity
 							</h2>
@@ -243,7 +355,7 @@ export default function UserDashboardPage() {
 												Project
 											</th>
 											<th className="pb-4 text-white/60 font-medium">
-												Date
+												When
 											</th>
 										</tr>
 									</thead>
@@ -277,11 +389,8 @@ export default function UserDashboardPage() {
 													)}
 												</td>
 												<td className="py-4 text-white/60">
-													{formatDistanceToNow(
-														new Date(
-															activity.createdAt
-														),
-														{ addSuffix: true }
+													{formatActivityTime(
+														activity.createdAt
 													)}
 												</td>
 											</tr>
@@ -292,7 +401,9 @@ export default function UserDashboardPage() {
 													colSpan={3}
 													className="py-8 text-center text-white/60"
 												>
-													No recent activity
+													You haven't done anything
+													yet — get started by viewing
+													a project!
 												</td>
 											</tr>
 										)}

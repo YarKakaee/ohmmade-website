@@ -1,110 +1,342 @@
 'use client';
 
-import { signUpWithEmail } from '@/lib/auth';
-import { Inter_Tight } from 'next/font/google';
-import Image from 'next/image';
-import Link from 'next/link';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+	faUser,
+	faEnvelope,
+	faLock,
+	faEye,
+	faEyeSlash,
+} from '@fortawesome/free-solid-svg-icons';
+import { supabase } from '@/lib/supabaseClient'; // Use direct Supabase client
 import toast, { Toaster } from 'react-hot-toast';
-
-const interTight = Inter_Tight({ subsets: ['latin'] });
+import { motion } from 'framer-motion';
 
 export default function SignUpPage() {
-	const router = useRouter();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [displayName, setDisplayName] = useState('');
+	const [username, setUsername] = useState(''); // Changed from displayName
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(null);
+	const [showPassword, setShowPassword] = useState(false);
+	const usernameInputRef = useRef(null); // Focus username first on sign up
+	const router = useRouter();
+
+	useEffect(() => {
+		usernameInputRef.current?.focus();
+	}, []);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
+		setError(null);
+		toast.dismiss();
 
-		const { user, error } = await signUpWithEmail(
-			email,
-			password,
-			displayName
-		);
+		try {
+			// Use the username for both username and name metadata initially
+			const { data, error: signUpError } = await supabase.auth.signUp({
+				email,
+				password,
+				options: {
+					data: {
+						username: username, // Store in metadata
+						name: username, // Use as initial display name
+					},
+				},
+			});
 
-		if (error) {
-			toast.error(error.message);
-		} else {
-			toast.success('Check your email to confirm your account!');
-			router.push('/signin');
+			if (signUpError) throw signUpError;
+
+			// Check if user needs email confirmation
+			if (data.user && data.user.identities?.length === 0) {
+				// This usually means email confirmation is required
+				toast.success(
+					'Account created! Please check your email to confirm your account.',
+					{ duration: 6000 } // Show longer
+				);
+			} else if (data.session) {
+				// Auto-confirm is enabled or user already confirmed somehow
+				toast.success('Account created successfully!');
+				router.push('/'); // Redirect to homepage
+				router.refresh();
+				return; // Don't proceed further
+			} else {
+				// Fallback message if state is unclear
+				toast.success(
+					'Account created! Please check your email to confirm your account.',
+					{ duration: 6000 }
+				);
+			}
+
+			// Redirect to signin page after showing confirmation message
+			setTimeout(() => {
+				router.push('/signin');
+			}, 3000); // Slight delay before redirect
+		} catch (err) {
+			console.error('Sign up error:', err);
+			const errorMessage = err.message || 'Failed to create account.';
+			setError(errorMessage);
+			toast.error(errorMessage);
+		} finally {
+			// Keep loading true if redirecting immediately after success
+			// setLoading(false);
+			// Set loading false only on error or if not redirecting
+			if (error) {
+				setLoading(false);
+			}
 		}
+	};
 
-		setLoading(false);
+	const handleGoogleSignIn = async () => {
+		setLoading(true);
+		setError(null);
+		toast.dismiss();
+
+		try {
+			const { error: oauthError } = await supabase.auth.signInWithOAuth({
+				provider: 'google',
+				options: {
+					redirectTo: `${window.location.origin}/auth/callback`,
+				},
+			});
+			if (oauthError) throw oauthError;
+		} catch (err) {
+			console.error('Google sign in error during signup:', err);
+			const errorMessage =
+				err.message || 'Failed to sign up with Google.';
+			setError(errorMessage);
+			toast.error(errorMessage);
+			setLoading(false);
+		}
 	};
 
 	return (
-		<div className="bg-[#101014] min-h-screen flex items-center justify-center px-6 relative overflow-hidden">
-			<Toaster position="top-right" />
-			{/* Background Blur */}
+		<div className="bg-[#101014] min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+			<Toaster position="top-center" reverseOrder={false} />
+
+			{/* Optional Background Blur */}
 			<div className="absolute inset-0 pointer-events-none">
 				<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1200px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 blur-[125px] opacity-70 transform-gpu">
-					<Image
-						src="https://cms-assets.unrealengine.com/AiKUh5PQCTaOFnmJDZJBfz/oXIAOr5gQny2cAfPpq02"
-						alt="Light effect"
-						width={1200}
-						height={1200}
-						className="w-full h-auto"
-						priority
-					/>
+					{/* Background image can be added here */}
 				</div>
 			</div>
 
-			<div className="bg-[#1C1C1F] p-10 rounded-xl max-w-md w-full relative z-10 border border-[#2E2E30]">
-				<h1
-					className={`text-3xl font-extrabold text-white mb-6 ${interTight.className}`}
-				>
-					Create an Account
-				</h1>
+			<motion.div
+				className="w-full max-w-[480px] z-10"
+				initial={{ opacity: 0, y: -20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.5 }}
+			>
+				<div className="bg-[#1C1C20] rounded-2xl p-8 border border-[#3A3A3C]/60 shadow-xl">
+					<div className="flex flex-col items-center mb-6 mt-4">
+						<div className="flex items-center justify-center gap-2">
+							<img
+								src="https://ujaylejhopvncyjvduvj.supabase.co/storage/v1/object/public/ohmmade-assets//Frame%205%20(3).png"
+								alt="OhmMade Logo"
+								className="w-9 mb-4"
+							/>
+							<h1 className="text-3xl font-extrabold text-white mb-2">
+								OhmMade
+							</h1>
+						</div>
+						<h2 className="text-[20px] font-semibold text-white mb-2 mt-2">
+							Let's Get You Started 🚀
+						</h2>
+						<p className="text-[#FFFFFF]/60 text-[15px]">
+							Sign up and start building.
+						</p>
+					</div>
 
-				<form onSubmit={handleSubmit} className="space-y-4">
-					<input
-						type="text"
-						value={displayName}
-						onChange={(e) => setDisplayName(e.target.value)}
-						placeholder="Display Name"
-						required
-						className="w-full bg-[#101014] text-white px-4 py-3 rounded-md border border-[#333] placeholder-[#888] focus:outline-none focus:ring-1 focus:ring-white"
-					/>
-					<input
-						type="email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						placeholder="Email"
-						required
-						className="w-full bg-[#101014] text-white px-4 py-3 rounded-md border border-[#333] placeholder-[#888] focus:outline-none focus:ring-1 focus:ring-white"
-					/>
-					<input
-						type="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						placeholder="Password"
-						required
-						className="w-full bg-[#101014] text-white px-4 py-3 rounded-md border border-[#333] placeholder-[#888] focus:outline-none focus:ring-1 focus:ring-white"
-					/>
-					<button
-						type="submit"
-						disabled={loading}
-						className="bg-[#27BBFF] text-[#101014] font-medium px-4 py-3 rounded-md w-full transition hover:brightness-110"
-					>
-						{loading ? 'Creating Account...' : 'Sign Up'}
-					</button>
-				</form>
+					<form onSubmit={handleSubmit} className="space-y-4">
+						<div className="space-y-2">
+							<label className="block text-sm font-medium text-[#ACACAD]">
+								Username
+							</label>
+							<div className="relative">
+								<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+									<FontAwesomeIcon
+										icon={faUser}
+										className="text-[#ACACAD]"
+									/>
+								</div>
+								<input
+									ref={usernameInputRef}
+									type="text"
+									value={username}
+									onChange={(e) => {
+										setUsername(e.target.value);
+										setError(null);
+									}}
+									className="w-full pl-10 pr-4 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
+									placeholder="Choose a username"
+									required
+									disabled={loading}
+								/>
+							</div>
+						</div>
 
-				<p className="text-sm text-[#999] mt-4 text-center">
-					Already have an account?{' '}
-					<Link
-						href="/signin"
-						className="text-[#27BBFF] hover:underline"
-					>
-						Sign In
-					</Link>
-				</p>
-			</div>
+						<div className="space-y-2">
+							<label className="block text-sm font-medium text-[#ACACAD]">
+								Email
+							</label>
+							<div className="relative">
+								<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+									<FontAwesomeIcon
+										icon={faEnvelope}
+										className="text-[#ACACAD]"
+									/>
+								</div>
+								<input
+									type="email"
+									value={email}
+									onChange={(e) => {
+										setEmail(e.target.value);
+										setError(null);
+									}}
+									className="w-full pl-10 pr-4 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
+									placeholder="Enter your email"
+									required
+									disabled={loading}
+								/>
+							</div>
+						</div>
+
+						<div className="space-y-2">
+							<label className="block text-sm font-medium text-[#ACACAD]">
+								Password
+							</label>
+							<div className="relative">
+								<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+									<FontAwesomeIcon
+										icon={faLock}
+										className="text-[#ACACAD]"
+									/>
+								</div>
+								<input
+									type={showPassword ? 'text' : 'password'}
+									value={password}
+									onChange={(e) => {
+										setPassword(e.target.value);
+										setError(null);
+									}}
+									className="w-full pl-10 pr-10 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
+									placeholder="Create a password"
+									required
+									disabled={loading}
+								/>
+								<div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+									<button
+										type="button"
+										onClick={() =>
+											setShowPassword(!showPassword)
+										}
+										className="text-[#ACACAD] hover:text-white/80 text-sm cursor-pointer"
+										disabled={loading}
+									>
+										<FontAwesomeIcon
+											icon={
+												showPassword
+													? faEyeSlash
+													: faEye
+											}
+										/>
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<motion.button
+							type="submit"
+							disabled={loading}
+							whileHover={{ scale: 1.02 }}
+							whileTap={{ scale: 0.98 }}
+							className="cursor-pointer w-full bg-[#27BBFF] text-[#101014] font-semibold py-2.5 px-4 rounded-lg hover:bg-[#1ea8e6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+						>
+							{loading ? 'Creating Account...' : 'Create Account'}
+						</motion.button>
+
+						<div className="relative pt-2 pb-1">
+							<div className="absolute inset-0 flex items-center">
+								<div className="w-full border-t border-[#3A3A3C]/60"></div>
+							</div>
+							<div className="relative flex justify-center text-sm">
+								<span className="px-2 bg-[#1C1C20] text-[#ACACAD]">
+									or
+								</span>
+							</div>
+						</div>
+
+						<motion.button
+							type="button"
+							onClick={handleGoogleSignIn}
+							disabled={loading}
+							whileHover={{ scale: 1.02 }}
+							whileTap={{ scale: 0.98 }}
+							className="cursor-pointer w-full flex items-center justify-center gap-2 bg-[#2c2d2e] text-white font-medium py-2.5 px-4 rounded-lg border border-[#3A3A3C]/60 hover:bg-[#3A3A3C] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+						>
+							<svg
+								width="18"
+								height="18"
+								viewBox="0 0 18 18"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"
+									fill="#4285f4"
+								/>
+								<path
+									d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"
+									fill="#34a853"
+								/>
+								<path
+									d="M3.964 10.712c-.18-.54-.282-1.117-.282-1.71 0-.593.102-1.17.282-1.71V4.96H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
+									fill="#fbbc05"
+								/>
+								<path
+									d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
+									fill="#ea4335"
+								/>
+							</svg>
+							Continue with Google
+						</motion.button>
+					</form>
+
+					<div className="mt-6 text-center">
+						<p className="text-[#ACACAD] text-xs mt-4">
+							By proceeding, you agree to our{' '}
+							<Link
+								href="/tos"
+								className="text-white hover:text-white/80 cursor-pointer relative group"
+							>
+								Terms
+								<span className="absolute -bottom-0.5 left-0 w-full h-[1px] bg-white/60 opacity-0 group-hover:opacity-100" />
+							</Link>{' '}
+							and{' '}
+							<Link
+								href="/privacy-policy"
+								className="text-white hover:text-white/80 cursor-pointer relative group"
+							>
+								Privacy
+								<span className="absolute -bottom-0.5 left-0 w-full h-[1px] bg-white/60 opacity-0 group-hover:opacity-100" />
+							</Link>
+						</p>
+
+						<p className="text-[#ACACAD] text-sm mt-3">
+							Already have an account?{' '}
+							<Link
+								href="/signin" // Link back to signin page
+								className="text-white hover:text-white/80 cursor-pointer relative group"
+							>
+								Sign in
+								<span className="absolute -bottom-0.5 left-0 w-full h-[1px] bg-white/60 opacity-0 group-hover:opacity-100" />
+							</Link>
+						</p>
+					</div>
+				</div>
+			</motion.div>
 		</div>
 	);
 }
