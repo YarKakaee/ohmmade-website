@@ -1,76 +1,86 @@
 // app/api/projects/[slug]/like/route.js
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import prisma from '@/prisma/client';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { createActivity } from '@/lib/activity';
 
 export async function POST(req, { params }) {
-	const { slug } = await params;
-	const cookieStore = await cookies();
-	const supabase = createRouteHandlerClient({
-		cookies: () => cookieStore,
-	});
-
-	const {
-		data: { session },
-	} = await supabase.auth.getSession();
-
-	if (!session?.user) {
-		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-	}
-
-	const userId = session.user.id;
-	const { email, user_metadata } = session.user;
-	const name = user_metadata?.name || '';
-	const image = user_metadata?.avatar_url || '';
-
-	const project = await prisma.project.findUnique({ where: { slug } });
-	if (!project)
-		return NextResponse.json(
-			{ error: 'Project not found' },
-			{ status: 404 }
-		);
-
-	// Make sure user exists
-	await prisma.user.upsert({
-		where: { email },
-		update: { name, image },
-		create: { id: userId, email, name, image },
-	});
-
-	// Check if already liked and perform like/unlike in a single transaction
-	const result = await prisma.$transaction(async (tx) => {
-		const existingLike = await tx.userLike.findUnique({
-			where: {
-				userId_projectId: {
-					userId,
-					projectId: project.id,
-				},
-			},
+	try {
+		const cookieStore = await cookies();
+		const supabase = createRouteHandlerClient({
+			cookies: () => cookieStore,
 		});
 
-		if (existingLike) {
-			// Unlike
-			await tx.userLike.delete({
-				where: { userId_projectId: { userId, projectId: project.id } },
-			});
-			await tx.project.update({
-				where: { id: project.id },
-				data: { likes: { decrement: 1 } },
-			});
-			return { liked: false };
-		} else {
-			// Like
-			await tx.userLike.create({
-				data: { userId, projectId: project.id },
-			});
-			await tx.project.update({
-				where: { id: project.id },
-				data: { likes: { increment: 1 } },
-			});
-			return { liked: true };
-		}
-	});
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
 
-	return NextResponse.json(result);
+		if (!session?.user) {
+			return new Response('Unauthorized', { status: 401 });
+		}
+
+		const { slug } = params;
+		const { id: userId, email, user_metadata } = session.user;
+		const name = user_metadata?.name || '';
+		const image = user_metadata?.avatar_url || '';
+
+		// Get project by slug
+		const project = await prisma.project.findUnique({ where: { slug } });
+		if (!project) {
+			return new Response('Project not found', { status: 404 });
+		}
+
+		// Make sure user exists
+		await prisma.user.upsert({
+			where: { email },
+			update: { name, image },
+			create: { id: userId, email, name, image },
+		});
+
+		// Check if already liked and perform like/unlike in a single transaction
+		const result = await prisma.$transaction(async (tx) => {
+			const existingLike = await tx.userLike.findUnique({
+				where: {
+					userId_projectId: {
+						userId,
+						projectId: project.id,
+					},
+				},
+			});
+
+			if (existingLike) {
+				// Unlike
+				await tx.userLike.delete({
+					where: {
+						userId_projectId: { userId, projectId: project.id },
+					},
+				});
+				await tx.project.update({
+					where: { id: project.id },
+					data: { likes: { decrement: 1 } },
+				});
+				return { liked: false };
+			} else {
+				// Like
+				await tx.userLike.create({
+					data: { userId, projectId: project.id },
+				});
+				await tx.project.update({
+					where: { id: project.id },
+					data: { likes: { increment: 1 } },
+				});
+				// Track the activity only when liking, not when unliking
+				await createActivity(userId, 'PROJECT_LIKED', project.id);
+				return { liked: true };
+			}
+		});
+
+		return new Response(JSON.stringify(result), {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' },
+		});
+	} catch (error) {
+		console.error('Error liking project:', error);
+		return new Response('Error liking project', { status: 500 });
+	}
 }

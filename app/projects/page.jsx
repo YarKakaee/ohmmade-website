@@ -27,10 +27,15 @@ const interTight = Inter_Tight({ subsets: ['latin'] });
 const SkeletonCard = () => (
 	<div className="bg-[#1E2025] border border-[#2C2F36] p-6 rounded-2xl animate-pulse">
 		<div className="flex flex-col gap-4">
-			<div className="w-full h-48 bg-[#2C2F36] rounded-lg" />
+			<div className="w-full h-52 bg-[#2C2F36] rounded-lg" />
 			<div className="flex-1">
-				<div className="h-6 w-3/4 bg-[#2C2F36] rounded mb-2" />
-				<div className="h-4 w-full bg-[#2C2F36] rounded" />
+				<div className="h-6 w-3/4 bg-[#2C2F36] rounded mb-4" />
+				<div className="h-4 w-full bg-[#2C2F36] rounded mb-2" />
+				<div className="h-4 w-full bg-[#2C2F36] rounded mb-2" />
+				<div className="h-4 w-full bg-[#2C2F36] rounded mb-2" />
+				<div className="h-4 w-full bg-[#2C2F36] rounded mb-2" />
+				<div className="h-4 w-full bg-[#2C2F36] rounded mb-4" />
+				<div className="h-4 w-full bg-[#2C2F36] rounded mb-2" />
 			</div>
 		</div>
 	</div>
@@ -221,6 +226,17 @@ export default function ExploreProjectsPage() {
 		};
 	}, [projects]); // Re-run when projects change
 
+	// Add useEffect for handling scroll on page change
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}, [currentPage]);
+
+	const handlePageChange = (page) => {
+		const newPage = Math.max(1, Math.min(page, totalPages));
+		setCurrentPage(newPage);
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	};
+
 	return (
 		<div className="relative min-h-screen bg-[#101014] overflow-hidden">
 			<section className="relative w-full pt-16 px-8 sm:px-16 lg:px-24">
@@ -303,7 +319,7 @@ export default function ExploreProjectsPage() {
 								<select
 									value={sortBy}
 									onChange={handleSortChange}
-									className="cursor-pointer w-full bg-[#1E2025] border border-[#6B6B6D] rounded-md px-3 py-2 pr-8 text-white/50 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] font-medium text-[14px]"
+									className="cursor-pointer w-full bg-[#1C1C20] border border-[#3A3A3C]/60 rounded-md px-3 py-2 pr-8 text-white/60 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] font-medium text-[14px]"
 								>
 									<option value="trending">Trending</option>
 									<option value="newest">Newest</option>
@@ -641,9 +657,7 @@ export default function ExploreProjectsPage() {
 							<div className="flex items-center gap-2">
 								<button
 									onClick={() =>
-										setCurrentPage((prev) =>
-											Math.max(prev - 1, 1)
-										)
+										handlePageChange(currentPage - 1)
 									}
 									disabled={currentPage === 1}
 									className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
@@ -669,11 +683,11 @@ export default function ExploreProjectsPage() {
 												<button
 													key={i}
 													onClick={() =>
-														setCurrentPage(page)
+														handlePageChange(page)
 													}
 													className={`px-4 py-2 rounded-lg transition-colors cursor-pointer ${
 														isCurrentPage
-															? 'bg-[#27BBFF] text-white'
+															? 'bg-[#27BBFF] text-[#101014]'
 															: 'bg-[#13151A] border border-[#2C2F36] text-gray-400 hover:bg-[#1E2025]'
 													}`}
 												>
@@ -698,9 +712,7 @@ export default function ExploreProjectsPage() {
 								</div>
 								<button
 									onClick={() =>
-										setCurrentPage((prev) =>
-											Math.min(prev + 1, totalPages)
-										)
+										handlePageChange(currentPage + 1)
 									}
 									disabled={currentPage === totalPages}
 									className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"

@@ -2,6 +2,9 @@
 
 import prisma from '@/prisma/client';
 import { NextResponse } from 'next/server';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { createActivity } from '@/lib/activity';
 
 export async function GET(request) {
 	const { searchParams } = new URL(request.url);
@@ -107,5 +110,108 @@ export async function GET(request) {
 			{ error: 'Failed to fetch projects' },
 			{ status: 500 }
 		);
+	}
+}
+
+export async function POST(req) {
+	try {
+		const cookieStore = await cookies();
+		const supabase = createRouteHandlerClient({
+			cookies: () => cookieStore,
+		});
+
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
+
+		if (!session?.user) {
+			return new Response('Unauthorized', { status: 401 });
+		}
+
+		const data = await req.json();
+		const { id: userId, email, user_metadata } = session.user;
+		const name = user_metadata?.name || '';
+		const image = user_metadata?.avatar_url || '';
+
+		// Make sure user exists
+		await prisma.user.upsert({
+			where: { email },
+			update: { name, image },
+			create: { id: userId, email, name, image },
+		});
+
+		const project = await prisma.project.create({
+			data: {
+				...data,
+				authorId: userId,
+			},
+		});
+
+		// Track publishing activity if the project is published
+		if (project.status === 'published') {
+			await createActivity(userId, 'PROJECT_PUBLISHED', project.id);
+		}
+
+		return new Response(JSON.stringify(project), {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' },
+		});
+	} catch (error) {
+		console.error('Error creating project:', error);
+		return new Response('Error creating project', { status: 500 });
+	}
+}
+
+export async function PUT(req) {
+	try {
+		const cookieStore = await cookies();
+		const supabase = createRouteHandlerClient({
+			cookies: () => cookieStore,
+		});
+
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
+
+		if (!session?.user) {
+			return new Response('Unauthorized', { status: 401 });
+		}
+
+		const data = await req.json();
+		const userId = session.user.id;
+
+		// Verify project ownership
+		const existingProject = await prisma.project.findUnique({
+			where: { id: data.id },
+			select: { authorId: true, status: true },
+		});
+
+		if (!existingProject || existingProject.authorId !== userId) {
+			return new Response('Unauthorized', { status: 401 });
+		}
+
+		const project = await prisma.project.update({
+			where: { id: data.id },
+			data: {
+				...data,
+				updatedAt: new Date(),
+			},
+		});
+
+		// Track publishing activity if the project status changed to published
+		if (
+			existingProject.status !== 'published' &&
+			project.status === 'published'
+		) {
+			await createActivity(userId, 'PROJECT_PUBLISHED', project.id);
+		}
+
+		return new Response(JSON.stringify(project), {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' },
+		});
+	} catch (error) {
+		console.error('Error updating project:', error);
+		return new Response('Error updating project', { status: 500 });
 	}
 }

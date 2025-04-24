@@ -5,6 +5,7 @@ import {
 	faAngleDown,
 	faGlobe,
 	faSignOutAlt,
+	faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'framer-motion';
@@ -105,25 +106,27 @@ export default function Nav() {
 				<nav className="flex items-center space-x-6 text-white font-normal text-sm">
 					{/* Learn Dropdown */}
 					<div className="relative group">
-						<div className="flex items-center px-2 py-2 cursor-pointer hover:text-[#ACACAD]">
+						<div className="flex items-center px-2 py-2 cursor-pointer hover:text-[#ACACAD] transition-colors">
 							Learn
 							<FontAwesomeIcon
 								icon={faAngleDown}
 								size="xs"
-								className="ml-1.5 transition-transform duration-200 group-hover:rotate-180"
+								className="ml-1.5 transition-transform duration-300 group-hover:rotate-180"
 							/>
 						</div>
-						<div className="absolute top-full left-[-12px] mt-2 w-45 bg-[#2c2d2e] border border-[#454547] text-white text-sm rounded-lg p-2 z-50 backdrop-blur-3xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+						<div className="absolute top-full left-[-12px] mt-1 w-48 bg-[#1C1C20]/95 border border-[#3A3A3C]/60 text-white text-sm rounded-xl shadow-xl backdrop-blur-xl opacity-0 invisible translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out">
 							{[
 								'basic-electronics',
 								'arduino-uno',
 								'raspberry-pi-4',
 								'raspberry-pi-pico-w',
-							].map((path) => (
+							].map((path, index) => (
 								<Link
 									key={path}
 									href={`/learn/${path}`}
-									className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e]"
+									className={`block px-4 py-2.5 hover:bg-white/5 transition-colors ${
+										index === 0 ? 'rounded-t-xl' : ''
+									} ${index === 3 ? 'rounded-b-xl' : ''}`}
 								>
 									{path
 										.replace(/-/g, ' ')
@@ -137,26 +140,29 @@ export default function Nav() {
 
 					{/* Projects Dropdown */}
 					<div className="relative group">
-						<div className="flex items-center px-2 py-2 cursor-pointer hover:text-[#ACACAD]">
-							<Link href="/projects">
+						<div className="flex items-center px-2 py-2 cursor-pointer hover:text-[#ACACAD] transition-colors">
+							<Link
+								href="/projects"
+								className="flex items-center"
+							>
 								Projects
 								<FontAwesomeIcon
 									icon={faAngleDown}
 									size="xs"
-									className="ml-1.5 transition-transform duration-200 group-hover:rotate-180"
+									className="ml-1.5 transition-transform duration-300 group-hover:rotate-180"
 								/>
 							</Link>
 						</div>
-						<div className="absolute top-full left-[-12px] mt-2 w-40 bg-[#2c2d2e] border border-[#454547] text-white text-sm rounded-lg p-2 z-50 backdrop-blur-3xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+						<div className="absolute top-full left-[-12px] mt-1 w-44 bg-[#1C1C20]/95 border border-[#3A3A3C]/60 text-white text-sm rounded-xl shadow-xl backdrop-blur-xl opacity-0 invisible translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out">
 							<Link
 								href="/projects"
-								className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e]"
+								className="block px-4 py-2.5 hover:bg-white/5 transition-colors rounded-t-xl"
 							>
 								Explore Projects
 							</Link>
 							<Link
 								href="/projects/publish"
-								className="block px-3 py-2 rounded-lg hover:bg-[#1e1e1e]"
+								className="block px-4 py-2.5 hover:bg-white/5 transition-colors rounded-b-xl"
 							>
 								Publish Your Own
 							</Link>
@@ -179,7 +185,7 @@ export default function Nav() {
 						<input
 							type="text"
 							placeholder="Search"
-							className="bg-[#1C1C20] text-sm text-white placeholder-[#ACACAD] pl-10 pr-5 w-[35ch] py-2 rounded-full border border-[#3A3A3C]/60 focus:ring-1 focus:outline-none focus:ring-white transition"
+							className="bg-[#1C1C20] text-sm text-white placeholder-white/60 pl-10 pr-5 w-[35ch] py-2 rounded-full border border-[#3A3A3C]/60 focus:ring-1 focus:outline-none focus:ring-white transition"
 						/>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -221,7 +227,7 @@ export default function Nav() {
 								onClick={() =>
 									setShowUserDropdown((prev) => !prev)
 								}
-								className="cursor-pointer flex items-center gap-2 text-white hover:text-[#ACACAD]"
+								className="cursor-pointer flex items-center gap-2 text-white hover:text-[#ACACAD] transition-colors"
 							>
 								{user.user_metadata.avatar_url ? (
 									<Image
@@ -229,10 +235,10 @@ export default function Nav() {
 										alt="Avatar"
 										width={30}
 										height={30}
-										className="rounded-full"
+										className="rounded-full ring-2 ring-[#3A3A3C]/60"
 									/>
 								) : (
-									<div className="w-[35px] h-[35px] rounded-full bg-[#1C1C20] flex items-center justify-center text-xs font-semibold">
+									<div className="w-[35px] h-[35px] rounded-full bg-[#1C1C20] border border-[#3A3A3C]/60 flex items-center justify-center text-xs font-semibold">
 										{getInitials(
 											user.user_metadata.name ||
 												user.email
@@ -243,21 +249,28 @@ export default function Nav() {
 							</button>
 
 							{showUserDropdown && (
-								<div className="absolute right-0 top-full mt-2 bg-[#2c2d2e] border border-[#454547] text-white text-sm rounded-lg shadow-lg p-2 z-50 w-40 backdrop-blur-3xl">
+								<motion.div
+									initial={{ opacity: 0, y: 8 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: 8 }}
+									transition={{ duration: 0.2 }}
+									className="absolute right-0 top-full mt-4 bg-[#1C1C20]/95 border border-[#3A3A3C]/60 text-white text-sm rounded-xl shadow-xl backdrop-blur-xl w-44"
+								>
 									<Link
-										href="/user"
-										className="block px-3 py-2 hover:bg-[#1e1e1e] rounded-md"
+										href="/dashboard"
+										className="px-4 py-2.5 hover:bg-white/5 transition-colors rounded-t-xl flex items-center gap-2"
 									>
-										Dashboard
+										<FontAwesomeIcon icon={faUser} />
+										My Account
 									</Link>
 									<button
 										onClick={handleSignOut}
-										className="cursor-pointer w-full text-left px-3 py-2 hover:bg-[#1e1e1e] rounded-md flex items-center gap-2"
+										className="cursor-pointer w-full text-left px-4 py-2.5 hover:bg-white/5 transition-colors rounded-b-xl flex items-center gap-2"
 									>
 										<FontAwesomeIcon icon={faSignOutAlt} />
 										Sign Out
 									</button>
-								</div>
+								</motion.div>
 							)}
 						</div>
 					) : (

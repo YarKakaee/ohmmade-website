@@ -32,6 +32,7 @@ model User {
   blogs     Blog[]
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
+  activities UserActivity[]
 }
 
 model Project {
@@ -58,6 +59,7 @@ model Project {
 
   userLikes UserLike[]
   userViews UserView[]
+  activities UserActivity[]
 }
 
 model UserLike {
@@ -98,4 +100,24 @@ model Blog {
 	updatedAt   DateTime @updatedAt
 	views       Int      @default(0)
 	tags        String[]
+}
+
+enum ActivityType {
+  PROJECT_PUBLISHED
+  PROJECT_LIKED
+  PROJECT_SAVED
+  PROJECT_VIEWED
+}
+
+model UserActivity {
+  id          String       @id @default(cuid())
+  userId      String
+  projectId   Int?
+  type        ActivityType
+  createdAt   DateTime     @default(now())
+  
+  user        User         @relation(fields: [userId], references: [id])
+  project     Project?     @relation(fields: [projectId], references: [id])
+
+  @@index([userId, createdAt])
 }

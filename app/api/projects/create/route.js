@@ -1,6 +1,7 @@
 // /app/api/projects/create/route.js
 import { NextResponse } from 'next/server';
 import prisma from '@/prisma/client';
+import { createActivity } from '@/lib/activity';
 
 export async function POST(req) {
 	try {
@@ -38,6 +39,15 @@ export async function POST(req) {
 				},
 			},
 		});
+
+		// Track publishing activity if the project is published
+		if (newProject.status === 'published') {
+			await createActivity(
+				body.userId,
+				'PROJECT_PUBLISHED',
+				newProject.id
+			);
+		}
 
 		return NextResponse.json(
 			{ success: true, project: newProject },

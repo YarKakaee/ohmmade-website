@@ -92,7 +92,7 @@ export default function AboutUs() {
 	];
 
 	return (
-		<section className="relative py-24 px-4 md:px-12 bg-[#101014] overflow-hidden">
+		<section className="relative py-24 px-4 md:px-12 overflow-hidden">
 			{/* Background Elements */}
 			{/* <div className="absolute inset-0 overflow-hidden">
 				<div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#27BBFF]/5 to-transparent" />
