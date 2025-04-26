@@ -19,9 +19,10 @@ const AuthModal = ({ isOpen, onClose }) => {
 	const [isSignIn, setIsSignIn] = useState(true);
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [username, setUsername] = useState('');
+	const [name, setName] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
+	const [success, setSuccess] = useState(null);
 	const [showPassword, setShowPassword] = useState(false);
 	const emailInputRef = useRef(null);
 
@@ -34,8 +35,9 @@ const AuthModal = ({ isOpen, onClose }) => {
 		if (!isOpen) {
 			setEmail('');
 			setPassword('');
-			setUsername('');
+			setName('');
 			setError(null);
+			setSuccess(null);
 			setShowPassword(false);
 		}
 	}, [isOpen]);
@@ -68,52 +70,108 @@ const AuthModal = ({ isOpen, onClose }) => {
 		e.preventDefault();
 		setLoading(true);
 		setError(null);
+		setSuccess(null);
 
-		try {
-			if (isSignIn) {
-				const { error } = await supabase.auth.signInWithPassword({
-					email,
-					password,
-				});
-				if (error) throw error;
-			} else {
-				const { error } = await supabase.auth.signUp({
-					email,
-					password,
-					options: {
-						data: {
-							username: username,
-							name: username, // This will be used as the display name
-						},
-					},
-				});
-				if (error) throw error;
+		if (isSignIn) {
+			const { error } = await supabase.auth.signInWithPassword({
+				email,
+				password,
+			});
+
+			if (error) {
+				setError(error.message);
+				setLoading(false);
+				return;
 			}
 			onClose();
-		} catch (error) {
-			setError(error.message);
-		} finally {
-			setLoading(false);
+		} else {
+			// Check if email exists
+			const checkResponse = await fetch('/api/auth/check-email', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ email }),
+			});
+
+			const { exists } = await checkResponse.json();
+
+			if (exists) {
+				setError(
+					'An account with this email already exists. Please sign in instead.'
+				);
+				setLoading(false);
+				return;
+			}
+
+			// Create account
+			const { data, error: signUpError } = await supabase.auth.signUp({
+				email,
+				password,
+				options: {
+					data: {
+						name: name,
+						display_name: name,
+					},
+				},
+			});
+
+			if (signUpError) {
+				setError(signUpError.message);
+				setLoading(false);
+				return;
+			}
+
+			// Create user in Prisma
+			const createUserResponse = await fetch('/api/auth/create-user', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ email, name }),
+			});
+
+			if (!createUserResponse.ok) {
+				const errorData = await createUserResponse.json();
+				setError(errorData.error || 'Failed to create user profile');
+				setLoading(false);
+				return;
+			}
+
+			// Handle success
+			if (data.user) {
+				// Check if email confirmation is required by looking at the session
+				if (!data.session) {
+					setSuccess(
+						'Account created! Please check your email to confirm your account.'
+					);
+					setTimeout(() => {
+						onClose();
+						setIsSignIn(true);
+					}, 3000);
+				} else {
+					setSuccess('Account created successfully!');
+					onClose();
+				}
+			}
 		}
+		setLoading(false);
 	};
 
 	const handleGoogleSignIn = async () => {
 		setLoading(true);
 		setError(null);
+		setSuccess(null);
 
-		try {
-			const { error } = await supabase.auth.signInWithOAuth({
-				provider: 'google',
-				options: {
-					redirectTo: `${window.location.origin}/auth/callback`,
-				},
-			});
-			if (error) throw error;
-		} catch (error) {
+		const { error } = await supabase.auth.signInWithOAuth({
+			provider: 'google',
+			options: {
+				redirectTo: `${window.location.origin}/auth/callback`,
+			},
+		});
+
+		if (error) {
 			setError(error.message);
-		} finally {
 			setLoading(false);
+			return;
 		}
+		setLoading(false);
 	};
 
 	return (
@@ -164,7 +222,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 									<div className="flex flex-col items-center mb-6 mt-4">
 										<div className="flex items-center justify-center gap-2">
 											<img
-												src="https://ujaylejhopvncyjvduvj.supabase.co/storage/v1/object/public/ohmmade-assets//Frame%205%20(3).png"
+												src="https://ujaylejhopvncyjvduvj.supabase.co/storage/v1/object/public/ohmmade-assets//Frame%205%20(4).png"
 												alt="OhmMade Logo"
 												className="w-9 mb-4"
 											/>
@@ -191,7 +249,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 										{!isSignIn && (
 											<div className="space-y-2">
 												<label className="block text-sm font-medium text-[#ACACAD]">
-													Username
+													Full Name
 												</label>
 												<div className="relative">
 													<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -202,14 +260,14 @@ const AuthModal = ({ isOpen, onClose }) => {
 													</div>
 													<input
 														type="text"
-														value={username}
+														value={name}
 														onChange={(e) =>
-															setUsername(
+															setName(
 																e.target.value
 															)
 														}
 														className="w-full pl-10 pr-4 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
-														placeholder="Choose a username"
+														placeholder="John Doe"
 														required={!isSignIn}
 													/>
 												</div>
@@ -235,7 +293,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 														setEmail(e.target.value)
 													}
 													className="w-full pl-10 pr-4 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
-													placeholder="Enter your email"
+													placeholder="john.doe@gmail.com"
 													required
 												/>
 											</div>
@@ -265,7 +323,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 														)
 													}
 													className="w-full pl-10 pr-24 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
-													placeholder="Enter your password"
+													placeholder="Min. 6 characters"
 													required
 												/>
 												<div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-2">
@@ -299,6 +357,32 @@ const AuthModal = ({ isOpen, onClose }) => {
 												</div>
 											</div>
 										</div>
+
+										{error && (
+											<div className="text-red-500 text-sm text-center">
+												{error}
+											</div>
+										)}
+
+										{success && (
+											<div className="text-green-500 text-sm text-center">
+												{success}
+											</div>
+										)}
+
+										<motion.button
+											type="submit"
+											disabled={loading}
+											whileHover={{ scale: 1.02 }}
+											whileTap={{ scale: 0.98 }}
+											className="mt-1 cursor-pointer w-full bg-[#27BBFF] text-[#101014] font-semibold py-2 px-4 rounded-lg hover:bg-[#1ea8e6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+										>
+											{loading
+												? 'Loading...'
+												: isSignIn
+												? 'Sign In'
+												: 'Create Account'}
+										</motion.button>
 
 										<div className="relative">
 											<div className="absolute inset-0 flex items-center">
@@ -345,26 +429,6 @@ const AuthModal = ({ isOpen, onClose }) => {
 											{loading
 												? 'Loading...'
 												: 'Continue with Google'}
-										</motion.button>
-
-										{error && (
-											<div className="text-red-500 text-sm text-center">
-												{error}
-											</div>
-										)}
-
-										<motion.button
-											type="submit"
-											disabled={loading}
-											whileHover={{ scale: 1.02 }}
-											whileTap={{ scale: 0.98 }}
-											className="cursor-pointer w-full bg-[#27BBFF] text-[#101014] font-semibold py-2 px-4 rounded-lg hover:bg-[#1ea8e6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-										>
-											{loading
-												? 'Loading...'
-												: isSignIn
-												? 'Sign In'
-												: 'Create Account'}
 										</motion.button>
 									</form>
 

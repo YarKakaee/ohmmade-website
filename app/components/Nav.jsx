@@ -90,7 +90,7 @@ export default function Nav() {
 				{/* Logo */}
 				<Link href="/" className="flex items-center space-x-2">
 					<Image
-						src="/assets/OMLogo2.png"
+						src="/assets/newohmlogo.png"
 						alt="OhmMade Logo"
 						width={28}
 						height={28}

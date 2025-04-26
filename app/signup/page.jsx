@@ -11,88 +11,111 @@ import {
 	faEye,
 	faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
-import { supabase } from '@/lib/supabaseClient'; // Use direct Supabase client
-import toast, { Toaster } from 'react-hot-toast';
+import { supabase } from '@/lib/supabaseClient';
+import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 
 export default function SignUpPage() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [username, setUsername] = useState(''); // Changed from displayName
+	const [name, setName] = useState('');
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
 	const [showPassword, setShowPassword] = useState(false);
-	const usernameInputRef = useRef(null); // Focus username first on sign up
+	const nameInputRef = useRef(null);
 	const router = useRouter();
 
 	useEffect(() => {
-		usernameInputRef.current?.focus();
-	}, []);
+		// Check if user is already signed in and redirect if they are
+		const checkSession = async () => {
+			const { data } = await supabase.auth.getSession();
+			if (data.session) {
+				router.push('/');
+				return;
+			}
+			nameInputRef.current?.focus();
+		};
+
+		checkSession();
+	}, [router]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
-		setError(null);
 		toast.dismiss();
 
 		try {
-			// Use the username for both username and name metadata initially
+			// Check if email exists
+			const checkResponse = await fetch('/api/auth/check-email', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ email }),
+			});
+
+			const { exists } = await checkResponse.json();
+
+			if (exists) {
+				toast.error(
+					'An account with this email already exists. Please sign in instead.'
+				);
+				setLoading(false);
+				return;
+			}
+
+			// Create account
 			const { data, error: signUpError } = await supabase.auth.signUp({
 				email,
 				password,
 				options: {
 					data: {
-						username: username, // Store in metadata
-						name: username, // Use as initial display name
+						name: name,
+						display_name: name,
 					},
 				},
 			});
 
 			if (signUpError) throw signUpError;
 
-			// Check if user needs email confirmation
-			if (data.user && data.user.identities?.length === 0) {
-				// This usually means email confirmation is required
-				toast.success(
-					'Account created! Please check your email to confirm your account.',
-					{ duration: 6000 } // Show longer
+			// Handle success
+			if (data.user) {
+				// Create user in Prisma
+				const createUserResponse = await fetch(
+					'/api/auth/create-user',
+					{
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ email, name }),
+					}
 				);
-			} else if (data.session) {
-				// Auto-confirm is enabled or user already confirmed somehow
-				toast.success('Account created successfully!');
-				router.push('/'); // Redirect to homepage
-				router.refresh();
-				return; // Don't proceed further
-			} else {
-				// Fallback message if state is unclear
-				toast.success(
-					'Account created! Please check your email to confirm your account.',
-					{ duration: 6000 }
-				);
-			}
 
-			// Redirect to signin page after showing confirmation message
-			setTimeout(() => {
-				router.push('/signin');
-			}, 3000); // Slight delay before redirect
+				if (!createUserResponse.ok) {
+					const errorData = await createUserResponse.json();
+					throw new Error(
+						errorData.error || 'Failed to create user profile'
+					);
+				}
+
+				// Check if email confirmation is required by looking at the session
+				// If there's no session, email confirmation is required
+				if (!data.session) {
+					toast.success(
+						'Account created! Please check your email to confirm your account.'
+					);
+					setTimeout(() => router.push('/signin'), 3000);
+				} else {
+					// If we have a session, the user is already confirmed
+					toast.success('Account created successfully!');
+					router.push('/');
+				}
+			}
 		} catch (err) {
 			console.error('Sign up error:', err);
-			const errorMessage = err.message || 'Failed to create account.';
-			setError(errorMessage);
-			toast.error(errorMessage);
-		} finally {
-			// Keep loading true if redirecting immediately after success
-			// setLoading(false);
-			// Set loading false only on error or if not redirecting
-			if (error) {
-				setLoading(false);
-			}
+			toast.error(err.message || 'Failed to create account.');
+			setLoading(false);
 		}
 	};
 
 	const handleGoogleSignIn = async () => {
 		setLoading(true);
-		setError(null);
 		toast.dismiss();
 
 		try {
@@ -104,26 +127,14 @@ export default function SignUpPage() {
 			});
 			if (oauthError) throw oauthError;
 		} catch (err) {
-			console.error('Google sign in error during signup:', err);
-			const errorMessage =
-				err.message || 'Failed to sign up with Google.';
-			setError(errorMessage);
-			toast.error(errorMessage);
+			console.error('Google sign in error:', err);
+			toast.error(err.message || 'Failed to sign up with Google.');
 			setLoading(false);
 		}
 	};
 
 	return (
 		<div className="bg-[#101014] min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-			<Toaster position="top-center" reverseOrder={false} />
-
-			{/* Optional Background Blur */}
-			<div className="absolute inset-0 pointer-events-none">
-				<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1200px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 blur-[125px] opacity-70 transform-gpu">
-					{/* Background image can be added here */}
-				</div>
-			</div>
-
 			<motion.div
 				className="w-full max-w-[480px] z-10"
 				initial={{ opacity: 0, y: -20 }}
@@ -153,7 +164,7 @@ export default function SignUpPage() {
 					<form onSubmit={handleSubmit} className="space-y-4">
 						<div className="space-y-2">
 							<label className="block text-sm font-medium text-[#ACACAD]">
-								Username
+								Full Name
 							</label>
 							<div className="relative">
 								<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -163,15 +174,12 @@ export default function SignUpPage() {
 									/>
 								</div>
 								<input
-									ref={usernameInputRef}
+									ref={nameInputRef}
 									type="text"
-									value={username}
-									onChange={(e) => {
-										setUsername(e.target.value);
-										setError(null);
-									}}
+									value={name}
+									onChange={(e) => setName(e.target.value)}
 									className="w-full pl-10 pr-4 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
-									placeholder="Choose a username"
+									placeholder="Enter your full name"
 									required
 									disabled={loading}
 								/>
@@ -192,10 +200,7 @@ export default function SignUpPage() {
 								<input
 									type="email"
 									value={email}
-									onChange={(e) => {
-										setEmail(e.target.value);
-										setError(null);
-									}}
+									onChange={(e) => setEmail(e.target.value)}
 									className="w-full pl-10 pr-4 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
 									placeholder="Enter your email"
 									required
@@ -218,10 +223,9 @@ export default function SignUpPage() {
 								<input
 									type={showPassword ? 'text' : 'password'}
 									value={password}
-									onChange={(e) => {
-										setPassword(e.target.value);
-										setError(null);
-									}}
+									onChange={(e) =>
+										setPassword(e.target.value)
+									}
 									className="w-full pl-10 pr-10 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
 									placeholder="Create a password"
 									required
@@ -327,7 +331,7 @@ export default function SignUpPage() {
 						<p className="text-[#ACACAD] text-sm mt-3">
 							Already have an account?{' '}
 							<Link
-								href="/signin" // Link back to signin page
+								href="/signin"
 								className="text-white hover:text-white/80 cursor-pointer relative group"
 							>
 								Sign in

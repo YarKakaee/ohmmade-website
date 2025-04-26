@@ -11,8 +11,10 @@ import {
 	faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { supabase } from '@/lib/supabaseClient'; // Use direct Supabase client
-import toast, { Toaster } from 'react-hot-toast';
 import { motion } from 'framer-motion'; // Keep some motion
+
+// Define a constant toast ID outside the component
+const REDIRECT_TOAST_ID = 'auth-redirect-toast';
 
 export default function SignInPage() {
 	const [email, setEmail] = useState('');
@@ -22,26 +24,64 @@ export default function SignInPage() {
 	const [error, setError] = useState(null);
 	const [showPassword, setShowPassword] = useState(false);
 	const emailInputRef = useRef(null);
+	const toastShown = useRef(false);
 	const router = useRouter();
 
 	useEffect(() => {
-		// Focus email input on mount
-		emailInputRef.current?.focus();
-	}, []);
+		// Check if user is already signed in and redirect if they are
+		const checkSession = async () => {
+			const { data } = await supabase.auth.getSession();
+			if (data.session) {
+				// User is already signed in, redirect with query param
+				router.push('/?fromAuth=signin');
+				return;
+			}
+			// Only focus if user is not signed in
+			emailInputRef.current?.focus();
+		};
+
+		checkSession();
+	}, [router]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
-		setError(null); // Clear previous inline errors
-		toast.dismiss(); // Clear previous toasts
+		setError(null);
+		toast.dismiss();
 
 		try {
-			const { error: signInError } =
+			const { error: signInError, data } =
 				await supabase.auth.signInWithPassword({
 					email,
 					password,
 				});
 			if (signInError) throw signInError;
+
+			// Check if the user has a username and create one if not
+			try {
+				const user = data.user;
+				// Call our API to ensure the user has a username
+				const usernameRes = await fetch('/api/auth/username', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						name:
+							user.user_metadata?.name ||
+							user.email?.split('@')[0],
+					}),
+				});
+
+				if (!usernameRes.ok) {
+					console.warn(
+						'Warning: Username check failed:',
+						await usernameRes.text()
+					);
+					// Continue anyway - non-critical
+				}
+			} catch (usernameError) {
+				console.error('Username setup error:', usernameError);
+				// Continue anyway - this is a non-critical enhancement
+			}
 
 			toast.success('Signed in successfully!');
 			router.push('/'); // Redirect to homepage
@@ -83,8 +123,6 @@ export default function SignInPage() {
 
 	return (
 		<div className="bg-[#101014] min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-			<Toaster position="top-center" reverseOrder={false} />
-
 			{/* Background Blur - Optional: keep or remove */}
 			<div className="absolute inset-0 pointer-events-none">
 				<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1200px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 blur-[125px] opacity-70 transform-gpu">

@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-
 import { Inter_Tight } from 'next/font/google';
 
 const interTight = Inter_Tight({
