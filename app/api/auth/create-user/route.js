@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function POST(request) {
 	try {
-		const { email, name } = await request.json();
+		const { email, name, image } = await request.json();
 
 		if (!email || !name) {
 			return NextResponse.json(
@@ -42,8 +42,7 @@ export async function POST(request) {
 				email,
 				name,
 				username,
-				// You can add a default image URL here if needed
-				image: null,
+				image,
 			},
 		});
 

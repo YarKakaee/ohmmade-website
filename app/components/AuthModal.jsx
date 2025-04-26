@@ -14,6 +14,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const AuthModal = ({ isOpen, onClose }) => {
 	const [isSignIn, setIsSignIn] = useState(true);
@@ -25,6 +26,8 @@ const AuthModal = ({ isOpen, onClose }) => {
 	const [success, setSuccess] = useState(null);
 	const [showPassword, setShowPassword] = useState(false);
 	const emailInputRef = useRef(null);
+	const [showUserDropdown, setShowUserDropdown] = useState(false);
+	const [user, setUser] = useState(null);
 
 	useEffect(() => {
 		if (isOpen && emailInputRef.current) {
@@ -66,6 +69,11 @@ const AuthModal = ({ isOpen, onClose }) => {
 		};
 	}, [isOpen, onClose]);
 
+	const getRandomAvatar = () => {
+		const avatarNumber = Math.floor(Math.random() * 20) + 1; // Random number between 1 and 20
+		return `https://ujaylejhopvncyjvduvj.supabase.co/storage/v1/object/public/ohmmade-assets/default-avatars/avatar-${avatarNumber}.png`;
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
@@ -102,6 +110,8 @@ const AuthModal = ({ isOpen, onClose }) => {
 				return;
 			}
 
+			const randomAvatar = getRandomAvatar();
+
 			// Create account
 			const { data, error: signUpError } = await supabase.auth.signUp({
 				email,
@@ -110,6 +120,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 					data: {
 						name: name,
 						display_name: name,
+						avatar_url: randomAvatar,
 					},
 				},
 			});
@@ -124,7 +135,11 @@ const AuthModal = ({ isOpen, onClose }) => {
 			const createUserResponse = await fetch('/api/auth/create-user', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email, name }),
+				body: JSON.stringify({
+					email,
+					name,
+					image: randomAvatar,
+				}),
 			});
 
 			if (!createUserResponse.ok) {
@@ -426,9 +441,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 													fill="#ea4335"
 												/>
 											</svg>
-											{loading
-												? 'Loading...'
-												: 'Continue with Google'}
+											Continue with Google
 										</motion.button>
 									</form>
 

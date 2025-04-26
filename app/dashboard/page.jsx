@@ -39,7 +39,6 @@ export default function UserDashboardPage() {
 		}
 
 		const authUser = session.user;
-		console.log('Auth user from session:', authUser);
 
 		const fetchData = async () => {
 			setLoading(true);
@@ -52,20 +51,23 @@ export default function UserDashboardPage() {
 						await supabaseClient
 							.from('User')
 							.select('*')
-							.eq('id', authUser.id)
+							.eq('email', authUser.email)
 							.single();
 
-					if (profileError && profileError.code !== 'PGRST116') {
-						console.error('Error fetching profile:', profileError);
-						console.error('Profile Error Details:', {
-							message: profileError.message,
-							details: profileError.details,
-							hint: profileError.hint,
-							code: profileError.code,
-						});
+					if (profileError) {
+						// Try fetching by ID as fallback
+						const { data: profileById, error: profileByIdError } =
+							await supabaseClient
+								.from('User')
+								.select('*')
+								.eq('id', authUser.id)
+								.single();
+
+						if (!profileByIdError) {
+							userProfile = profileById;
+						}
 					} else {
 						userProfile = profile;
-						console.log('Profile data:', userProfile);
 					}
 
 					// Fetch total views (ensure RLS policy allows this)
@@ -88,16 +90,8 @@ export default function UserDashboardPage() {
 									: 0;
 								return sum + views;
 							}, 0);
-							console.log(
-								'Calculated total views:',
-								totalUserViews
-							);
 						}
 					} catch (viewError) {
-						console.error(
-							'Error fetching/calculating views:',
-							viewError
-						);
 						// Continue even if views fail to load
 					}
 					setTotalViews(totalUserViews);
@@ -112,43 +106,27 @@ export default function UserDashboardPage() {
 							authUser.email?.split('@')[0] ||
 							'User',
 						image:
-							userProfile?.avatar_url ||
+							userProfile?.image ||
 							authUser.user_metadata?.avatar_url,
-						username:
-							userProfile?.username ||
-							authUser.user_metadata?.username,
+						username: userProfile?.username,
 						created_at:
 							userProfile?.created_at ||
 							(authUser.created_at
 								? new Date(authUser.created_at).toISOString()
 								: null),
-						// Include other relevant fields from authUser or profile as needed
-						...userProfile, // Spread profile to include any other fields
+						...userProfile,
 					});
-					console.log('User state set with:', {
-						name:
-							userProfile?.name ||
-							authUser.user_metadata?.name ||
-							authUser.email?.split('@')[0] ||
-							'User',
-						image:
-							userProfile?.avatar_url ||
-							authUser.user_metadata?.avatar_url,
-					});
-
-					// Fetch user activities (can run concurrently or after setting user)
-					const response = await fetch(
-						'/api/user/activities?limit=10'
-					);
-					if (!response.ok)
-						throw new Error('Failed to fetch activities');
-					const activityData = await response.json();
-					setActivities(activityData);
 				} else {
 					// This case should ideally not be reached if session exists
 					setUser(null);
 					router.push('/signin');
 				}
+
+				// Fetch user activities (can run concurrently or after setting user)
+				const response = await fetch('/api/user/activities?limit=10');
+				if (!response.ok) throw new Error('Failed to fetch activities');
+				const activityData = await response.json();
+				setActivities(activityData);
 			} catch (err) {
 				console.error('Failed to fetch dashboard data:', err);
 				// Optionally set an error state to show a message to the user
@@ -179,11 +157,9 @@ export default function UserDashboardPage() {
 	};
 
 	const getMemberDuration = (createdAt) => {
-		console.log('getMemberDuration input:', createdAt);
 		if (!createdAt) return 'New member';
 
 		const date = new Date(createdAt);
-		console.log('Parsed date:', date);
 		if (isNaN(date.getTime())) return 'New member';
 
 		return date.toLocaleDateString('en-US', {
@@ -250,7 +226,7 @@ export default function UserDashboardPage() {
 								{user.name}
 							</h2>
 							<p className="text-sm text-white/60">
-								@{user.username || user.name?.toLowerCase()}
+								@{user.username}
 							</p>
 						</div>
 
