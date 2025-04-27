@@ -18,14 +18,19 @@ export async function POST(req) {
 
 		// Upsert the user — creates if not exists
 		await prisma.user.upsert({
-			where: { id: body.userId },
-			update: {}, // no update needed
+			where: { email: body.email },
+			update: { name: body.name, username },
 			create: {
 				id: body.userId,
-				name: body.username || null,
+				name: body.name || null,
 				email: body.email || null,
 				username,
 			},
+		});
+
+		// Fetch the user to get the correct id
+		const user = await prisma.user.findUnique({
+			where: { email: body.email },
 		});
 
 		// Create the project and connect the author
@@ -45,7 +50,7 @@ export async function POST(req) {
 				views: 0,
 				likes: 0,
 				author: {
-					connect: { id: body.userId },
+					connect: { id: user.id },
 				},
 			},
 		});

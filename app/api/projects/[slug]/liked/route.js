@@ -19,13 +19,18 @@ export async function GET(req, { params }) {
 		return NextResponse.json({ liked: false });
 	}
 
-	const userId = session.user.id;
+	// Always use the user's id from the database (looked up by email)
+	const dbUser = await prisma.user.findUnique({
+		where: { email: session.user.email },
+	});
+	if (!dbUser) return NextResponse.json({ liked: false });
+
 	const project = await prisma.project.findUnique({ where: { slug } });
 	if (!project) return NextResponse.json({ liked: false });
 
 	const likeCount = await prisma.userLike.count({
 		where: {
-			userId: userId,
+			userId: dbUser.id,
 			projectId: project.id,
 		},
 	});

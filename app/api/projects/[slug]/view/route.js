@@ -16,7 +16,8 @@ export async function POST(req, { params }) {
 			data: { session },
 		} = await supabase.auth.getSession();
 
-		const { slug } = params;
+		// Await params before using its properties
+		const { slug } = await params;
 
 		// Get project by slug
 		const project = await prisma.project.findUnique({ where: { slug } });
@@ -36,7 +37,7 @@ export async function POST(req, { params }) {
 
 			// Upsert user into DB if not already there (by email)
 			await prisma.user.upsert({
-				where: { id: userId },
+				where: { email },
 				update: { name, image, username },
 				create: {
 					id: userId,
@@ -47,39 +48,31 @@ export async function POST(req, { params }) {
 				},
 			});
 
-			// Check if view already exists and increment view count in a single transaction
-			const result = await prisma.$transaction(async (tx) => {
-				const existingView = await tx.userView.findUnique({
-					where: {
-						userId_projectId: {
-							userId,
-							projectId: project.id,
-						},
-					},
-				});
-
-				if (!existingView) {
-					await tx.userView.create({
-						data: {
-							userId,
-							projectId: project.id,
-						},
-					});
-
-					await tx.project.update({
-						where: { id: project.id },
-						data: { views: { increment: 1 } },
-					});
-
-					// Track the activity only for new views
-					await createActivity(userId, 'PROJECT_VIEWED', project.id);
-					return { viewAdded: true };
-				}
-
-				return { viewAdded: false };
+			// Fetch the user to get the correct id
+			const user = await prisma.user.findUnique({
+				where: { email },
 			});
 
-			return new Response(JSON.stringify(result), {
+			let viewAdded = false;
+			try {
+				await prisma.userView.create({
+					data: {
+						userId: user.id,
+						projectId: project.id,
+					},
+				});
+				// Only increment and track if a new view was created
+				await prisma.project.update({
+					where: { id: project.id },
+					data: { views: { increment: 1 } },
+				});
+				await createActivity(user.id, 'PROJECT_VIEWED', project.id);
+				viewAdded = true;
+			} catch (e) {
+				if (e.code !== 'P2002') throw e; // Only ignore unique constraint error
+				// If already exists, do nothing
+			}
+			return new Response(JSON.stringify({ viewAdded }), {
 				status: 200,
 				headers: { 'Content-Type': 'application/json' },
 			});

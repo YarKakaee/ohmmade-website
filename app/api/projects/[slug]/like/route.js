@@ -20,7 +20,7 @@ export async function POST(req, { params }) {
 			return new Response('Unauthorized', { status: 401 });
 		}
 
-		const { slug } = params;
+		const { slug } = await params;
 		const { id: userId, email, user_metadata } = session.user;
 		const name = user_metadata?.name || '';
 		const image = user_metadata?.avatar_url || '';
@@ -42,12 +42,17 @@ export async function POST(req, { params }) {
 			create: { id: userId, email, name, image, username },
 		});
 
+		// Fetch the user to get the correct id
+		const user = await prisma.user.findUnique({
+			where: { email },
+		});
+
 		// Check if already liked and perform like/unlike in a single transaction
 		const result = await prisma.$transaction(async (tx) => {
 			const existingLike = await tx.userLike.findUnique({
 				where: {
 					userId_projectId: {
-						userId,
+						userId: user.id,
 						projectId: project.id,
 					},
 				},
@@ -57,7 +62,10 @@ export async function POST(req, { params }) {
 				// Unlike
 				await tx.userLike.delete({
 					where: {
-						userId_projectId: { userId, projectId: project.id },
+						userId_projectId: {
+							userId: user.id,
+							projectId: project.id,
+						},
 					},
 				});
 				await tx.project.update({
@@ -68,14 +76,14 @@ export async function POST(req, { params }) {
 			} else {
 				// Like
 				await tx.userLike.create({
-					data: { userId, projectId: project.id },
+					data: { userId: user.id, projectId: project.id },
 				});
 				await tx.project.update({
 					where: { id: project.id },
 					data: { likes: { increment: 1 } },
 				});
 				// Track the activity only when liking, not when unliking
-				await createActivity(userId, 'PROJECT_LIKED', project.id);
+				await createActivity(user.id, 'PROJECT_LIKED', project.id);
 				return { liked: true };
 			}
 		});
