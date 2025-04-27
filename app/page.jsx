@@ -1,14 +1,13 @@
 import Image from 'next/image';
-import ContactUs from './components/ContactUs';
-import FeatureSection from './components/FeatureSection';
-import Footer from './components/Footer';
-import Hero from './components/Hero';
-import Learn from './components/Learn';
-import OurTeam from './components/OurTeam';
-import ProjectsSectionServer from './components/projects/ProjectsSectionServer';
+import ContactUs from './components/sections/ContactUs';
+import Footer from './components/layout/Footer';
+import Hero from './components/sections/Hero';
+import Learn from './components/sections/Learn';
+import OurTeam from './components/sections/OurTeam';
+import ProjectsSection from './components/sections/ProjectsSection';
 import './globals.css';
-import CreatorSection from './components/CreatorSection';
-import AboutUs from './components/AboutUs';
+import CreatorSection from './components/sections/CreatorSection';
+import Details from './components/sections/Details';
 
 export default function Home() {
 	return (
@@ -30,10 +29,10 @@ export default function Home() {
 
 				<Hero />
 
-				<AboutUs />
+				<Details />
 				<OurTeam />
 				<Learn />
-				<ProjectsSectionServer />
+				<ProjectsSection />
 				<CreatorSection />
 				<ContactUs />
 				<Footer />

@@ -16,7 +16,7 @@ export default function CodexViewer({ data }) {
 			const ImageTool = (await import('@editorjs/image')).default;
 
 			const CustomCodeSnippet = (
-				await import('@/app/components/CustomCodeSnippet')
+				await import('@/app/components/codex/CustomCodeSnippet')
 			).default;
 
 			if (!isMounted) return;

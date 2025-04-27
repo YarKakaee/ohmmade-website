@@ -1,5 +1,5 @@
-import CodexViewer from '@/app/components/CodexViewer';
-import ProjectSlugHeader from '@/app/components/projects/ProjectSlugHeader';
+import CodexViewer from '@/app/components/codex/CodexViewer';
+import ProjectSlugHeader from '@/app/components/common/ProjectSlugHeader';
 import prisma from '@/prisma/client';
 import {
 	faCheck,

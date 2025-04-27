@@ -1,6 +1,6 @@
 'use client';
 
-import ClientVerifiedIcon from '@/app/components/ClientVerifiedIcon';
+import ClientVerifiedIcon from '@/app/components/auth/ClientVerifiedIcon';
 import categoryColors from '@/lib/constants/categoryColors';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import {

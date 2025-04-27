@@ -1,6 +1,6 @@
 'use client';
-import CodexEditorWrapper from '@/app/components/CodexEditorWrapper';
-import Footer from '@/app/components/Footer';
+import CodexEditorWrapper from '@/app/components/codex/CodexEditorWrapper';
+import Footer from '@/app/components/layout/Footer';
 import { supabase } from '@/lib/supabaseClient';
 import {
 	faArrowUpRightFromSquare,

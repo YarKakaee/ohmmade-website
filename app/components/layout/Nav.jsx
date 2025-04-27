@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
-import AuthModal from './AuthModal';
+import AuthModal from '../auth/AuthModal';
 
 export default function Nav() {
 	const session = useSession();

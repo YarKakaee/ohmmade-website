@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import AdminTable from '@/app/components/AdminTable';
+import AdminTable from '@/app/components/common/AdminTable';
 import Link from 'next/link';
 
 export default function BlogsPage() {

@@ -5,7 +5,7 @@ import { Inter_Tight } from 'next/font/google';
 const interTight = Inter_Tight({ subsets: ['latin'] });
 
 import Image from 'next/image';
-import Footer from '../components/Footer';
+import Footer from '../components/layout/Footer';
 
 export default function TermsOfService() {
 	return (

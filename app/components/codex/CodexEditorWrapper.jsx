@@ -32,7 +32,7 @@ const CodexEditorWrapper = forwardRef((props, ref) => {
 
 			// 💡 Import your custom code snippet plugin
 			const CustomCodeSnippet = (
-				await import('@/app/components/CustomCodeSnippet')
+				await import('@/app/components/codex/CustomCodeSnippet')
 			).default;
 
 			if (!isMounted) return;
@@ -50,9 +50,9 @@ const CodexEditorWrapper = forwardRef((props, ref) => {
 							},
 						},
 					},
-					codeSnippet: CustomCodeSnippet, // ✅ Register your plugin here
+					codeSnippet: CustomCodeSnippet,
 				},
-				placeholder: 'Start writing content here...',
+				placeholder: 'Start adding content here...',
 			});
 		};
 

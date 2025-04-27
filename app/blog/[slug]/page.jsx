@@ -1,8 +1,8 @@
 import prisma from '@/prisma/client';
 import { notFound } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
-import CodexViewer from '@/app/components/CodexViewer';
-import ImageWithFallback from '@/app/components/ImageWithFallback';
+import CodexViewer from '@/app/components/codex/CodexViewer';
+import ImageWithFallback from '@/app/components/common/ImageWithFallback';
 
 export default async function BlogPostPage({ params }) {
 	const slug = await Promise.resolve(params.slug);

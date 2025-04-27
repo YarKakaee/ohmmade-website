@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Inter_Tight } from 'next/font/google';
-import LearnCard from './LearnCard';
+import LearnCard from '../common/LearnCard';
 
 const interTight = Inter_Tight({
 	subsets: ['latin'],

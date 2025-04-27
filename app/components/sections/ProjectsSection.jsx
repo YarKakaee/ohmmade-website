@@ -1,9 +1,9 @@
 import categoryColors from '@/lib/constants/categoryColors';
 import prisma from '@/prisma/client'; // Adjust this path if needed
-import ProjectCard from './ProjectCard';
-import ProjectsHeader from './ProjectHeader';
+import ProjectCard from '../common/ProjectCard';
+import ProjectsHeader from '../common/ProjectHeader';
 
-export default async function ProjectsSectionServer() {
+export default async function ProjectsSection() {
 	const featuredProjects = await prisma.project.findMany({
 		where: { featured: true, status: 'published' },
 		orderBy: { createdAt: 'desc' },

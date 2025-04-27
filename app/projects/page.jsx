@@ -1,6 +1,6 @@
 'use client';
 
-import ProjectCard from '@/app/components/projects/ProjectCard';
+import ProjectCard from '@/app/components/common/ProjectCard';
 import categoryColors from '@/lib/constants/categoryColors';
 import { Inter_Tight } from 'next/font/google';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,7 +17,7 @@ import { LayoutGrid, List } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
-import Footer from '../components/Footer';
+import Footer from '../components/layout/Footer';
 import { checkSession } from '@/lib/auth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';

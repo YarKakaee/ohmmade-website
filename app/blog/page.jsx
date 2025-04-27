@@ -1,7 +1,7 @@
 import prisma from '@/prisma/client';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
-import ImageWithFallback from '@/app/components/ImageWithFallback';
+import ImageWithFallback from '@/app/components/common/ImageWithFallback';
 
 export default async function BlogPage() {
 	const blogs = await prisma.blog.findMany({

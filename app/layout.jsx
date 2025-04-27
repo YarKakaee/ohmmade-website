@@ -2,7 +2,7 @@ import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
-import Nav from './components/Nav';
+import Nav from './components/layout/Nav';
 import './globals.css';
 import SupabaseProvider from './providers/SupabaseProvider';
 config.autoAddCss = false;
