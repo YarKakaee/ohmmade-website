@@ -48,7 +48,7 @@ export default async function BlogPostPage({ params }) {
 					)}
 					<div className="relative z-10">
 						<div className="absolute inset-0 bg-gradient-to-r from-[#27BBFF]/20 to-[#FF4D4D]/20 blur-3xl -z-10" />
-						<h1 className="text-5xl font-bold text-white mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#27BBFF] to-[#FF4D4D]">
+						<h1 className="text-5xl font-bold text-white mb-6 bg-clip-text bg-gradient-to-r from-[#27BBFF] to-[#FF4D4D]">
 							{blog.title}
 						</h1>
 						<div className="flex items-center gap-4 text-white/70">
@@ -89,7 +89,7 @@ export default async function BlogPostPage({ params }) {
 
 				{/* Tags */}
 				<div className="mt-16 pt-8 border-t border-white/10">
-					<h2 className="text-2xl font-bold text-white mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#27BBFF] to-[#FF4D4D]">
+					<h2 className="text-2xl font-bold text-white mb-6 bg-clip-text bg-gradient-to-r from-[#27BBFF] to-[#FF4D4D]">
 						Tags
 					</h2>
 					<div className="flex flex-wrap gap-3">

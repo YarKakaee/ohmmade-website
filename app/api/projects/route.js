@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { createActivity } from '@/lib/activity';
+import { generateUsername } from '@/lib/usernameUtils';
 
 export async function GET(request) {
 	const { searchParams } = new URL(request.url);
@@ -132,12 +133,16 @@ export async function POST(req) {
 		const { id: userId, email, user_metadata } = session.user;
 		const name = user_metadata?.name || '';
 		const image = user_metadata?.avatar_url || '';
+		let username = data.username;
+		if (!username) {
+			username = await generateUsername(name || email.split('@')[0]);
+		}
 
 		// Make sure user exists
 		await prisma.user.upsert({
 			where: { email },
-			update: { name, image },
-			create: { id: userId, email, name, image },
+			update: { name, image, username },
+			create: { id: userId, email, name, image, username },
 		});
 
 		const project = await prisma.project.create({

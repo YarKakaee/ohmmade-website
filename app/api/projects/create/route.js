@@ -2,12 +2,21 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/prisma/client';
 import { createActivity } from '@/lib/activity';
+import { generateUsername } from '@/lib/usernameUtils';
 
 export async function POST(req) {
 	try {
 		const body = await req.json();
 
-		// 🛠 Upsert the user — creates if not exists
+		let username = body.username;
+		if (!username) {
+			// Fallback: generate from name or email
+			username = await generateUsername(
+				body.name || body.email.split('@')[0]
+			);
+		}
+
+		// Upsert the user — creates if not exists
 		await prisma.user.upsert({
 			where: { id: body.userId },
 			update: {}, // no update needed
@@ -15,10 +24,11 @@ export async function POST(req) {
 				id: body.userId,
 				name: body.username || null,
 				email: body.email || null,
+				username,
 			},
 		});
 
-		// 📦 Create the project and connect the author
+		// Create the project and connect the author
 		const newProject = await prisma.project.create({
 			data: {
 				title: body.title,

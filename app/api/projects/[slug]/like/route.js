@@ -3,6 +3,7 @@ import prisma from '@/prisma/client';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { createActivity } from '@/lib/activity';
+import { generateUsername } from '@/lib/usernameUtils';
 
 export async function POST(req, { params }) {
 	try {
@@ -23,6 +24,10 @@ export async function POST(req, { params }) {
 		const { id: userId, email, user_metadata } = session.user;
 		const name = user_metadata?.name || '';
 		const image = user_metadata?.avatar_url || '';
+		let username = user_metadata?.username;
+		if (!username) {
+			username = await generateUsername(name || email.split('@')[0]);
+		}
 
 		// Get project by slug
 		const project = await prisma.project.findUnique({ where: { slug } });
@@ -33,8 +38,8 @@ export async function POST(req, { params }) {
 		// Make sure user exists
 		await prisma.user.upsert({
 			where: { email },
-			update: { name, image },
-			create: { id: userId, email, name, image },
+			update: { name, image, username },
+			create: { id: userId, email, name, image, username },
 		});
 
 		// Check if already liked and perform like/unlike in a single transaction

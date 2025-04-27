@@ -96,7 +96,7 @@ export default function BlogsPage() {
 					<div className="absolute inset-0 bg-gradient-to-r from-[#27BBFF]/20 to-[#FF4D4D]/20 blur-3xl -z-10" />
 					<div className="flex justify-between items-center">
 						<div>
-							<h1 className="text-4xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#27BBFF] to-[#FF4D4D]">
+							<h1 className="text-4xl font-bold text-white mb-4 bg-clip-text bg-gradient-to-r from-[#27BBFF] to-[#FF4D4D]">
 								Blog Posts Management
 							</h1>
 							<p className="text-white/70">

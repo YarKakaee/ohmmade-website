@@ -27,6 +27,13 @@ export default function UserDashboardPage() {
 	const [loading, setLoading] = useState(true);
 	const [totalViews, setTotalViews] = useState(0);
 
+	// Protect the page: redirect to /signin if not signed in
+	useEffect(() => {
+		if (session === null) {
+			router.replace('/signin');
+		}
+	}, [session, router]);
+
 	useEffect(() => {
 		if (!session && !loading) {
 			setLoading(false);
@@ -111,8 +118,10 @@ export default function UserDashboardPage() {
 						username: userProfile?.username,
 						created_at:
 							userProfile?.created_at ||
-							(authUser.created_at
-								? new Date(authUser.created_at).toISOString()
+							userProfile?.createdAt ||
+							authUser.created_at ||
+							(authUser.createdAt
+								? new Date(authUser.createdAt).toISOString()
 								: null),
 						...userProfile,
 					});

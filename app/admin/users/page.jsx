@@ -67,7 +67,7 @@ export default function UsersPage() {
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="mb-12 relative">
 					<div className="absolute inset-0 bg-gradient-to-r from-[#27BBFF]/20 to-[#FF4D4D]/20 blur-3xl -z-10" />
-					<h1 className="text-4xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#27BBFF] to-[#FF4D4D]">
+					<h1 className="text-4xl font-bold text-white mb-4 bg-clip-text bg-gradient-to-r from-[#27BBFF] to-[#FF4D4D]">
 						Users Management
 					</h1>
 					<p className="text-white/70">
