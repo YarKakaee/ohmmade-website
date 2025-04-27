@@ -4,36 +4,16 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Secret that should match what you set in the Supabase Dashboard
-const WEBHOOK_SECRET = process.env.SUPABASE_WEBHOOK_SECRET;
-
-// This is a secure webhook that should be called by Supabase
-// The Supabase auth webhook should be configured in the Supabase dashboard
-// with the correct secret key
 export async function POST(request) {
 	try {
-		// Verify the webhook request is legitimate
-		const webhookSecret = request.headers.get('x-webhook-secret');
-		if (WEBHOOK_SECRET && webhookSecret !== WEBHOOK_SECRET) {
-			console.error('Webhook secret mismatch');
-			return NextResponse.json(
-				{ error: 'Unauthorized' },
-				{ status: 401 }
-			);
-		}
-
 		const requestData = await request.json();
 		console.log('Webhook received:', requestData.type);
 
-		// Validate webhook signature if needed
-		// Verify if this is from Supabase (you should implement proper validation)
-		// const signature = request.headers.get('x-signature');
-		// if (!validateSignature(signature)) {
-		//   return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
-		// }
-
-		// Currently processing only user creation events
-		if (requestData.type === 'USER_CREATED') {
+		// Handle both USER_CREATED and SIGNED_IN events
+		if (
+			requestData.type === 'USER_CREATED' ||
+			requestData.type === 'SIGNED_IN'
+		) {
 			const user = requestData.record;
 
 			if (!user || !user.id) {
@@ -52,7 +32,7 @@ export async function POST(request) {
 				// User already exists in our database, check if they have a username
 				if (existingUser.username) {
 					return NextResponse.json({
-						status: 'User already has username',
+						status: 'User already exists',
 					});
 				}
 			}
@@ -78,6 +58,10 @@ export async function POST(request) {
 						username,
 						// If no name is set, use the part before @ in email
 						name: existingUser.name || name,
+						email: user.email, // Update email in case it changed
+						image:
+							user.user_metadata?.avatar_url ||
+							existingUser.image, // Update image if available
 					},
 				});
 				console.log(
@@ -91,6 +75,7 @@ export async function POST(request) {
 						email: user.email,
 						username,
 						name: name,
+						image: user.user_metadata?.avatar_url,
 						createdAt: new Date(user.created_at),
 					},
 				});

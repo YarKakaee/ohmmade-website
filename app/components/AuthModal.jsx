@@ -174,7 +174,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 		setError(null);
 		setSuccess(null);
 
-		const { error } = await supabase.auth.signInWithOAuth({
+		const { data, error } = await supabase.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
 				redirectTo: `${window.location.origin}/auth/callback`,
@@ -186,6 +186,9 @@ const AuthModal = ({ isOpen, onClose }) => {
 			setLoading(false);
 			return;
 		}
+
+		// The user will be redirected to the callback URL
+		// The callback route will handle creating the Prisma user model
 		setLoading(false);
 	};
 

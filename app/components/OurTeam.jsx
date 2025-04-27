@@ -14,7 +14,7 @@ const teamMembers = [
 		name: 'Yar Kakaee',
 		role: 'Founder, Head of Engineering',
 		description:
-			'Yar is a 2nd-year Software Engineering student at Western University with a strong background in web development, Raspberry Pi, and Arduino. He’s passionate about building innovative microcontroller-based projects and full-stack web applications that merge hardware and software in meaningful ways. As the Founder and CEO of OhmMade, Yar leads all development and design efforts — having designed and engineered the platform from the ground up. He continues to shape its direction, ensuring an exceptional experience for makers and creators around the world.',
+			'Yar is a 2nd-year Software Engineering student at Western University with a strong background in web development, circuit design, microcontrollers, and full-stack software development. He’s passionate about building innovative projects that blend hardware and software — from hands-on electronics to scalable web applications. As the Founder and Head of Engineering at OhmMade, Yar leads all development and design efforts, having architected and engineered the platform from the ground up. He continues to shape OhmMade’s direction, ensuring an exceptional experience for makers and creators around the world.',
 		image: '/assets/Yar.jpeg',
 		instagram: 'https://www.instagram.com/yar.kakaee/',
 		linkedin: 'https://www.linkedin.com/in/yar-kakaee/',
