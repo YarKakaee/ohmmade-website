@@ -114,6 +114,7 @@ export default function PublishProjectPage() {
 			setTimeToBuild('');
 			setTags('');
 			setThumbnailUrl(null);
+			setComponents([]);
 		} catch (err) {
 			console.error('Error publishing project:', err);
 			toast.error('Something went wrong while publishing.');
@@ -229,7 +230,7 @@ export default function PublishProjectPage() {
 
 								<p className="text-[#FFFFFF]/70">
 									Need help formatting or editing, or just
-									want general information about what’s
+									want general information about what's
 									allowed?
 								</p>
 
