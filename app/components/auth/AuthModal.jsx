@@ -93,80 +93,94 @@ const AuthModal = ({ isOpen, onClose }) => {
 			}
 			onClose();
 		} else {
-			// Check if email exists
-			const checkResponse = await fetch('/api/auth/check-email', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email }),
-			});
+			try {
+				// Check if email exists
+				const checkResponse = await fetch('/api/auth/check-email', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email }),
+				});
 
-			const { exists } = await checkResponse.json();
+				const { exists } = await checkResponse.json();
 
-			if (exists) {
-				setError(
-					'An account with this email already exists. Please sign in instead.'
-				);
-				setLoading(false);
-				return;
-			}
-
-			const randomAvatar = getRandomAvatar();
-
-			// Create account
-			const { data, error: signUpError } = await supabase.auth.signUp({
-				email,
-				password,
-				options: {
-					data: {
-						name: name,
-						display_name: name,
-						avatar_url: randomAvatar,
-					},
-				},
-			});
-
-			if (signUpError) {
-				setError(signUpError.message);
-				setLoading(false);
-				return;
-			}
-
-			// Create user in Prisma
-			const createUserResponse = await fetch('/api/auth/create-user', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					email,
-					name,
-					image: randomAvatar,
-				}),
-			});
-
-			if (!createUserResponse.ok) {
-				const errorData = await createUserResponse.json();
-				setError(errorData.error || 'Failed to create user profile');
-				setLoading(false);
-				return;
-			}
-
-			// Handle success
-			if (data.user) {
-				// Check if email confirmation is required by looking at the session
-				if (!data.session) {
-					setSuccess(
-						'Account created! Please check your email to confirm your account.'
+				if (exists) {
+					setError(
+						'An account with this email already exists. Please sign in instead.'
 					);
-					setTimeout(() => {
-						onClose();
-						setIsSignIn(true);
-					}, 3000);
-				} else {
-					setSuccess('Account created successfully!');
-					onClose();
+					setLoading(false);
+					return;
 				}
+
+				const randomAvatar = getRandomAvatar();
+
+				// Create account
+				const { data, error: signUpError } = await supabase.auth.signUp(
+					{
+						email,
+						password,
+						options: {
+							data: {
+								name: name,
+								display_name: name,
+								avatar_url: randomAvatar,
+							},
+						},
+					}
+				);
+
+				if (signUpError) {
+					setError(signUpError.message);
+					setLoading(false);
+					return;
+				}
+
+				// Create user in Prisma
+				const createUserResponse = await fetch(
+					'/api/auth/create-user',
+					{
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({
+							email,
+							name,
+							image: randomAvatar,
+						}),
+					}
+				);
+
+				const createUserData = await createUserResponse.json();
+
+				if (!createUserResponse.ok) {
+					setError(
+						createUserData.error || 'Failed to create user profile'
+					);
+					setLoading(false);
+					return;
+				}
+
+				// Handle success
+				if (data.user) {
+					// Check if email confirmation is required by looking at the session
+					if (!data.session) {
+						setSuccess(
+							'Account created! Please check your email to confirm your account.'
+						);
+						setTimeout(() => {
+							onClose();
+							setIsSignIn(true);
+						}, 3000);
+					} else {
+						setSuccess('Account created successfully!');
+						onClose();
+					}
+				}
+			} catch (err) {
+				console.error('Sign up error:', err);
+				setError(err.message || 'Failed to create account');
+			} finally {
+				setLoading(false);
 			}
 		}
-		setLoading(false);
 	};
 
 	const handleGoogleSignIn = async () => {

@@ -46,9 +46,26 @@ export async function POST(request) {
 			},
 		});
 
-		return NextResponse.json({ user });
+		// Return success response
+		return NextResponse.json({
+			success: true,
+			user: {
+				id: user.id,
+				email: user.email,
+				name: user.name,
+				username: user.username,
+				image: user.image,
+			},
+		});
 	} catch (error) {
 		console.error('Create user error:', error);
+		// Check if it's a unique constraint violation
+		if (error.code === 'P2002') {
+			return NextResponse.json(
+				{ error: 'A user with this email already exists' },
+				{ status: 409 }
+			);
+		}
 		return NextResponse.json(
 			{ error: 'Failed to create user' },
 			{ status: 500 }
