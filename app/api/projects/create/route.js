@@ -10,7 +10,6 @@ export async function POST(req) {
 
 		let username = body.username;
 		if (!username) {
-			// Fallback: generate from name or email
 			username = await generateUsername(
 				body.name || body.email.split('@')[0]
 			);
@@ -42,10 +41,10 @@ export async function POST(req) {
 				difficultyLevel: body.difficultyLevel,
 				timeToBuild: body.timeToBuild,
 				tags: body.tags,
+				componentsUsed: body.componentsUsed,
+				content: body.content,
 				thumbnailUrl: body.thumbnailUrl,
 				slug: body.slug,
-				content: body.content,
-				componentsUsed: body.componentsUsed,
 				status: body.status || 'published',
 				views: 0,
 				likes: 0,

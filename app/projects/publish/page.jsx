@@ -97,13 +97,18 @@ export default function PublishProjectPage() {
 				10000000 + Math.random() * 90000000
 			)}`;
 
+			// Defensive: ensure tags is a flat array of strings
+			const flatTags = Array.isArray(tags)
+				? tags.map((t) => String(t).trim())
+				: [];
+
 			await axios.post('/api/projects/create', {
 				title: title,
 				description: description,
 				category,
 				difficultyLevel,
 				timeToBuild,
-				tags: tags.map((t) => t.trim()),
+				tags: flatTags,
 				thumbnailUrl,
 				content: editorData,
 				slug,
@@ -398,10 +403,6 @@ export default function PublishProjectPage() {
 													.from('project-thumbnails')
 													.getPublicUrl(filePath);
 
-											console.log(
-												'Thumbnail URL:',
-												publicUrlData.publicUrl
-											);
 											setThumbnailUrl(
 												publicUrlData.publicUrl
 											);

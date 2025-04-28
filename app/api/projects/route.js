@@ -6,6 +6,7 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { createActivity } from '@/lib/activity';
 import { generateUsername } from '@/lib/usernameUtils';
+import { Prisma } from '@prisma/client';
 
 export async function GET(request) {
 	const { searchParams } = new URL(request.url);
@@ -24,33 +25,6 @@ export async function GET(request) {
 		searchParams.get('components')?.split(',').filter(Boolean) || [];
 	const tags = searchParams.get('tags')?.split(',').filter(Boolean) || [];
 	const author = searchParams.get('author')?.split(',').filter(Boolean) || [];
-
-	// Build where clause
-	const where = {
-		status: 'published',
-		...(searchQuery && {
-			OR: [
-				{ title: { contains: searchQuery, mode: 'insensitive' } },
-				{ description: { contains: searchQuery, mode: 'insensitive' } },
-			],
-		}),
-		...(category.length > 0 && { category: { in: category } }),
-		...(difficulty.length > 0 && { difficultyLevel: { in: difficulty } }),
-		...(components.length > 0 && {
-			componentsUsed: { hasSome: components },
-		}),
-		...(tags.length > 0 && { tags: { hasSome: tags } }),
-		...(author.length > 0 && {
-			OR: author.map((authorType) => {
-				if (authorType === 'ohmmade') {
-					return { author: { email: 'info@ohmmade.ca' } };
-				} else if (authorType === 'community') {
-					return { author: { email: { not: 'info@ohmmade.ca' } } };
-				}
-				return {};
-			}),
-		}),
-	};
 
 	// Build orderBy clause
 	let orderBy = [];
@@ -75,9 +49,83 @@ export async function GET(request) {
 	}
 
 	try {
+		if (searchQuery) {
+			// Use raw SQL for partial tag search
+			const projects = await prisma.$queryRaw`
+				SELECT * FROM "Project"
+				WHERE status = 'published'
+				  AND (
+					  title ILIKE ${'%' + searchQuery + '%'}
+					  OR description ILIKE ${'%' + searchQuery + '%'}
+					  OR EXISTS (
+						  SELECT 1 FROM jsonb_array_elements_text("tags") AS tag
+						  WHERE tag ILIKE ${'%' + searchQuery + '%'}
+					  )
+				  )
+				ORDER BY ${Prisma.raw(
+					orderBy
+						.map((o) =>
+							Object.entries(o)
+								.map(([k, v]) => `"${k}" ${v.toUpperCase()}`)
+								.join(', ')
+						)
+						.join(', ')
+				)}
+				LIMIT ${limit} OFFSET ${skip}
+			`;
+			// For total count
+			const totalResult = await prisma.$queryRaw`
+				SELECT COUNT(*) FROM "Project"
+				WHERE status = 'published'
+				  AND (
+					  title ILIKE ${'%' + searchQuery + '%'}
+					  OR description ILIKE ${'%' + searchQuery + '%'}
+					  OR EXISTS (
+						  SELECT 1 FROM jsonb_array_elements_text("tags") AS tag
+						  WHERE tag ILIKE ${'%' + searchQuery + '%'}
+					  )
+				  )
+			`;
+			const total = parseInt(totalResult[0]?.count || 0, 10);
+			return NextResponse.json(
+				{
+					projects,
+					total,
+				},
+				{
+					headers: {
+						'Cache-Control': 'no-store',
+					},
+				}
+			);
+		}
+		// ... fallback to original Prisma query if no searchQuery ...
 		const [projects, total] = await Promise.all([
 			prisma.project.findMany({
-				where,
+				where: {
+					status: 'published',
+					...(category.length > 0 && { category: { in: category } }),
+					...(difficulty.length > 0 && {
+						difficultyLevel: { in: difficulty },
+					}),
+					...(components.length > 0 && {
+						componentsUsed: { hasSome: components },
+					}),
+					...(author.length > 0 && {
+						OR: author.map((authorType) => {
+							if (authorType === 'ohmmade') {
+								return { author: { email: 'info@ohmmade.ca' } };
+							} else if (authorType === 'community') {
+								return {
+									author: {
+										email: { not: 'info@ohmmade.ca' },
+									},
+								};
+							}
+							return {};
+						}),
+					}),
+				},
 				orderBy,
 				skip,
 				take: limit,
@@ -91,7 +139,32 @@ export async function GET(request) {
 					},
 				},
 			}),
-			prisma.project.count({ where }),
+			prisma.project.count({
+				where: {
+					status: 'published',
+					...(category.length > 0 && { category: { in: category } }),
+					...(difficulty.length > 0 && {
+						difficultyLevel: { in: difficulty },
+					}),
+					...(components.length > 0 && {
+						componentsUsed: { hasSome: components },
+					}),
+					...(author.length > 0 && {
+						OR: author.map((authorType) => {
+							if (authorType === 'ohmmade') {
+								return { author: { email: 'info@ohmmade.ca' } };
+							} else if (authorType === 'community') {
+								return {
+									author: {
+										email: { not: 'info@ohmmade.ca' },
+									},
+								};
+							}
+							return {};
+						}),
+					}),
+				},
+			}),
 		]);
 
 		return NextResponse.json(
@@ -199,6 +272,7 @@ export async function PUT(req) {
 			where: { id: data.id },
 			data: {
 				...data,
+				tags: data.tags ? JSON.stringify(data.tags) : undefined,
 				updatedAt: new Date(),
 			},
 		});

@@ -238,8 +238,8 @@ export default function ExploreProjectsPage() {
 	};
 
 	return (
-		<div className="relative min-h-screen bg-[#101014] overflow-hidden">
-			<section className="relative w-full pt-16 px-8 sm:px-16 lg:px-24">
+		<div className="flex flex-col min-h-screen bg-[#101014] overflow-hidden">
+			<section className="flex-1 relative w-full pt-16 px-8 sm:px-16 lg:px-24">
 				{/* Blurred background */}
 				<div
 					className="absolute top-[100px] left-1/2 -translate-x-1/2 z-0 w-full max-w-[1500px] h-[500px] bg-center bg-no-repeat bg-cover opacity-40 pointer-events-none select-none"

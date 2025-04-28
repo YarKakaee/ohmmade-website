@@ -54,27 +54,12 @@ export default function UserDashboardPage() {
 				let totalUserViews = 0;
 
 				if (authUser) {
-					const { data: profile, error: profileError } =
-						await supabaseClient
-							.from('User')
-							.select('*')
-							.eq('email', authUser.email)
-							.single();
-
-					if (profileError) {
-						// Try fetching by ID as fallback
-						const { data: profileById, error: profileByIdError } =
-							await supabaseClient
-								.from('User')
-								.select('*')
-								.eq('id', authUser.id)
-								.single();
-
-						if (!profileByIdError) {
-							userProfile = profileById;
-						}
-					} else {
-						userProfile = profile;
+					// Fetch user profile from our own API (Prisma DB)
+					const response = await fetch(
+						`/api/user/profile?email=${authUser.email}`
+					);
+					if (response.ok) {
+						userProfile = await response.json();
 					}
 
 					// Fetch total views (ensure RLS policy allows this)
@@ -115,7 +100,7 @@ export default function UserDashboardPage() {
 						image:
 							userProfile?.image ||
 							authUser.user_metadata?.avatar_url,
-						username: userProfile?.username,
+						username: userProfile?.username || 'No username',
 						created_at:
 							userProfile?.created_at ||
 							userProfile?.createdAt ||

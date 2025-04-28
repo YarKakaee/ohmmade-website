@@ -44,7 +44,7 @@ model Project {
   status          ProjectStatus @default(published)
   thumbnailUrl    String
   content         Json
-  tags            String[]
+  tags            Json
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @default(now())
   componentsUsed  String[]
