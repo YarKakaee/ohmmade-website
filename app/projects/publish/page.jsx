@@ -23,17 +23,29 @@ export default function PublishProjectPage() {
 	const [category, setCategory] = useState('');
 	const [difficultyLevel, setDifficultyLevel] = useState('');
 	const [timeToBuild, setTimeToBuild] = useState('');
-	const [tags, setTags] = useState('');
+	const [tags, setTags] = useState([]);
+	const [newTag, setNewTag] = useState('');
 	const [thumbnailUrl, setThumbnailUrl] = useState(null);
 	const [user, setUser] = useState(null);
 	const [isPublishing, setIsPublishing] = useState(false);
 
 	const [checkingSession, setCheckingSession] = useState(true);
 
-	const inputRef = useRef(null); // ⬅️ Add this outside return
+	const inputRef = useRef(null);
+	const tagInputRef = useRef(null);
 
 	const [components, setComponents] = useState([]);
 	const [newComponent, setNewComponent] = useState('');
+
+	const handleAddTag = () => {
+		if (!newTag.trim() || tags.length >= 6) return;
+		setTags([...tags, newTag.trim()]);
+		setNewTag('');
+	};
+
+	const handleRemoveTag = (index) => {
+		setTags(tags.filter((_, i) => i !== index));
+	};
 
 	const handleAddComponent = () => {
 		if (!newComponent.trim()) return;
@@ -91,7 +103,7 @@ export default function PublishProjectPage() {
 				category,
 				difficultyLevel,
 				timeToBuild,
-				tags: tags.split(',').map((t) => t.trim()),
+				tags: tags.map((t) => t.trim()),
 				thumbnailUrl,
 				content: editorData,
 				slug,
@@ -112,7 +124,7 @@ export default function PublishProjectPage() {
 			setCategory('');
 			setDifficultyLevel('');
 			setTimeToBuild('');
-			setTags('');
+			setTags([]);
 			setThumbnailUrl(null);
 			setComponents([]);
 		} catch (err) {
@@ -534,17 +546,63 @@ export default function PublishProjectPage() {
 
 								<div className="mb-4">
 									<label className="block mb-1.5 text-white/60">
-										Tags
+										Tags{' '}
+										<span className="text-[#FFC008]">
+											*
+										</span>
+										<span className="text-xs text-white/40 ml-2">
+											(max 6)
+										</span>
 									</label>
-									<input
-										type="text"
-										value={tags}
-										onChange={(e) =>
-											setTags(e.target.value)
-										}
-										className="w-full bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 text-sm text-white/50"
-										placeholder="e.g., arduino, RGB LED - helpful for search."
-									/>
+									<div className="flex gap-2 mb-2">
+										<input
+											ref={tagInputRef}
+											type="text"
+											value={newTag}
+											placeholder="e.g., arduino, electronics, diy"
+											onChange={(e) =>
+												setNewTag(e.target.value)
+											}
+											className="flex-1 bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 text-white/50 text-sm"
+										/>
+
+										{/* Add Button */}
+										<button
+											type="button"
+											onClick={handleAddTag}
+											disabled={tags.length >= 6}
+											className={`px-3 py-2 rounded-md text-sm font-medium ${
+												tags.length >= 6
+													? 'bg-[#27BBFF]/50 text-[#101014]/50 cursor-not-allowed'
+													: 'bg-[#27BBFF] text-[#101014] hover:brightness-110 cursor-pointer'
+											}`}
+										>
+											Add
+										</button>
+									</div>
+
+									<ul className="list-disc ml-6 text-white/70 text-sm -space-y-1">
+										{tags.map((item, idx) => (
+											<li key={idx} className="relative">
+												<div className="flex justify-between items-center gap-2">
+													<span className="ml-2">
+														{item}
+													</span>
+													<button
+														type="button"
+														onClick={() =>
+															handleRemoveTag(idx)
+														}
+														className="text-[#FF4B4B] px-3 py-2 cursor-pointer rounded-md text-sm font-medium transition-transform duration-200 hover:scale-110"
+													>
+														<FontAwesomeIcon
+															icon={faTrashCan}
+														/>
+													</button>
+												</div>
+											</li>
+										))}
+									</ul>
 								</div>
 							</div>
 						</div>
