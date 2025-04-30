@@ -13,6 +13,8 @@ import {
 	faBook,
 	faGear,
 	faRightFromBracket,
+	faChevronLeft,
+	faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -25,13 +27,29 @@ export default function UserDashboardPage() {
 	const [user, setUser] = useState(null);
 	const [activities, setActivities] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [totalViews, setTotalViews] = useState(0);
+	const [page, setPage] = useState(1);
+	const [total, setTotal] = useState(0);
+	const limit = 6;
+	const totalPages = Math.ceil(total / limit);
 
-	// Protect the page: redirect to /signin if not signed in
 	useEffect(() => {
-		if (session === null) {
-			router.replace('/signin');
+		let timeout;
+		if (session === undefined || session === null) {
+			setLoading(true);
+			timeout = setTimeout(() => {
+				if (session === undefined || session === null) {
+					router.replace('/signin');
+				} else {
+					setLoading(false);
+				}
+			}, 500); // 500ms delay
+		} else {
+			setLoading(false);
+			if (!session) {
+				router.replace('/signin');
+			}
 		}
+		return () => clearTimeout(timeout);
 	}, [session, router]);
 
 	useEffect(() => {
@@ -51,7 +69,6 @@ export default function UserDashboardPage() {
 			setLoading(true);
 			try {
 				let userProfile = null;
-				let totalUserViews = 0;
 
 				if (authUser) {
 					// Fetch user profile from our own API (Prisma DB)
@@ -61,32 +78,6 @@ export default function UserDashboardPage() {
 					if (response.ok) {
 						userProfile = await response.json();
 					}
-
-					// Fetch total views (ensure RLS policy allows this)
-					try {
-						const { data: projects, error: projectsError } =
-							await supabaseClient
-								.from('Project')
-								.select('views')
-								.eq('authorId', authUser.id);
-
-						if (projectsError) {
-							throw new Error(
-								`Projects error: ${projectsError.message}`
-							);
-						}
-						if (projects) {
-							totalUserViews = projects.reduce((sum, project) => {
-								const views = project.views
-									? Number(project.views)
-									: 0;
-								return sum + views;
-							}, 0);
-						}
-					} catch (viewError) {
-						// Continue even if views fail to load
-					}
-					setTotalViews(totalUserViews);
 
 					// Set user state using authUser and profile if available
 					setUser({
@@ -111,16 +102,19 @@ export default function UserDashboardPage() {
 						...userProfile,
 					});
 				} else {
-					// This case should ideally not be reached if session exists
 					setUser(null);
 					router.push('/signin');
 				}
 
-				// Fetch user activities (can run concurrently or after setting user)
-				const response = await fetch('/api/user/activities?limit=10');
-				if (!response.ok) throw new Error('Failed to fetch activities');
-				const activityData = await response.json();
-				setActivities(activityData);
+				// Fetch user activities with pagination
+				const activitiesRes = await fetch(
+					`/api/user/activities?page=${page}&limit=${limit}`
+				);
+				if (!activitiesRes.ok)
+					throw new Error('Failed to fetch activities');
+				const { activities, total } = await activitiesRes.json();
+				setActivities(activities);
+				setTotal(total);
 			} catch (err) {
 				console.error('Failed to fetch dashboard data:', err);
 				// Optionally set an error state to show a message to the user
@@ -135,7 +129,7 @@ export default function UserDashboardPage() {
 
 		// Cleanup function not strictly necessary here but good practice
 		// return () => {};
-	}, [session, supabaseClient, router]); // Depend on the session object
+	}, [session, supabaseClient, router, page]); // Depend on the session object
 
 	const handleSignOut = async () => {
 		await supabaseClient.auth.signOut();
@@ -187,6 +181,10 @@ export default function UserDashboardPage() {
 			});
 		}
 	};
+
+	function getPageHref(p) {
+		return `/dashboard?page=${p}`;
+	}
 
 	if (loading) {
 		return (
@@ -293,9 +291,7 @@ export default function UserDashboardPage() {
 										Welcome back, {user.name} 👋
 									</h2>
 									<p className="text-white/60">
-										{totalViews > 0
-											? `Keep contributing! Your work has inspired ${totalViews} people.`
-											: 'Share your projects to inspire people!'}
+										Share your projects to inspire people!
 									</p>
 								</div>
 								<div className="text-right">
@@ -380,6 +376,93 @@ export default function UserDashboardPage() {
 									</tbody>
 								</table>
 							</div>
+							{totalPages > 1 && (
+								<div className="flex flex-col items-center gap-4 mt-12">
+									<div className="flex items-center gap-2">
+										<button
+											onClick={() => setPage(page - 1)}
+											disabled={page === 1}
+											className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
+										>
+											<FontAwesomeIcon
+												icon={faChevronLeft}
+											/>
+										</button>
+										<div className="flex items-center gap-1">
+											{[...Array(totalPages)].map(
+												(_, i) => {
+													const pageNum = i + 1;
+													const isCurrentPage =
+														page === pageNum;
+													const isNearCurrentPage =
+														Math.abs(
+															page - pageNum
+														) <= 2;
+													const isFirstPage =
+														pageNum === 1;
+													const isLastPage =
+														pageNum === totalPages;
+
+													if (
+														isFirstPage ||
+														isLastPage ||
+														isNearCurrentPage
+													) {
+														return (
+															<button
+																key={i}
+																onClick={() =>
+																	setPage(
+																		pageNum
+																	)
+																}
+																className={`px-4 py-2 rounded-lg transition-colors cursor-pointer ${
+																	isCurrentPage
+																		? 'bg-[#27BBFF] text-[#101014]'
+																		: 'bg-[#13151A] border border-[#2C2F36] text-gray-400 hover:bg-[#1E2025]'
+																}`}
+															>
+																{pageNum}
+															</button>
+														);
+													} else if (
+														pageNum === page - 3 ||
+														pageNum === page + 3
+													) {
+														return (
+															<span
+																key={i}
+																className="px-4 py-2 text-gray-400"
+															>
+																...
+															</span>
+														);
+													}
+													return null;
+												}
+											)}
+										</div>
+										<button
+											onClick={() => setPage(page + 1)}
+											disabled={page === totalPages}
+											className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
+										>
+											<FontAwesomeIcon
+												icon={faChevronRight}
+											/>
+										</button>
+									</div>
+									{/* <p className="text-sm text-white/60">
+										Showing{' '}
+										{Math.min(
+											(page - 1) * limit + 1,
+											total
+										)}{' '}
+										- {Math.min(page * limit, total)} of{' '}
+										{total} activities
+									</p> */}
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
