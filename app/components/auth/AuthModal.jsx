@@ -141,6 +141,9 @@ const AuthModal = ({ isOpen, onClose }) => {
 					return;
 				}
 
+				// Get the Supabase Auth user id
+				const userId = data.user?.id;
+
 				// Create user in Prisma
 				const createUserResponse = await fetch(
 					'/api/auth/create-user',
@@ -148,6 +151,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({
+							id: userId,
 							email,
 							name,
 							image: randomAvatar,

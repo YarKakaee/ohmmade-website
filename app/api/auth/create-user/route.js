@@ -6,11 +6,11 @@ const prisma = new PrismaClient();
 
 export async function POST(request) {
 	try {
-		const { email, name, image } = await request.json();
+		const { id, email, name, image } = await request.json();
 
-		if (!email || !name) {
+		if (!id || !email || !name) {
 			return NextResponse.json(
-				{ error: 'Email and name are required' },
+				{ error: 'ID, email and name are required' },
 				{ status: 400 }
 			);
 		}
@@ -39,6 +39,7 @@ export async function POST(request) {
 		// Create the user in Prisma
 		const user = await prisma.user.create({
 			data: {
+				id,
 				email,
 				name,
 				username,
