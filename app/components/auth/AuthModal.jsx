@@ -34,6 +34,13 @@ const AuthModal = ({ isOpen, onClose }) => {
 			emailInputRef.current.focus();
 		}
 
+		// Reset loading, error, and success when modal is opened
+		if (isOpen) {
+			setLoading(false);
+			setError(null);
+			setSuccess(null);
+		}
+
 		// Clear form fields when modal is toggled
 		if (!isOpen) {
 			setEmail('');
