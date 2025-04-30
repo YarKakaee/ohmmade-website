@@ -78,17 +78,8 @@ export async function POST(req, { params }) {
 			});
 		}
 
-		// If no user is logged in, just increment the view count
-		await prisma.project.update({
-			where: { id: project.id },
-			data: {
-				views: {
-					increment: 1,
-				},
-			},
-		});
-
-		return new Response(JSON.stringify({ viewAdded: true }), {
+		// If no user is logged in, do not track the view
+		return new Response(JSON.stringify({ viewAdded: false }), {
 			status: 200,
 			headers: { 'Content-Type': 'application/json' },
 		});

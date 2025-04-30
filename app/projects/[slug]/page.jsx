@@ -8,6 +8,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import ClientProjectSlugHeader from './ClientProjectSlugHeader';
 
 export default async function ProjectPage({ params }) {
 	const { slug } = await params;
@@ -26,7 +28,9 @@ export default async function ProjectPage({ params }) {
 	return (
 		<section>
 			<div className="relative min-h-screen bg-[#101014] overflow-hidden">
-				<ProjectSlugHeader project={project} />
+				<Suspense fallback={<ProjectSlugHeader project={project} />}>
+					<ClientProjectSlugHeader project={project} />
+				</Suspense>
 
 				<div className="max-w-[1700px] mx-auto px-2.5 mt-12 grid grid-cols-1 lg:grid-cols-4 pr-16 gap-12">
 					{/* Left: Editor.js Content */}

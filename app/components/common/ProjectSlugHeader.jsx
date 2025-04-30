@@ -11,10 +11,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
-export default function ProjectSlugHeader({ project }) {
+export default function ProjectSlugHeader({ project, user, setAuthModalOpen }) {
 	const [likesCount, setLikesCount] = useState(project.likes);
+	const [liked, setLiked] = useState(false);
 
 	useEffect(() => {
 		const trackView = async () => {
@@ -39,6 +40,10 @@ export default function ProjectSlugHeader({ project }) {
 	}, [project.slug]);
 
 	const toggleLike = async () => {
+		if (!user) {
+			if (setAuthModalOpen) setAuthModalOpen(true);
+			return;
+		}
 		const newLikedState = !liked;
 		setLiked(newLikedState); // optimistic update
 		setLikesCount((prev) => prev + (newLikedState ? 1 : -1)); // update count immediately
@@ -57,8 +62,6 @@ export default function ProjectSlugHeader({ project }) {
 			setLikesCount((prev) => prev - (newLikedState ? 1 : -1));
 		}
 	};
-
-	const [liked, setLiked] = useState(false);
 
 	const isVerified = project.author?.email === 'info@ohmmade.ca';
 
