@@ -30,22 +30,19 @@ export async function GET(req) {
 		}
 
 		if (session?.user) {
-			// Check if user exists in Prisma
+			// Check if user exists in Prisma by email
 			const existingUser = await prisma.user.findUnique({
-				where: { id: session.user.id },
+				where: { email: session.user.email },
 			});
 
 			if (!existingUser) {
-				// Extract name from user metadata or email
+				// User does not exist, create with generated username
 				const name =
 					session.user.user_metadata?.name ||
 					session.user.user_metadata?.full_name ||
 					session.user.email.split('@')[0];
-
-				// Generate a unique username
 				const username = await generateUsername(name);
 
-				// Create new user in Prisma
 				await prisma.user.create({
 					data: {
 						id: session.user.id,
@@ -56,10 +53,23 @@ export async function GET(req) {
 						createdAt: new Date(),
 					},
 				});
-
 				console.log(
 					`Created new user ${session.user.id} with username ${username}`
 				);
+			} else {
+				// User exists, update other fields but DO NOT overwrite username
+				await prisma.user.update({
+					where: { email: session.user.email },
+					data: {
+						id: session.user.id,
+						name:
+							session.user.user_metadata?.name ||
+							session.user.user_metadata?.full_name ||
+							session.user.email.split('@')[0],
+						image: session.user.user_metadata?.avatar_url,
+						createdAt: new Date(),
+					},
+				});
 			}
 		}
 	}
