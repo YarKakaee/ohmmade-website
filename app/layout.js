@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-	title: 'OhmMade | Electronics Made Simple. Projects Worth Sharing.',
+	title: 'OhmMade | Launching Q3 2025',
 	description:
 		'OhmMade is where makers publish, discover, and share electronics projects with the world. From Raspberry Pi builds to Arduino tutorials, OhmMade gives you the tools to showcase your work, inspire others, and explore step-by-step guides — all in one beginner-friendly, beautifully designed platform.',
 	keywords: [
@@ -36,7 +36,7 @@ export const metadata = {
 		siteName: 'OhmMade',
 		images: [
 			{
-				url: '/assets/og-image.png',
+				url: '/og-image.png',
 				width: 1200,
 				height: 630,
 				alt: 'OhmMade Image',
@@ -49,7 +49,7 @@ export const metadata = {
 		title: 'OhmMade | Electronics Made Simple. Projects Worth Sharing.',
 		description:
 			'Discover, build, and share your electronics projects with OhmMade.',
-		images: ['/assets/og-image.png'],
+		images: ['/og-image.png'],
 	},
 };
 
