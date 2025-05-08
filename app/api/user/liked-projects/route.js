@@ -1,69 +1,74 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import prisma from '@/prisma/client';
 
-export async function GET() {
+export async function GET(req) {
 	try {
-		const cookieStore = cookies();
+		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,
 		});
 
+		// Get user session from Supabase
 		const {
 			data: { session },
 		} = await supabase.auth.getSession();
-		if (!session) {
-			return NextResponse.json(
-				{ error: 'Unauthorized' },
-				{ status: 401 }
-			);
+
+		if (!session?.user) {
+			return new Response('Unauthorized', { status: 401 });
 		}
 
-		const likedProjects = await prisma.userLike.findMany({
-			where: {
-				userId: session.user.id,
-			},
-			include: {
-				project: {
-					select: {
-						id: true,
-						title: true,
-						description: true,
-						thumbnailUrl: true,
-						views: true,
-						likes: true,
-						createdAt: true,
-						slug: true,
-						author: {
-							select: {
-								name: true,
-								image: true,
-								email: true,
-							},
+		const searchParams = new URL(req.url).searchParams;
+		const userId = searchParams.get('userId');
+		const page = parseInt(searchParams.get('page')) || 1;
+		const limit = 6; // 6 items per page
+		const skip = (page - 1) * limit;
+
+		if (!userId) {
+			return new Response('User ID is required', { status: 400 });
+		}
+
+		const [projects, total] = await Promise.all([
+			prisma.project.findMany({
+				where: {
+					userLikes: {
+						some: {
+							userId: userId,
 						},
 					},
 				},
-			},
-			orderBy: {
-				createdAt: 'desc',
-			},
+				include: {
+					author: {
+						select: {
+							name: true,
+							image: true,
+							email: true,
+						},
+					},
+				},
+				orderBy: {
+					createdAt: 'desc',
+				},
+				skip,
+				take: limit,
+			}),
+			prisma.project.count({
+				where: {
+					userLikes: {
+						some: {
+							userId: userId,
+						},
+					},
+				},
+			}),
+		]);
+
+		return new Response(JSON.stringify({ projects, total }), {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' },
 		});
-
-		const projects = likedProjects.map((like) => ({
-			...like.project,
-			imageUrl: like.project.thumbnailUrl,
-			authorName: like.project.author.name,
-			authorImage: like.project.author.image,
-			authorEmail: like.project.author.email,
-		}));
-
-		return NextResponse.json(projects);
 	} catch (error) {
 		console.error('Error fetching liked projects:', error);
-		return NextResponse.json(
-			{ error: 'Failed to fetch liked projects' },
-			{ status: 500 }
-		);
+		return new Response('Error fetching liked projects', { status: 500 });
 	}
 }
