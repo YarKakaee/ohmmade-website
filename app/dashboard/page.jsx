@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,17 +20,19 @@ import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { formatDistanceToNow } from 'date-fns';
 import { formatActivityMessage } from '@/lib/activity';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
+import Footer from '@/app/components/layout/Footer';
 
 export default function UserDashboardPage() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const session = useSession();
 	const supabaseClient = useSupabaseClient();
 	const [user, setUser] = useState(null);
 	const [activities, setActivities] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [page, setPage] = useState(1);
+	const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
 	const [total, setTotal] = useState(0);
-	const limit = 6;
+	const limit = 10;
 	const totalPages = Math.ceil(total / limit);
 
 	useEffect(() => {
@@ -132,6 +134,13 @@ export default function UserDashboardPage() {
 		// return () => {};
 	}, [session, supabaseClient, router, page]); // Depend on the session object
 
+	// Update URL when page changes
+	useEffect(() => {
+		const params = new URLSearchParams(searchParams);
+		params.set('page', page.toString());
+		router.replace(`?${params.toString()}`, { scroll: false });
+	}, [page, router, searchParams]);
+
 	const handleSignOut = async () => {
 		await supabaseClient.auth.signOut();
 		router.push('/');
@@ -200,209 +209,224 @@ export default function UserDashboardPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-[#101014]">
-			<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-16">
-				<div className="flex">
-					{/* Sidebar */}
-					<div className="fixed h-screen">
-						<DashboardSidebar
-							user={user}
-							currentPath="/dashboard"
-						/>
-					</div>
-
-					{/* Main scrollable Content */}
-					<div className="flex-1 pt-24 ml-[280px] pl-16">
-						<div className="mb-8">
-							<h1 className="text-[44px] font-black text-white mb-2">
-								Account Dashboard
-							</h1>
+		<div className="min-h-screen bg-[#101014] flex flex-col">
+			<div className="flex-1">
+				<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-16">
+					<div className="flex">
+						{/* Sidebar */}
+						<div className="fixed h-screen">
+							<DashboardSidebar
+								user={user}
+								currentPath="/dashboard"
+							/>
 						</div>
 
-						{/* Welcome Section */}
-						<div className="rounded-2xl mb-8 ">
-							<div className="flex items-start justify-between">
-								<div>
-									<h2 className="text-2xl font-bold text-white mb-2">
-										Welcome back, {user.name} 👋
-									</h2>
-									<p className="text-white/60">
-										Share your projects to inspire people!
-									</p>
-								</div>
-								<div className="text-right">
-									<p className="text-sm text-white/60">
-										Member since
-									</p>
-									<p className="text-lg font-semibold text-white">
-										{getMemberDuration(user.created_at)}
-									</p>
-								</div>
+						{/* Main scrollable Content */}
+						<div className="flex-1 pt-24 ml-[280px] pl-16">
+							<div className="mb-8">
+								<h1 className="text-[44px] font-black text-white mb-2">
+									Account Dashboard
+								</h1>
 							</div>
-						</div>
 
-						{/* Recent Activity */}
-						<div className="bg-[#13151A] rounded-2xl p-8 border border-[#3A3A3C]/60">
-							<h2 className="text-xl font-bold text-white mb-6">
-								Recent Activity
-							</h2>
-							<div className="overflow-x-auto">
-								<table className="w-full">
-									<thead>
-										<tr className="text-left border-b border-[#3A3A3C]/60">
-											<th className="pb-4 text-white/60 font-medium">
-												Action
-											</th>
-											<th className="pb-4 text-white/60 font-medium">
-												Project
-											</th>
-											<th className="pb-4 text-white/60 font-medium">
-												When
-											</th>
-										</tr>
-									</thead>
-									<tbody className="text-white">
-										{activities.map((activity, index) => (
-											<tr
-												key={activity.id}
-												className={`${
-													index !==
-													activities.length - 1
-														? 'border-b border-[#3A3A3C]/60'
-														: ''
-												}`}
-											>
-												<td className="py-4">
-													{formatActivityMessage(
-														activity
-													)}
-												</td>
-												<td className="py-4">
-													{activity.project && (
-														<Link
-															href={`/projects/${activity.project.slug}`}
-															className="text-[#27BBFF] hover:underline"
-														>
-															{
-																activity.project
-																	.title
-															}
-														</Link>
-													)}
-												</td>
-												<td className="py-4 text-white/60">
-													{formatActivityTime(
-														activity.createdAt
-													)}
-												</td>
-											</tr>
-										))}
-										{activities.length === 0 && (
-											<tr>
-												<td
-													colSpan={3}
-													className="py-8 text-center text-white/60"
-												>
-													You haven't done anything
-													yet — get started by viewing
-													a project!
-												</td>
-											</tr>
-										)}
-									</tbody>
-								</table>
-							</div>
-							{totalPages > 1 && (
-								<div className="flex flex-col items-center gap-4 mt-12">
-									<div className="flex items-center gap-2">
-										<button
-											onClick={() => setPage(page - 1)}
-											disabled={page === 1}
-											className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
-										>
-											<FontAwesomeIcon
-												icon={faChevronLeft}
-											/>
-										</button>
-										<div className="flex items-center gap-1">
-											{[...Array(totalPages)].map(
-												(_, i) => {
-													const pageNum = i + 1;
-													const isCurrentPage =
-														page === pageNum;
-													const isNearCurrentPage =
-														Math.abs(
-															page - pageNum
-														) <= 2;
-													const isFirstPage =
-														pageNum === 1;
-													const isLastPage =
-														pageNum === totalPages;
-
-													if (
-														isFirstPage ||
-														isLastPage ||
-														isNearCurrentPage
-													) {
-														return (
-															<button
-																key={i}
-																onClick={() =>
-																	setPage(
-																		pageNum
-																	)
-																}
-																className={`px-4 py-2 rounded-lg transition-colors cursor-pointer ${
-																	isCurrentPage
-																		? 'bg-[#27BBFF] text-[#101014]'
-																		: 'bg-[#13151A] border border-[#2C2F36] text-gray-400 hover:bg-[#1E2025]'
-																}`}
-															>
-																{pageNum}
-															</button>
-														);
-													} else if (
-														pageNum === page - 3 ||
-														pageNum === page + 3
-													) {
-														return (
-															<span
-																key={i}
-																className="px-4 py-2 text-gray-400"
-															>
-																...
-															</span>
-														);
-													}
-													return null;
-												}
-											)}
-										</div>
-										<button
-											onClick={() => setPage(page + 1)}
-											disabled={page === totalPages}
-											className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
-										>
-											<FontAwesomeIcon
-												icon={faChevronRight}
-											/>
-										</button>
+							{/* Welcome Section */}
+							<div className="rounded-2xl mb-8 ">
+								<div className="flex items-start justify-between">
+									<div>
+										<h2 className="text-2xl font-bold text-white mb-2">
+											Welcome back, {user.name} 👋
+										</h2>
+										<p className="text-white/60">
+											Share your projects to inspire
+											people!
+										</p>
 									</div>
-									{/* <p className="text-sm text-white/60">
-										Showing{' '}
-										{Math.min(
-											(page - 1) * limit + 1,
-											total
-										)}{' '}
-										- {Math.min(page * limit, total)} of{' '}
-										{total} activities
-									</p> */}
+									<div className="text-right">
+										<p className="text-sm text-white/60">
+											Member since
+										</p>
+										<p className="text-lg font-semibold text-white">
+											{getMemberDuration(user.created_at)}
+										</p>
+									</div>
 								</div>
-							)}
+							</div>
+
+							{/* Recent Activity */}
+							<div className="bg-[#13151A] rounded-2xl p-8 border border-[#3A3A3C]/60">
+								<h2 className="text-xl font-bold text-white mb-6">
+									Recent Activity
+								</h2>
+								<div className="overflow-x-auto">
+									<table className="w-full">
+										<thead>
+											<tr className="text-left border-b border-[#3A3A3C]/60">
+												<th className="pb-4 text-white/60 font-medium">
+													Action
+												</th>
+												<th className="pb-4 text-white/60 font-medium">
+													Project
+												</th>
+												<th className="pb-4 text-white/60 font-medium">
+													When
+												</th>
+											</tr>
+										</thead>
+										<tbody className="text-white">
+											{activities.map(
+												(activity, index) => (
+													<tr
+														key={activity.id}
+														className={`${
+															index !==
+															activities.length -
+																1
+																? 'border-b border-[#3A3A3C]/60'
+																: ''
+														}`}
+													>
+														<td className="py-4">
+															{formatActivityMessage(
+																activity
+															)}
+														</td>
+														<td className="py-4">
+															{activity.project && (
+																<Link
+																	href={`/projects/${activity.project.slug}`}
+																	className="text-[#27BBFF] hover:underline"
+																>
+																	{
+																		activity
+																			.project
+																			.title
+																	}
+																</Link>
+															)}
+														</td>
+														<td className="py-4 text-white/60">
+															{formatActivityTime(
+																activity.createdAt
+															)}
+														</td>
+													</tr>
+												)
+											)}
+											{activities.length === 0 && (
+												<tr>
+													<td
+														colSpan={3}
+														className="py-8 text-center text-white/60"
+													>
+														You haven't done
+														anything yet — get
+														started by viewing a
+														project!
+													</td>
+												</tr>
+											)}
+										</tbody>
+									</table>
+								</div>
+								{totalPages > 1 && (
+									<div className="flex flex-col items-center gap-4 mt-12">
+										<div className="flex items-center gap-2">
+											<button
+												onClick={() =>
+													setPage(page - 1)
+												}
+												disabled={page === 1}
+												className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
+											>
+												<FontAwesomeIcon
+													icon={faChevronLeft}
+												/>
+											</button>
+											<div className="flex items-center gap-1">
+												{[...Array(totalPages)].map(
+													(_, i) => {
+														const pageNum = i + 1;
+														const isCurrentPage =
+															page === pageNum;
+														const isNearCurrentPage =
+															Math.abs(
+																page - pageNum
+															) <= 2;
+														const isFirstPage =
+															pageNum === 1;
+														const isLastPage =
+															pageNum ===
+															totalPages;
+
+														if (
+															isFirstPage ||
+															isLastPage ||
+															isNearCurrentPage
+														) {
+															return (
+																<button
+																	key={i}
+																	onClick={() =>
+																		setPage(
+																			pageNum
+																		)
+																	}
+																	className={`px-4 py-2 rounded-lg transition-colors cursor-pointer ${
+																		isCurrentPage
+																			? 'bg-[#27BBFF] text-[#101014]'
+																			: 'bg-[#13151A] border border-[#2C2F36] text-gray-400 hover:bg-[#1E2025]'
+																	}`}
+																>
+																	{pageNum}
+																</button>
+															);
+														} else if (
+															pageNum ===
+																page - 3 ||
+															pageNum === page + 3
+														) {
+															return (
+																<span
+																	key={i}
+																	className="px-4 py-2 text-gray-400"
+																>
+																	...
+																</span>
+															);
+														}
+														return null;
+													}
+												)}
+											</div>
+											<button
+												onClick={() =>
+													setPage(page + 1)
+												}
+												disabled={page === totalPages}
+												className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
+											>
+												<FontAwesomeIcon
+													icon={faChevronRight}
+												/>
+											</button>
+										</div>
+										{/* <p className="text-sm text-white/60">
+											Showing{' '}
+											{Math.min(
+												(page - 1) * limit + 1,
+												total
+											)}{' '}
+											- {Math.min(page * limit, total)} of{' '}
+											{total} activities
+										</p> */}
+									</div>
+								)}
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<Footer />
 		</div>
 	);
 }

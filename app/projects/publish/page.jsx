@@ -547,11 +547,8 @@ export default function PublishProjectPage() {
 
 								<div className="mb-4">
 									<label className="block mb-1.5 text-white/60">
-										Tags{' '}
-										<span className="text-[#FFC008]">
-											*
-										</span>
-										<span className="text-xs text-white/40 ml-2">
+										Tags
+										<span className="text-xs text-white/40 ml-1">
 											(max 6)
 										</span>
 									</label>
