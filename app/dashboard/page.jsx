@@ -204,10 +204,15 @@ export default function UserDashboardPage() {
 			<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-16">
 				<div className="flex">
 					{/* Sidebar */}
-					<DashboardSidebar user={user} currentPath="/dashboard" />
+					<div className="fixed h-screen">
+						<DashboardSidebar
+							user={user}
+							currentPath="/dashboard"
+						/>
+					</div>
 
-					{/* Main Content */}
-					<div className="flex-1 pt-24">
+					{/* Main scrollable Content */}
+					<div className="flex-1 pt-24 ml-[280px] pl-16">
 						<div className="mb-8">
 							<h1 className="text-[44px] font-black text-white mb-2">
 								Account Dashboard

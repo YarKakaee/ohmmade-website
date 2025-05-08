@@ -1,39 +1,26 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import prisma from '@/prisma/client';
 
-export async function GET() {
+export async function GET(request) {
 	try {
-		const cookieStore = cookies();
-		const supabase = createRouteHandlerClient({
-			cookies: () => cookieStore,
-		});
+		const { searchParams } = new URL(request.url);
+		const userId = searchParams.get('userId');
 
-		const {
-			data: { session },
-		} = await supabase.auth.getSession();
-		if (!session) {
+		if (!userId) {
 			return NextResponse.json(
-				{ error: 'Unauthorized' },
-				{ status: 401 }
+				{ error: 'User ID is required' },
+				{ status: 400 }
 			);
 		}
 
 		const projects = await prisma.project.findMany({
 			where: {
-				authorId: session.user.id,
+				authorId: userId,
 			},
-			select: {
-				id: true,
-				title: true,
-				description: true,
-				thumbnailUrl: true,
-				views: true,
-				likes: true,
-				createdAt: true,
-				category: true,
-				slug: true,
+			orderBy: {
+				createdAt: 'desc',
+			},
+			include: {
 				author: {
 					select: {
 						name: true,
@@ -42,25 +29,13 @@ export async function GET() {
 					},
 				},
 			},
-			orderBy: {
-				createdAt: 'desc',
-			},
 		});
 
-		// Transform the projects to match the ProjectCard component's expectations
-		const transformedProjects = projects.map((project) => ({
-			...project,
-			imageUrl: project.thumbnailUrl,
-			authorName: project.author.name,
-			authorImage: project.author.image,
-			authorEmail: project.author.email,
-		}));
-
-		return NextResponse.json(transformedProjects);
+		return NextResponse.json(projects);
 	} catch (error) {
 		console.error('Error fetching user projects:', error);
 		return NextResponse.json(
-			{ error: 'Failed to fetch user projects' },
+			{ error: 'Failed to fetch projects' },
 			{ status: 500 }
 		);
 	}
