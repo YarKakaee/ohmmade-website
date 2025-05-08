@@ -19,6 +19,7 @@ import {
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { formatDistanceToNow } from 'date-fns';
 import { formatActivityMessage } from '@/lib/activity';
+import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
 
 export default function UserDashboardPage() {
 	const router = useRouter();
@@ -203,77 +204,7 @@ export default function UserDashboardPage() {
 			<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-16">
 				<div className="flex">
 					{/* Sidebar */}
-					<div className="w-[280px] pt-24 pr-8">
-						<div className="flex flex-col items-center mb-8">
-							<div className="w-24 h-24 rounded-full overflow-hidden ring-2 ring-[#3A3A3C]/60 mb-4">
-								<Image
-									src={user.image || '/default-avatar.png'}
-									alt={user.name}
-									width={96}
-									height={96}
-									className="object-cover w-full h-full"
-								/>
-							</div>
-							<h2 className="text-xl font-bold text-white mb-1">
-								{user.name}
-							</h2>
-							<p className="text-sm text-white/60">
-								@{user.username}
-							</p>
-						</div>
-
-						<nav className="space-y-2">
-							<Link
-								href="/dashboard"
-								className="flex items-center gap-3 px-4 py-2.5 text-[#101014] bg-[#27BBFF] rounded-lg font-medium"
-							>
-								<FontAwesomeIcon icon={faUser} />
-								Overview
-							</Link>
-							<Link
-								href="/dashboard/projects"
-								className="flex items-center gap-3 px-4 py-2.5 text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-							>
-								<FontAwesomeIcon icon={faFolderOpen} />
-								My Projects
-							</Link>
-							<Link
-								href="/dashboard/liked"
-								className="flex items-center gap-3 px-4 py-2.5 text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-							>
-								<FontAwesomeIcon icon={faHeart} />
-								Liked Projects
-							</Link>
-							<Link
-								href="/dashboard/saved"
-								className="flex items-center gap-3 px-4 py-2.5 text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-							>
-								<FontAwesomeIcon icon={faBookmark} />
-								Saved Projects
-							</Link>
-							<Link
-								href="/dashboard/learning"
-								className="flex items-center gap-3 px-4 py-2.5 text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-							>
-								<FontAwesomeIcon icon={faBook} />
-								Learning Progress
-							</Link>
-							<Link
-								href="/dashboard/settings"
-								className="flex items-center gap-3 px-4 py-2.5 text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-							>
-								<FontAwesomeIcon icon={faGear} />
-								Settings
-							</Link>
-							<button
-								onClick={handleSignOut}
-								className="cursor-pointer flex items-center gap-3 px-4 py-2.5 text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors w-full"
-							>
-								<FontAwesomeIcon icon={faRightFromBracket} />
-								Sign Out
-							</button>
-						</nav>
-					</div>
+					<DashboardSidebar user={user} currentPath="/dashboard" />
 
 					{/* Main Content */}
 					<div className="flex-1 pt-24">
