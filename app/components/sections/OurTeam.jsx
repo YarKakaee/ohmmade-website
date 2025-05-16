@@ -28,6 +28,7 @@ const teamMembers = [
 		image: '/assets/Tristan.png',
 		instagram: 'https://www.instagram.com/tristan_biley_/',
 		linkedin: 'https://www.linkedin.com/in/tristan-biley-81928526a/',
+		github: 'https://github.com/TristanBiley',
 	},
 	{
 		name: 'Serkan Nur',
@@ -37,6 +38,7 @@ const teamMembers = [
 		image: '/assets/Serkan.jpeg',
 		instagram: 'https://www.instagram.com/_serkannur_/',
 		linkedin: 'https://www.linkedin.com/in/serkan-nur-32710424a/',
+		github: 'https://github.com/serkannur',
 	},
 	{
 		name: 'Andres Holmes',
