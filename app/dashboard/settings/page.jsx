@@ -118,11 +118,26 @@ export default function SettingsPage() {
 				const { data: uploadData, error: uploadError } =
 					await supabaseClient.storage
 						.from('avatars')
-						.upload(fileName, avatarFile);
+						.upload(fileName, avatarFile, {
+							cacheControl: '3600',
+							upsert: true,
+							contentType: avatarFile.type,
+						});
 
-				if (uploadError) throw uploadError;
+				if (uploadError) {
+					console.error(
+						'Avatar upload error:',
+						JSON.stringify(uploadError, null, 2),
+						uploadError
+					);
+					throw uploadError;
+				}
 
-				avatarUrl = uploadData.path;
+				// Get the public URL for the uploaded avatar
+				const { data: publicUrlData } = supabaseClient.storage
+					.from('avatars')
+					.getPublicUrl(uploadData.path);
+				avatarUrl = publicUrlData.publicUrl;
 			}
 
 			// Update user profile
@@ -135,7 +150,16 @@ export default function SettingsPage() {
 				}),
 			});
 
-			if (!response.ok) throw new Error('Failed to update profile');
+			if (!response.ok) {
+				const errorText = await response.text();
+				console.error('Error updating settings:', errorText);
+				throw new Error('Failed to update profile');
+			}
+
+			// After getting avatarUrl (public URL), update Supabase Auth user_metadata
+			await supabaseClient.auth.updateUser({
+				data: { avatar_url: avatarUrl },
+			});
 
 			setUpdateMessage({
 				type: 'success',
@@ -260,51 +284,51 @@ export default function SettingsPage() {
 										<div className="flex items-stretch gap-5">
 											{/* Profile Picture - Centered */}
 											<div className="flex flex-col justify-center items-center w-56 min-w-[180px]">
-												<div className="relative w-28 h-28 group flex items-center justify-center">
-													<div className="w-28 h-28 rounded-full overflow-hidden bg-[#23242A] relative ring-2 ring-[#3A3A3C]/60 shadow-lg flex items-center justify-center">
-														{avatarPreview ? (
-															<Image
-																src={
-																	avatarPreview
-																}
-																alt="Profile"
-																width={112}
-																height={112}
-																className="w-full h-full object-cover"
-															/>
-														) : (
-															<div className="w-full h-full flex items-center justify-center bg-[#23242A]">
-																<FontAwesomeIcon
-																	icon={
-																		faUser
+												<div className="relative w-28 h-28 group flex items-center justify-center cursor-pointer">
+													<label
+														htmlFor="avatar-upload"
+														className="w-full h-full block cursor-pointer"
+													>
+														<div className="w-28 h-28 rounded-full overflow-hidden bg-[#23242A] relative ring-2 ring-[#3A3A3C]/60 shadow-lg flex items-center justify-center">
+															{avatarPreview ? (
+																<Image
+																	src={
+																		avatarPreview
 																	}
-																	className="text-4xl text-white/40"
+																	alt="Profile"
+																	width={112}
+																	height={112}
+																	className="w-full h-full object-cover"
 																/>
-															</div>
-														)}
-														<div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full flex items-center justify-center cursor-pointer">
-															<label
-																htmlFor="avatar-upload"
-																className="cursor-pointer"
-															>
+															) : (
+																<div className="w-full h-full flex items-center justify-center bg-[#23242A]">
+																	<FontAwesomeIcon
+																		icon={
+																			faUser
+																		}
+																		className="text-4xl text-white/40"
+																	/>
+																</div>
+															)}
+															<div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full flex items-center justify-center">
 																<FontAwesomeIcon
 																	icon={
 																		faCamera
 																	}
 																	className="text-2xl text-white"
 																/>
-															</label>
-															<input
-																id="avatar-upload"
-																type="file"
-																accept="image/*"
-																className="hidden"
-																onChange={
-																	handleAvatarChange
-																}
-															/>
+															</div>
 														</div>
-													</div>
+														<input
+															id="avatar-upload"
+															type="file"
+															accept="image/*"
+															className="hidden"
+															onChange={
+																handleAvatarChange
+															}
+														/>
+													</label>
 												</div>
 											</div>
 											{/* Fields */}
