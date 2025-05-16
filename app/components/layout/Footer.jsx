@@ -1,6 +1,7 @@
 'use client';
 
 import {
+	faDiscord,
 	faGithub,
 	faInstagram,
 	faLinkedin,
@@ -38,6 +39,11 @@ export default function Footer() {
 							href: 'https://github.com/teamohmmade',
 							icon: faGithub,
 							label: 'GitHub',
+						},
+						{
+							href: 'https://discord.gg/ohmmade',
+							icon: faDiscord,
+							label: 'Discord',
 						},
 						{
 							href: 'https://www.linkedin.com/company/ohmmade/',
