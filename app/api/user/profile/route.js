@@ -1,108 +1,95 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import prisma from '@/prisma/client';
 import bcrypt from 'bcryptjs';
 import { uploadImage } from '@/lib/supabaseStorage';
 
-export async function GET(request) {
-	const { searchParams } = new URL(request.url);
-	const email = searchParams.get('email');
-	if (!email) {
-		return NextResponse.json({ error: 'Email required' }, { status: 400 });
-	}
-	const user = await prisma.user.findUnique({ where: { email } });
-	if (!user) {
-		return NextResponse.json({ error: 'User not found' }, { status: 404 });
-	}
-	return NextResponse.json(user);
-}
-
-export async function PUT(request) {
+export async function GET(req) {
 	try {
-		const cookieStore = cookies();
+		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,
 		});
 
+		// Get user session from Supabase
 		const {
 			data: { session },
 		} = await supabase.auth.getSession();
-		if (!session) {
-			return NextResponse.json(
-				{ error: 'Unauthorized' },
-				{ status: 401 }
-			);
+
+		if (!session?.user) {
+			return new Response('Unauthorized', { status: 401 });
 		}
 
-		const body = await request.json();
-		const { name, email, currentPassword, newPassword } = body;
+		const searchParams = new URL(req.url).searchParams;
+		const email = searchParams.get('email');
 
-		// Get the current user with password for verification
+		if (!email) {
+			return new Response('Email is required', { status: 400 });
+		}
+
 		const user = await prisma.user.findUnique({
-			where: { id: session.user.id },
+			where: { email },
 			select: {
 				id: true,
 				name: true,
+				username: true,
 				email: true,
 				image: true,
-				password: true,
 			},
 		});
 
 		if (!user) {
-			return NextResponse.json(
-				{ error: 'User not found' },
-				{ status: 404 }
-			);
+			return new Response('User not found', { status: 404 });
 		}
 
-		// If password change is requested, verify current password
-		if (newPassword) {
-			if (!currentPassword) {
-				return NextResponse.json(
-					{ error: 'Current password is required' },
-					{ status: 400 }
-				);
-			}
+		return new Response(JSON.stringify(user), {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' },
+		});
+	} catch (error) {
+		console.error('Error fetching user profile:', error);
+		return new Response('Error fetching user profile', { status: 500 });
+	}
+}
 
-			const isValidPassword = await bcrypt.compare(
-				currentPassword,
-				user.password
-			);
-			if (!isValidPassword) {
-				return NextResponse.json(
-					{ error: 'Current password is incorrect' },
-					{ status: 400 }
-				);
-			}
+export async function PUT(req) {
+	try {
+		const cookieStore = await cookies();
+		const supabase = createRouteHandlerClient({
+			cookies: () => cookieStore,
+		});
+
+		// Get user session from Supabase
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
+
+		if (!session?.user) {
+			return new Response('Unauthorized', { status: 401 });
 		}
 
-		// Prepare update data
-		const updateData = {};
-		if (name) updateData.name = name;
-		if (email) updateData.email = email;
-		if (newPassword)
-			updateData.password = await bcrypt.hash(newPassword, 10);
+		const data = await req.json();
+		const { email, ...updateData } = data;
 
-		// Update user
+		// Update user profile
 		const updatedUser = await prisma.user.update({
-			where: { id: session.user.id },
+			where: { email },
 			data: updateData,
 			select: {
 				id: true,
 				name: true,
+				username: true,
 				email: true,
 				image: true,
 			},
 		});
 
-		return NextResponse.json(updatedUser);
+		return new Response(JSON.stringify(updatedUser), {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' },
+		});
 	} catch (error) {
 		console.error('Error updating user profile:', error);
-		return NextResponse.json(
-			{ error: 'Failed to update user profile' },
-			{ status: 500 }
-		);
+		return new Response('Error updating user profile', { status: 500 });
 	}
 }

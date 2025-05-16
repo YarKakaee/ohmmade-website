@@ -12,7 +12,6 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { Inter_Tight } from 'next/font/google';
-import { redirect } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 

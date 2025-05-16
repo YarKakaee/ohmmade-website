@@ -1,26 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
+import Footer from '@/app/components/layout/Footer';
+import { formatActivityMessage } from '@/lib/activity';
 import {
-	faUser,
-	faFolderOpen,
-	faHeart,
-	faBookmark,
-	faBook,
-	faGear,
-	faRightFromBracket,
 	faChevronLeft,
 	faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { formatDistanceToNow } from 'date-fns';
-import { formatActivityMessage } from '@/lib/activity';
-import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
-import Footer from '@/app/components/layout/Footer';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function UserDashboardPage() {
 	const router = useRouter();
