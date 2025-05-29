@@ -35,6 +35,8 @@ export async function GET(req) {
 				username: true,
 				email: true,
 				image: true,
+				createdAt: true,
+				updatedAt: true,
 			},
 		});
 
@@ -81,6 +83,8 @@ export async function PUT(req) {
 				username: true,
 				email: true,
 				image: true,
+				createdAt: true,
+				updatedAt: true,
 			},
 		});
 

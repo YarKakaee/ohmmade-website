@@ -389,10 +389,10 @@ export default function SettingsPage() {
 											</div>
 										</div>
 										{/* Divider and Save Row */}
-										<div className="border-t border-[#23242A] mt-10 pt-6 flex items-center justify-between">
-											<span className="text-white/60 text-sm font-medium">
+										<div className="border-t border-[#23242A] mt-10 pt-6 flex items-center justify-between gap-2">
+											<span className="text-white/60 text-sm font-medium flex items-center">
 												Learn more about{' '}
-												<span className="relative inline-block group align-middle">
+												<span className="relative inline-block group align-middle ml-1">
 													<a
 														href="/help/profile-settings"
 														target="_blank"

@@ -57,12 +57,11 @@ export async function GET(req) {
 					`Created new user ${session.user.id} with username ${username}`
 				);
 			} else {
-				// User exists, update other fields but DO NOT overwrite username
+				// User exists, update other fields but DO NOT overwrite username or createdAt
 				await prisma.user.update({
 					where: { email: session.user.email },
 					data: {
 						id: session.user.id,
-						createdAt: new Date(),
 					},
 				});
 			}
