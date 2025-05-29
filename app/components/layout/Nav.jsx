@@ -24,6 +24,7 @@ export default function Nav() {
 	const languageRef = useRef(null);
 
 	const [user, setUser] = useState(session?.user || null);
+	const [userProfile, setUserProfile] = useState(null);
 	const [scrolled, setScrolled] = useState(false);
 	const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 	const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -38,6 +39,14 @@ export default function Nav() {
 		if (!session) refreshSession();
 		else setUser(session.user);
 	}, [session, supabaseClient]);
+
+	// Fetch user profile from your own DB
+	useEffect(() => {
+		if (!session?.user?.email) return;
+		fetch(`/api/user/profile?email=${session.user.email}`)
+			.then((res) => res.json())
+			.then((data) => setUserProfile(data));
+	}, [session]);
 
 	useEffect(() => {
 		const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -229,23 +238,22 @@ export default function Nav() {
 								}
 								className="cursor-pointer flex items-center gap-2 text-white hover:text-[#ACACAD] transition-colors"
 							>
-								{user.user_metadata.avatar_url ? (
+								{userProfile?.image ? (
 									<Image
-										src={user.user_metadata.avatar_url}
+										src={userProfile.image}
 										alt="Avatar"
 										width={30}
 										height={30}
-										className="rounded-full ring-2 ring-[#3A3A3C]/60"
+										className="rounded-full object-cover w-[30px] h-[30px] ring-2 ring-[#3A3A3C]/60 overflow-hidden"
 									/>
 								) : (
 									<div className="w-[35px] h-[35px] rounded-full bg-[#1C1C20] border border-[#3A3A3C]/60 flex items-center justify-center text-xs font-semibold">
 										{getInitials(
-											user.user_metadata.name ||
-												user.email
+											userProfile?.name || user?.email
 										)}
 									</div>
 								)}
-								<span>{user.user_metadata.name || 'User'}</span>
+								<span>{userProfile?.name || 'User'}</span>
 							</button>
 
 							{showUserDropdown && (

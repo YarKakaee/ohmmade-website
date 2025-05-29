@@ -38,7 +38,7 @@ export async function POST(req, { params }) {
 			// Upsert user into DB if not already there (by email)
 			await prisma.user.upsert({
 				where: { email },
-				update: { name, image, username },
+				update: {},
 				create: {
 					id: userId,
 					email,

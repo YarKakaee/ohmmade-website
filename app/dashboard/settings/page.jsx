@@ -156,9 +156,9 @@ export default function SettingsPage() {
 				throw new Error('Failed to update profile');
 			}
 
-			// After getting avatarUrl (public URL), update Supabase Auth user_metadata
+			// After getting avatarUrl (public URL), update Supabase Auth user_metadata with name and avatar_url
 			await supabaseClient.auth.updateUser({
-				data: { avatar_url: avatarUrl },
+				data: { name: formData.name, avatar_url: avatarUrl },
 			});
 
 			setUpdateMessage({

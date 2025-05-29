@@ -62,11 +62,6 @@ export async function GET(req) {
 					where: { email: session.user.email },
 					data: {
 						id: session.user.id,
-						name:
-							session.user.user_metadata?.name ||
-							session.user.user_metadata?.full_name ||
-							session.user.email.split('@')[0],
-						image: session.user.user_metadata?.avatar_url,
 						createdAt: new Date(),
 					},
 				});

@@ -51,21 +51,9 @@ export async function POST(request) {
 
 			// Create or update user with username
 			if (existingUser) {
-				// Update existing user
-				await prisma.user.update({
-					where: { id: user.id },
-					data: {
-						username,
-						// If no name is set, use the part before @ in email
-						name: existingUser.name || name,
-						email: user.email, // Update email in case it changed
-						image:
-							user.user_metadata?.avatar_url ||
-							existingUser.image, // Update image if available
-					},
-				});
+				// Do nothing, just return
 				console.log(
-					`Updated existing user ${user.id} with username ${username}`
+					`User ${user.id} already exists, not updating any fields.`
 				);
 			} else {
 				// Create new user
