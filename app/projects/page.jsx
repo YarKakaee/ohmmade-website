@@ -65,7 +65,6 @@ export default function ExploreProjectsPage() {
 	const [currentPage, setCurrentPage] = useState(
 		Number(searchParams.get('page')) || 1
 	);
-	const [viewMode, setViewMode] = useState('grid');
 	const [totalItems, setTotalItems] = useState(0);
 	const [error, setError] = useState(null);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -348,29 +347,6 @@ export default function ExploreProjectsPage() {
 								/>
 								Publish
 							</Link>
-
-							<div className="flex gap-3">
-								<button
-									onClick={() => setViewMode('grid')}
-									className={`cursor-pointer p-2.5 rounded-md transition ${
-										viewMode === 'grid'
-											? 'bg-[#27BBFF] text-[#101014]'
-											: 'bg-[#34343B] text-white hover:brightness-150'
-									}`}
-								>
-									<LayoutGrid strokeWidth="1.4" size="16" />
-								</button>
-								<button
-									onClick={() => setViewMode('list')}
-									className={`cursor-pointer p-2 rounded-md transition ${
-										viewMode === 'list'
-											? 'bg-[#27BBFF] text-[#101014]'
-											: 'bg-[#34343B] text-white hover:brightness-150'
-									}`}
-								>
-									<List strokeWidth="1.4" size="20" />
-								</button>
-							</div>
 						</div>
 					</div>
 
@@ -380,11 +356,9 @@ export default function ExploreProjectsPage() {
 							className={`grid w-full ${
 								filtersOpen ? 'lg:w-[78%]' : 'lg:w-full'
 							} ${
-								viewMode === 'grid'
-									? filtersOpen
-										? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-										: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-									: 'grid-cols-1 gap-4'
+								filtersOpen
+									? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+									: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
 							} gap-6`}
 						>
 							<AnimatePresence mode="wait">
@@ -439,7 +413,6 @@ export default function ExploreProjectsPage() {
 												views={project.views}
 												likes={project.likes}
 												slug={project.slug}
-												viewMode={viewMode}
 											/>
 										</motion.div>
 									))
