@@ -251,7 +251,7 @@ export default function PublishProjectPage() {
 								</p>
 
 								<a
-									href="/publishing-guidelines"
+									href="/help/publishing-guidelines"
 									className="inline-flex items-center mt-4 text-sm bg-[#343437] rounded-md px-3 py-2 text-white hover:bg-[#2F2F31] transition"
 								>
 									Publishing Guidelines{' '}

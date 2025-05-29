@@ -2,7 +2,7 @@
 
 import { Inter_Tight } from 'next/font/google';
 import Image from 'next/image';
-import Footer from '../components/layout/Footer';
+import Footer from '@/app/components/layout/Footer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 
@@ -37,7 +37,7 @@ export default function PublishingGuidelinesPage() {
 
 					<section>
 						<h2 className="text-2xl font-bold mb-3">
-							Before You Publish
+							1. Before You Publish
 						</h2>
 						<p className="text-[#CCCCCC] leading-relaxed">
 							OhmMade is a beginner-friendly, project-based
@@ -49,7 +49,7 @@ export default function PublishingGuidelinesPage() {
 
 					<section>
 						<h2 className="text-2xl font-bold mb-3">
-							Core Guidelines
+							2. Core Guidelines
 						</h2>
 						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
 							<li>
@@ -86,7 +86,7 @@ export default function PublishingGuidelinesPage() {
 
 					<section>
 						<h2 className="text-2xl font-bold mb-3">
-							Formatting Tips
+							3. Formatting Tips
 						</h2>
 						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
 							<li>
@@ -110,7 +110,7 @@ export default function PublishingGuidelinesPage() {
 
 					<section>
 						<h2 className="text-2xl font-bold mb-3">
-							What Not to Include
+							4. What Not to Include
 						</h2>
 						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
 							<li>
@@ -126,7 +126,9 @@ export default function PublishingGuidelinesPage() {
 					</section>
 
 					<section>
-						<h2 className="text-2xl font-bold mb-3">Need Help?</h2>
+						<h2 className="text-2xl font-bold mb-3">
+							5. Need Help?
+						</h2>
 						<p className="text-[#CCCCCC]">
 							If you're unsure about formatting or need feedback,
 							feel free to reach out at{' '}
