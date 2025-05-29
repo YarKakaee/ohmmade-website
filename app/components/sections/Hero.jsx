@@ -53,24 +53,26 @@ export default function Hero() {
 						variants={fadeInUp}
 						className="text-[15px] text-[#FFFFFF]/70 font-medium"
 					>
-						From Spark to Circuit. From Idea to Impact.
+						Learn What Matters. Build What's Possible.
 					</motion.p>
 
 					<motion.h1
 						variants={fadeInUp}
-						className={`text-4xl sm:text-[54px] font-[850] leading-tight ${interTight.className}`}
+						className={`text-4xl sm:text-[44px] font-[850] leading-tight ${interTight.className}`}
 					>
-						{/* Built for Makers.
-						<br />
-						Loved by Creators. */}
-						Learn What Matters.
-						<br />
-						Build What's Possible.
+						Turning One-Time Projects
+					</motion.h1>
+
+					<motion.h1
+						variants={fadeInUp}
+						className={`text-4xl sm:text-[54px] font-[900] leading-tight ${interTight.className} -mt-4`}
+					>
+						Into Lifelong Impact.
 					</motion.h1>
 
 					<motion.p
 						variants={fadeInUp}
-						className="text-[#FFFFFF]/65 max-w-lg font-normal text-[17px]"
+						className="text-[#FFFFFF]/65 max-w-lg font-normal text-[15px]"
 					>
 						A platform where ideas become hardware. Whether you're
 						lighting LEDs or building medical tech, your knowledge
@@ -109,7 +111,7 @@ export default function Hero() {
 				</div>
 
 				{/* Right Side: Hero Video with Blurred Background */}
-				<div className="hidden md:block relative w-[930px] h-[520px]">
+				<div className="hidden md:block relative w-[920px] h-[520px]">
 					{/* Blurred Background Video */}
 					<motion.div
 						variants={blurVariants}
