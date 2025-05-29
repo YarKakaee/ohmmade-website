@@ -394,13 +394,13 @@ export default function SettingsPage() {
 												Learn more about{' '}
 												<span className="relative inline-block group align-middle ml-1">
 													<a
-														href="/help/profile-settings"
+														href="/help/profile-guidelines"
 														target="_blank"
 														rel="noopener noreferrer"
 														className="text-[#27BBFF] text-sm font-medium flex items-center"
 													>
 														<span className="ml-0.5">
-															Profile Settings
+															Profile Guidelines
 														</span>
 														<FontAwesomeIcon
 															icon={
