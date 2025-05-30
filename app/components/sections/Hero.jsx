@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Inter_Tight } from 'next/font/google';
+import { useEffect, useState } from 'react';
 
 const interTight = Inter_Tight({
 	subsets: ['latin'],
@@ -38,14 +39,67 @@ const blurVariants = {
 };
 
 export default function Hero() {
+	const [particles, setParticles] = useState([]);
+
+	useEffect(() => {
+		const createParticle = () => {
+			const size = Math.random() * 3 + 1;
+			const x = Math.random() * window.innerWidth;
+			const y = Math.random() * window.innerHeight;
+			const speedX = (Math.random() - 0.5) * 0.5;
+			const speedY = (Math.random() - 0.5) * 0.5;
+			const opacity = Math.random() * 0.5 + 0.1;
+
+			return { x, y, size, speedX, speedY, opacity };
+		};
+
+		const initialParticles = Array.from({ length: 50 }, createParticle);
+		setParticles(initialParticles);
+
+		const animateParticles = () => {
+			setParticles((prevParticles) =>
+				prevParticles.map((particle) => {
+					let newX = particle.x + particle.speedX;
+					let newY = particle.y + particle.speedY;
+
+					if (newX < 0) newX = window.innerWidth;
+					if (newX > window.innerWidth) newX = 0;
+					if (newY < 0) newY = window.innerHeight;
+					if (newY > window.innerHeight) newY = 0;
+
+					return { ...particle, x: newX, y: newY };
+				})
+			);
+		};
+
+		const interval = setInterval(animateParticles, 50);
+		return () => clearInterval(interval);
+	}, []);
+
 	return (
 		<section className="relative w-full min-h-[90vh] flex items-center justify-center px-8 sm:px-16 lg:px-24 mt-10">
+			{/* Star/Particle Background */}
+			{particles.map((particle, index) => (
+				<div
+					key={index}
+					className="absolute rounded-full bg-white pointer-events-none z-0"
+					style={{
+						left: `${particle.x}px`,
+						top: `${particle.y}px`,
+						width: `${particle.size}px`,
+						height: `${particle.size}px`,
+						opacity: particle.opacity,
+						transform: 'translate(-50%, -50%)',
+					}}
+				/>
+			))}
+
 			{/* Container to Match Nav Width */}
 			<motion.div
 				variants={containerVariants}
 				initial="hidden"
 				animate="visible"
-				className="mx-auto max-w-[1700px] px-8 sm:px-16 flex items-center justify-between w-full"
+				className="mx-auto max-w-[1700px] px-8 sm:px-16 flex items-center justify-between w-full relative z-10"
 			>
 				{/* Left Side: Text Content */}
 				<div className="text-white space-y-5 max-w-xl">
