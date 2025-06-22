@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-	title: 'OhmMade | Electronics Made Simple. Projects Worth Sharing.',
+	title: 'OhmMade | Turning One-Time Projects To Lifelong Impact.',
 	description:
 		'OhmMade is where makers publish, discover, and share electronics projects with the world. From Raspberry Pi builds to Arduino tutorials, OhmMade gives you the tools to showcase your work, inspire others, and explore step-by-step guides — all in one beginner-friendly, beautifully designed platform.',
 	keywords: [

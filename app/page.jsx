@@ -1,13 +1,13 @@
 import Image from 'next/image';
-import ContactUs from './components/sections/ContactUs';
 import Footer from './components/layout/Footer';
+import ContactUs from './components/sections/ContactUs';
+import CreatorSection from './components/sections/CreatorSection';
+import Details from './components/sections/Details';
 import Hero from './components/sections/Hero';
 import Learn from './components/sections/Learn';
 import OurTeam from './components/sections/OurTeam';
 import ProjectsSection from './components/sections/ProjectsSection';
 import './globals.css';
-import CreatorSection from './components/sections/CreatorSection';
-import Details from './components/sections/Details';
 
 export default function Home() {
 	return (

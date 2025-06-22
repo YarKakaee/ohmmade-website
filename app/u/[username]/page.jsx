@@ -1,0 +1,438 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+	faCalendar,
+	faCopy,
+	faShare,
+	faHeart,
+	faEye,
+	faLinkedin,
+	faGithub,
+	faInstagram,
+	faTwitter,
+} from '@fortawesome/free-solid-svg-icons';
+import {
+	faLinkedin as faLinkedinBrand,
+	faGithub as faGithubBrand,
+	faInstagram as faInstagramBrand,
+	faTwitter as faTwitterBrand,
+} from '@fortawesome/free-brands-svg-icons';
+import ProjectCard from '@/app/components/common/ProjectCard';
+import categoryColors from '@/lib/constants/categoryColors';
+import Footer from '@/app/components/layout/Footer';
+import toast from 'react-hot-toast';
+import VerifiedIcon from '@mui/icons-material/Verified';
+
+export default function UserProfilePage() {
+	const params = useParams();
+	const { username } = params;
+	const [userData, setUserData] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+	const [isFollowing, setIsFollowing] = useState(false);
+
+	useEffect(() => {
+		const fetchUserData = async () => {
+			try {
+				setLoading(true);
+				const response = await fetch(`/api/user/${username}`);
+
+				if (!response.ok) {
+					if (response.status === 404) {
+						setError('User not found');
+					} else {
+						setError('Failed to load profile');
+					}
+					return;
+				}
+
+				const data = await response.json();
+				setUserData(data);
+			} catch (err) {
+				console.error('Error fetching user data:', err);
+				setError('Failed to load profile');
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		if (username) {
+			fetchUserData();
+		}
+	}, [username]);
+
+	const handleCopyProfileLink = async () => {
+		try {
+			await navigator.clipboard.writeText(
+				`${window.location.origin}/u/${username}`
+			);
+			toast.success('Profile link copied to clipboard!');
+		} catch (err) {
+			toast.error('Failed to copy link');
+		}
+	};
+
+	const handleShareProfile = async () => {
+		if (navigator.share) {
+			try {
+				await navigator.share({
+					title: `${userData.user.name} on OhmMade`,
+					text: `Check out ${userData.user.name}'s electronics projects on OhmMade!`,
+					url: `${window.location.origin}/u/${username}`,
+				});
+			} catch (err) {
+				console.log('Share cancelled');
+			}
+		} else {
+			handleCopyProfileLink();
+		}
+	};
+
+	const handleFollow = () => {
+		setIsFollowing(!isFollowing);
+		toast.success(isFollowing ? 'Unfollowed' : 'Following');
+	};
+
+	const formatDate = (dateString) => {
+		const date = new Date(dateString);
+		return date.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+		});
+	};
+
+	if (loading) {
+		return (
+			<div className="min-h-screen bg-[#101014] pt-24">
+				<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-8">
+					<div className="animate-pulse">
+						{/* Header Skeleton */}
+						<div className="bg-[#13151A]/50 backdrop-blur-sm border border-[#3A3A3C]/60 rounded-3xl p-8 mb-8">
+							<div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+								<div className="w-32 h-32 bg-[#2C2F36] rounded-full"></div>
+								<div className="flex-1 text-center md:text-left">
+									<div className="h-8 bg-[#2C2F36] rounded mb-4 w-48 mx-auto md:mx-0"></div>
+									<div className="h-6 bg-[#2C2F36] rounded mb-2 w-32 mx-auto md:mx-0"></div>
+									<div className="h-4 bg-[#2C2F36] rounded mb-6 w-64 mx-auto md:mx-0"></div>
+									<div className="flex justify-center md:justify-start gap-4 mb-6">
+										<div className="h-10 bg-[#2C2F36] rounded-lg w-24"></div>
+										<div className="h-10 bg-[#2C2F36] rounded-lg w-32"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						{/* Projects Grid Skeleton */}
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+							{[...Array(6)].map((_, i) => (
+								<div
+									key={i}
+									className="bg-[#1C1C20] rounded-xl h-96 animate-pulse"
+								>
+									<div className="h-48 bg-[#2C2F36] rounded-t-xl"></div>
+									<div className="p-5 space-y-3">
+										<div className="h-6 bg-[#2C2F36] rounded"></div>
+										<div className="h-4 bg-[#2C2F36] rounded"></div>
+										<div className="h-4 bg-[#2C2F36] rounded"></div>
+									</div>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className="min-h-screen bg-[#101014] flex items-center justify-center">
+				<div className="text-center">
+					<h1 className="text-2xl font-bold text-white mb-4">
+						User Not Found
+					</h1>
+					<p className="text-white/60">
+						The user you're looking for doesn't exist.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (!userData) return null;
+
+	const { user, projects, stats } = userData;
+
+	return (
+		<div className="min-h-screen bg-[#101014] pt-24">
+			<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-8">
+				{/* Header Section */}
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6 }}
+					className="bg-[#13151A]/50 backdrop-blur-sm border border-[#3A3A3C]/60 rounded-3xl p-8 mb-12"
+				>
+					<div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+						{/* Avatar */}
+						<div className="relative group">
+							<div className="w-33.5 h-33.5 rounded-full overflow-hidden border-2 border-[#3A3A3C]/60 group-hover:border-[#27BBFF]/60 transition-all duration-300">
+								{user.image ? (
+									<Image
+										src={user.image}
+										alt={user.name}
+										width={128}
+										height={128}
+										className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+									/>
+								) : (
+									<div className="w-full h-full bg-gradient-to-br from-[#27BBFF] to-[#1E40AF] flex items-center justify-center text-white text-3xl font-bold">
+										{user.name?.[0]?.toUpperCase() || 'U'}
+									</div>
+								)}
+							</div>
+						</div>
+
+						{/* User Info */}
+						<div className="flex-1 flex flex-col md:flex-row justify-between w-full md:items-stretch gap-4">
+							{/* Left Side */}
+							<div className="w-full md:w-auto flex flex-col items-center md:items-start text-center md:text-left">
+								<div className="flex items-center gap-2 mb-0.5">
+									<h1 className="text-3xl font-extrabold text-white">
+										{user.name}
+									</h1>
+									<VerifiedIcon className="text-[#27BBFF] text-2xl" />
+								</div>
+								<p className="text-md text-white/50 mb-3">
+									@{user.username}
+								</p>
+								<p className="text-md text-white/60 mb-4 max-w-md">
+									Electrical Engineering student at Western
+									University
+								</p>
+
+								{/* Social Icons */}
+								<div className="flex justify-center md:justify-start gap-5 mb-4">
+									<a
+										href="#"
+										className="text-[#ACACAD] hover:text-white transition-colors"
+									>
+										<FontAwesomeIcon
+											icon={faLinkedinBrand}
+										/>
+									</a>
+									<a
+										href="#"
+										className="text-[#ACACAD] hover:text-white transition-colors"
+									>
+										<FontAwesomeIcon icon={faGithubBrand} />
+									</a>
+									<a
+										href="#"
+										className="text-[#ACACAD] hover:text-white transition-colors"
+									>
+										<FontAwesomeIcon
+											icon={faInstagramBrand}
+										/>
+									</a>
+									<a
+										href="#"
+										className="text-[#ACACAD] hover:text-white transition-colors"
+									>
+										<FontAwesomeIcon
+											icon={faTwitterBrand}
+										/>
+									</a>
+								</div>
+								<button
+									onClick={handleFollow}
+									className={`px-6 py-2 text-sm rounded-lg font-semibold transition-all duration-200 ${
+										isFollowing
+											? 'bg-[#1C1C20] border border-[#3A3A3C]/60 text-white/60 hover:bg-[#2C2F36]'
+											: 'bg-[#27BBFF] border border-[#27BBFF] text-[#101014]'
+									}`}
+								>
+									{isFollowing ? 'Following' : 'Follow'}
+								</button>
+							</div>
+
+							{/* Right Side */}
+							<div className="w-full md:w-auto flex flex-col justify-between items-center md:items-end text-center md:text-right mt-6 md:mt-0">
+								{/* Top Group: Stats and Joined Date */}
+								<div>
+									<div className="flex items-center justify-center md:justify-end gap-2 text-white/60">
+										<FontAwesomeIcon
+											icon={faCalendar}
+											className="text-sm"
+										/>
+										<span className="text-sm mt-0.5">
+											Member since{' '}
+											{formatDate(user.joinedDate)}
+										</span>
+									</div>
+									<div className="flex justify-center md:justify-end gap-5 text-white/60 mt-4">
+										<span className="text-sm">
+											{stats.projectCount} Projects
+										</span>
+										<span className="text-sm">•</span>
+										<span className="text-sm">
+											{stats.followerCount} Followers
+										</span>
+										<span className="text-sm">•</span>
+										<span className="text-sm">
+											{stats.followingCount} Following
+										</span>
+									</div>
+								</div>
+
+								{/* Bottom Group: Action Buttons */}
+								<div className="flex flex-col sm:flex-row justify-center md:justify-end gap-3 mt-6 md:mt-0">
+									<button
+										onClick={handleCopyProfileLink}
+										className="px-4 py-2 text-sm rounded-lg font-semibold bg-[#1C1C20] border border-[#3A3A3C]/60 text-white/60 hover:bg-[#2C2F36] transition-all duration-200 flex items-center gap-2"
+									>
+										<FontAwesomeIcon icon={faCopy} />
+										Copy Link
+									</button>
+									<button
+										onClick={handleShareProfile}
+										className="px-4 py-2 text-sm rounded-lg font-semibold bg-[#1C1C20] border border-[#3A3A3C]/60 text-white/60 hover:bg-[#2C2F36] transition-all duration-200 flex items-center gap-2"
+									>
+										<FontAwesomeIcon icon={faShare} />
+										Share
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</motion.div>
+
+				{/* Badges Section */}
+				{/* <motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.2 }}
+					className="bg-[#13151A]/50 backdrop-blur-sm border border-[#3A3A3C]/60 rounded-2xl p-6 mb-12"
+				>
+					<h2 className="text-2xl font-bold text-white mb-6">
+						Achievements
+					</h2>
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+						<div className="bg-gradient-to-r from-[#FFD700]/20 to-[#FFA500]/20 border border-[#FFD700]/30 rounded-xl p-4 backdrop-blur-sm">
+							<div className="flex items-center gap-3">
+								<span className="text-2xl">🥇</span>
+								<div>
+									<h3 className="font-semibold text-white">
+										Early Contributor
+									</h3>
+									<p className="text-white/60 text-sm">
+										One of the first members
+									</p>
+								</div>
+							</div>
+						</div>
+						<div className="bg-gradient-to-r from-[#27BBFF]/20 to-[#1E40AF]/20 border border-[#27BBFF]/30 rounded-xl p-4 backdrop-blur-sm">
+							<div className="flex items-center gap-3">
+								<span className="text-2xl">⚡</span>
+								<div>
+									<h3 className="font-semibold text-white">
+										Top Project
+									</h3>
+									<p className="text-white/60 text-sm">
+										Featured project of the month
+									</p>
+								</div>
+							</div>
+						</div>
+						<div className="bg-gradient-to-r from-[#10B981]/20 to-[#059669]/20 border border-[#10B981]/30 rounded-xl p-4 backdrop-blur-sm">
+							<div className="flex items-center gap-3">
+								<span className="text-2xl">🚀</span>
+								<div>
+									<h3 className="font-semibold text-white">
+										Active Creator
+									</h3>
+									<p className="text-white/60 text-sm">
+										Published multiple projects
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</motion.div> */}
+
+				{/* Projects Section */}
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.4 }}
+				>
+					<div className="flex items-center justify-between mb-8">
+						<h2 className="text-[28px] font-extrabold text-white">
+							Projects
+						</h2>
+						<div className="flex items-center gap-4 text-white/60">
+							<div className="flex items-center gap-2">
+								<FontAwesomeIcon icon={faEye} />
+								<span className="text-sm">
+									{stats.totalViews} total views
+								</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<FontAwesomeIcon
+									icon={faHeart}
+									className="text-[#e22043]"
+								/>
+								<span className="text-sm">
+									{stats.totalLikes} total likes
+								</span>
+							</div>
+						</div>
+					</div>
+
+					{projects.length > 0 ? (
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+							{projects.map((project) => (
+								<ProjectCard
+									key={project.id}
+									title={project.title}
+									category={project.category}
+									description={project.description}
+									imageUrl={project.thumbnailUrl}
+									categoryColor={
+										categoryColors[project.category] ||
+										'#27BBFF'
+									}
+									authorName={user.name}
+									authorImage={user.image}
+									authorEmail={user.email}
+									views={project.views}
+									likes={project.likes}
+									slug={project.slug}
+								/>
+							))}
+						</div>
+					) : (
+						<div className="text-center py-12">
+							<div className="bg-[#13151A]/50 backdrop-blur-sm border border-[#3A3A3C]/60 rounded-2xl p-8">
+								<div className="text-6xl mb-4">🔧</div>
+								<h3 className="text-xl font-semibold text-white mb-2">
+									No Projects Yet
+								</h3>
+								<p className="text-white/60">
+									{user.name} hasn't published any projects
+									yet. Check back later!
+								</p>
+							</div>
+						</div>
+					)}
+				</motion.div>
+			</div>
+			<Footer />
+		</div>
+	);
+}
