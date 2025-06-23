@@ -11,7 +11,14 @@ import {
 	faTrash,
 	faCamera,
 	faUpRightFromSquare,
+	faGlobe,
 } from '@fortawesome/free-solid-svg-icons';
+import {
+	faGithub,
+	faInstagram,
+	faLinkedin,
+	faTwitter,
+} from '@fortawesome/free-brands-svg-icons';
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
 import Footer from '@/app/components/layout/Footer';
@@ -28,6 +35,11 @@ export default function SettingsPage() {
 		name: '',
 		username: '',
 		email: '',
+		bio: '',
+		github: '',
+		linkedin: '',
+		twitter: '',
+		instagram: '',
 	});
 	const [avatarFile, setAvatarFile] = useState(null);
 	const [avatarPreview, setAvatarPreview] = useState(null);
@@ -67,6 +79,11 @@ export default function SettingsPage() {
 						name: userData.name || '',
 						username: userData.username || '',
 						email: session.user.email || '',
+						bio: userData.bio || '',
+						github: userData.github || '',
+						linkedin: userData.linkedin || '',
+						twitter: userData.twitter || '',
+						instagram: userData.instagram || '',
 					};
 					setFormData(formDefaults);
 					setInitialFormData(formDefaults);
@@ -91,6 +108,37 @@ export default function SettingsPage() {
 		}));
 	};
 
+	const handleSocialLinkBlur = (e) => {
+		const { name, value } = e.target;
+		let finalValue = value.trim();
+
+		if (!finalValue) {
+			setFormData((prev) => ({ ...prev, [name]: '' }));
+			return;
+		}
+
+		const baseUrls = {
+			github: 'https://github.com/',
+			linkedin: 'https://www.linkedin.com/in/',
+			twitter: 'https://twitter.com/',
+			instagram: 'https://www.instagram.com/',
+		};
+
+		// If user enters just a username (no slashes or dots)
+		if (!finalValue.includes('/') && !finalValue.includes('.')) {
+			finalValue = baseUrls[name] + finalValue;
+		}
+		// If user enters a partial URL without protocol
+		else if (!/^https?:\/\//i.test(finalValue)) {
+			finalValue = 'https://' + finalValue;
+		}
+
+		setFormData((prev) => ({
+			...prev,
+			[name]: finalValue,
+		}));
+	};
+
 	const handleAvatarChange = (e) => {
 		const file = e.target.files[0];
 		if (file) {
@@ -109,7 +157,7 @@ export default function SettingsPage() {
 		setUpdateMessage({ type: '', text: '' });
 
 		try {
-			let avatarUrl = formData.image;
+			let avatarUrl = user.image; // Keep existing image by default
 
 			// Upload new avatar if selected
 			if (avatarFile) {
@@ -140,13 +188,20 @@ export default function SettingsPage() {
 				avatarUrl = publicUrlData.publicUrl;
 			}
 
-			// Update user profile
+			// Update user profile in Prisma
 			const response = await fetch('/api/user/profile', {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
-					...formData,
-					image: avatarUrl,
+					email: formData.email, // Use email to find user
+					name: formData.name,
+					username: formData.username,
+					bio: formData.bio,
+					github: formData.github,
+					linkedin: formData.linkedin,
+					twitter: formData.twitter,
+					instagram: formData.instagram,
+					image: avatarUrl, // This will be the new or existing URL
 				}),
 			});
 
@@ -199,6 +254,11 @@ export default function SettingsPage() {
 		(initialFormData &&
 			(formData.name !== initialFormData.name ||
 				formData.username !== initialFormData.username ||
+				formData.bio !== initialFormData.bio ||
+				formData.github !== initialFormData.github ||
+				formData.linkedin !== initialFormData.linkedin ||
+				formData.twitter !== initialFormData.twitter ||
+				formData.instagram !== initialFormData.instagram ||
 				avatarFile !== null)) ||
 		(avatarPreview !== initialAvatar && avatarFile !== null);
 
@@ -272,122 +332,218 @@ export default function SettingsPage() {
 
 								{/* Settings Content */}
 								{activeTab === 'profile' && (
-									<div className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-8 shadow-2xl flex flex-col w-full">
-										<h2 className="text-2xl font-bold text-white mb-4">
-											Profile
-										</h2>
-										<p className="text-white/60 text-sm mb-10">
-											Update your profile picture, display
-											name, and username. These will be
-											visible on your public profile.
-										</p>
-										<div className="flex items-stretch gap-5">
-											{/* Profile Picture - Centered */}
-											<div className="flex flex-col justify-center items-center w-56 min-w-[180px]">
-												<div className="relative w-28 h-28 group flex items-center justify-center cursor-pointer">
-													<label
-														htmlFor="avatar-upload"
-														className="w-full h-full block cursor-pointer"
-													>
-														<div className="w-28 h-28 rounded-full overflow-hidden bg-[#23242A] relative ring-2 ring-[#3A3A3C]/60 shadow-lg flex items-center justify-center">
-															{avatarPreview ? (
-																<Image
-																	src={
-																		avatarPreview
-																	}
-																	alt="Profile"
-																	width={112}
-																	height={112}
-																	className="w-full h-full object-cover"
-																/>
-															) : (
-																<div className="w-full h-full flex items-center justify-center bg-[#23242A]">
+									<form onSubmit={handleSubmit}>
+										<div className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-8 shadow-2xl flex flex-col w-full">
+											<h2 className="text-2xl font-bold text-white mb-4">
+												Profile
+											</h2>
+											<p className="text-white/60 text-sm mb-10">
+												Update your profile picture,
+												display name, and username.
+												These will be visible on your
+												public profile.
+											</p>
+											<div className="flex items-stretch gap-5">
+												{/* Profile Picture - Centered */}
+												<div className="flex flex-col justify-center items-center w-56 min-w-[180px]">
+													<div className="relative w-28 h-28 group flex items-center justify-center cursor-pointer">
+														<label
+															htmlFor="avatar-upload"
+															className="w-full h-full block cursor-pointer"
+														>
+															<div className="w-28 h-28 rounded-full overflow-hidden bg-[#23242A] relative ring-2 ring-[#3A3A3C]/60 shadow-lg flex items-center justify-center">
+																{avatarPreview ? (
+																	<Image
+																		src={
+																			avatarPreview
+																		}
+																		alt="Profile"
+																		width={
+																			112
+																		}
+																		height={
+																			112
+																		}
+																		className="w-full h-full object-cover"
+																	/>
+																) : (
+																	<div className="w-full h-full flex items-center justify-center bg-[#23242A]">
+																		<FontAwesomeIcon
+																			icon={
+																				faUser
+																			}
+																			className="text-4xl text-white/40"
+																		/>
+																	</div>
+																)}
+																<div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full flex items-center justify-center">
 																	<FontAwesomeIcon
 																		icon={
-																			faUser
+																			faCamera
 																		}
-																		className="text-4xl text-white/40"
+																		className="text-2xl text-white"
 																	/>
 																</div>
-															)}
-															<div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full flex items-center justify-center">
-																<FontAwesomeIcon
-																	icon={
-																		faCamera
-																	}
-																	className="text-2xl text-white"
-																/>
 															</div>
-														</div>
-														<input
-															id="avatar-upload"
-															type="file"
-															accept="image/*"
-															className="hidden"
-															onChange={
-																handleAvatarChange
-															}
-														/>
-													</label>
+															<input
+																id="avatar-upload"
+																type="file"
+																accept="image/*"
+																className="hidden"
+																onChange={
+																	handleAvatarChange
+																}
+															/>
+														</label>
+													</div>
 												</div>
-											</div>
-											{/* Fields */}
-											<div className="flex-1 flex flex-col gap-8 justify-center">
-												{/* Display Name Field */}
-												<div>
-													<label
-														className="block text-white font-semibold mb-1.5"
-														htmlFor="display-name"
-													>
-														Display Name
-													</label>
+												{/* Fields */}
+												<div className="flex-1 flex flex-col gap-8 justify-center">
+													{/* Display Name Field */}
+													<div>
+														<label
+															className="block text-white font-semibold mb-1.5"
+															htmlFor="display-name"
+														>
+															Display Name
+														</label>
 
-													<input
-														id="display-name"
-														name="name"
-														type="text"
-														value={formData.name}
-														onChange={
-															handleInputChange
-														}
-														className="w-full bg-[#101014] border border-[#23242A] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#27BBFF] transition-all placeholder-white/30"
-														placeholder="Enter your display name"
-														autoComplete="off"
-													/>
-												</div>
-												{/* Username Field */}
-												<div>
-													<label
-														className="block text-white font-semibold mb-1.5"
-														htmlFor="username"
-													>
-														Username
-													</label>
-
-													<div className="flex items-center bg-[#101014] border border-[#23242A] rounded-lg overflow-hidden focus-within:border-[#27BBFF] transition-all">
-														<span className="px-4 py-3 text-white/50 text-sm select-none bg-[#101014] border-r border-[#23242A]">
-															ohmmade.ca/u/
-														</span>
 														<input
-															id="username"
-															name="username"
+															id="display-name"
+															name="name"
 															type="text"
 															value={
-																formData.username
+																formData.name
 															}
 															onChange={
 																handleInputChange
 															}
-															className="flex-1 bg-transparent px-4 py-3 text-white focus:outline-none placeholder-white/30"
-															placeholder="your-username"
+															className="w-full bg-[#101014] border border-[#23242A] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#27BBFF] transition-all placeholder-white/30"
+															placeholder="Enter your display name"
 															autoComplete="off"
-															pattern="^[a-zA-Z0-9_]+$"
-															maxLength={32}
 														/>
+													</div>
+													{/* Username Field */}
+													<div>
+														<label
+															className="block text-white font-semibold mb-1.5"
+															htmlFor="username"
+														>
+															Username
+														</label>
+
+														<div className="flex items-center bg-[#101014] border border-[#23242A] rounded-lg overflow-hidden focus-within:border-[#27BBFF] transition-all">
+															<span className="px-4 py-3 text-white/50 text-sm select-none bg-[#101014] border-r border-[#23242A]">
+																ohmmade.ca/u/
+															</span>
+															<input
+																id="username"
+																name="username"
+																type="text"
+																value={
+																	formData.username
+																}
+																onChange={
+																	handleInputChange
+																}
+																className="flex-1 bg-transparent px-4 py-3 text-white focus:outline-none placeholder-white/30"
+																placeholder="your-username"
+																autoComplete="off"
+																pattern="^[a-zA-Z0-9_]+$"
+																maxLength={32}
+															/>
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
+
+										{/* Public Info Section */}
+										<div className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-8 shadow-2xl flex flex-col w-full mt-8">
+											<h2 className="text-2xl font-bold text-white mb-4">
+												Public Info
+											</h2>
+											<p className="text-white/60 text-sm mb-10">
+												Add a bio and social links to
+												complete your profile.
+											</p>
+
+											{/* Bio Field */}
+											<div className="mb-8">
+												<label
+													className="block text-white font-semibold mb-1.5"
+													htmlFor="bio"
+												>
+													Bio
+												</label>
+												<textarea
+													id="bio"
+													name="bio"
+													rows="3"
+													value={formData.bio}
+													onChange={handleInputChange}
+													maxLength="160"
+													className="w-full bg-[#101014] border border-[#23242A] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#27BBFF] transition-all placeholder-white/30 resize-none"
+													placeholder="Tell us a bit about yourself..."
+												/>
+												<p className="text-right text-white/40 text-xs mt-1.5">
+													{formData.bio.length} / 160
+												</p>
+											</div>
+
+											{/* Social Links */}
+											<div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
+												{/* Github */}
+												<SocialInput
+													id="github"
+													label="GitHub"
+													icon={faGithub}
+													value={formData.github}
+													placeholder="github.com/username"
+													onChange={handleInputChange}
+													onBlur={
+														handleSocialLinkBlur
+													}
+												/>
+												{/* LinkedIn */}
+												<SocialInput
+													id="linkedin"
+													label="LinkedIn"
+													icon={faLinkedin}
+													value={formData.linkedin}
+													placeholder="linkedin.com/in/username"
+													onChange={handleInputChange}
+													onBlur={
+														handleSocialLinkBlur
+													}
+												/>
+												{/* Twitter */}
+												<SocialInput
+													id="twitter"
+													label="Twitter"
+													icon={faTwitter}
+													value={formData.twitter}
+													placeholder="twitter.com/username"
+													onChange={handleInputChange}
+													onBlur={
+														handleSocialLinkBlur
+													}
+												/>
+												{/* Instagram */}
+												<SocialInput
+													id="instagram"
+													label="Instagram"
+													icon={faInstagram}
+													value={formData.instagram}
+													placeholder="instagram.com/username"
+													onChange={handleInputChange}
+													onBlur={
+														handleSocialLinkBlur
+													}
+												/>
+											</div>
+										</div>
+
 										{/* Divider and Save Row */}
 										<div className="border-t border-[#23242A] mt-10 pt-6 flex items-center justify-between gap-2">
 											<span className="text-white/60 text-sm font-medium flex items-center">
@@ -413,11 +569,10 @@ export default function SettingsPage() {
 												</span>
 											</span>
 											<button
-												type="button"
+												type="submit"
 												disabled={
 													!hasChanges || isUpdating
 												}
-												onClick={handleSubmit}
 												className={`px-6 py-2 rounded-lg font-semibold transition-all text-sm shadow-sm
 													${
 														hasChanges &&
@@ -426,10 +581,12 @@ export default function SettingsPage() {
 															: 'bg-[#23242A] text-white/40 cursor-not-allowed'
 													}`}
 											>
-												Save
+												{isUpdating
+													? 'Saving...'
+													: 'Save'}
 											</button>
 										</div>
-									</div>
+									</form>
 								)}
 							</div>
 						</div>
@@ -440,3 +597,35 @@ export default function SettingsPage() {
 		</div>
 	);
 }
+
+const SocialInput = ({
+	id,
+	label,
+	icon,
+	value,
+	placeholder,
+	onChange,
+	onBlur,
+}) => (
+	<div>
+		<label className="block text-white font-semibold mb-1.5" htmlFor={id}>
+			{label}
+		</label>
+		<div className="flex items-center bg-[#101014] border border-[#23242A] rounded-lg overflow-hidden focus-within:border-[#27BBFF] transition-all">
+			<span className="px-4 py-3 text-white/50 select-none bg-[#101014] border-r border-[#23242A]">
+				<FontAwesomeIcon icon={icon} />
+			</span>
+			<input
+				id={id}
+				name={id}
+				type="text"
+				value={value}
+				onChange={onChange}
+				onBlur={onBlur}
+				className="flex-1 bg-transparent px-4 py-3 text-white focus:outline-none placeholder-white/30"
+				placeholder={placeholder}
+				autoComplete="off"
+			/>
+		</div>
+	</div>
+);

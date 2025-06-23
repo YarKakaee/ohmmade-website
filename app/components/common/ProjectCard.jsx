@@ -22,7 +22,7 @@ export default function ProjectCard({
 	variant = 'large',
 	viewMode = 'grid',
 }) {
-	const isVerified = authorEmail === 'kakaeeyar@gmail.com';
+	const isVerified = authorEmail === 'info@ohmmade.ca';
 
 	const cardHeight = 'h-[465px]';
 	const imageHeight = 'h-48 sm:h-52 md:h-56 lg:h-60';

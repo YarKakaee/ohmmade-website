@@ -20,6 +20,11 @@ model User {
   name     String?
   username String    @unique
   image    String?
+  bio      String?
+  github   String?
+  linkedin String?
+  twitter  String?
+  instagram String?
   projects Project[]
 
   userLikes UserLike[]
