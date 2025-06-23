@@ -29,6 +29,8 @@ import Footer from '@/app/components/layout/Footer';
 import toast from 'react-hot-toast';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { useSession } from '@supabase/auth-helpers-react';
+import WattsDisplay from '@/app/components/common/WattsDisplay';
+import UserRank from '@/app/components/common/UserRank';
 
 export default function UserProfilePage() {
 	const params = useParams();
@@ -320,20 +322,24 @@ export default function UserProfilePage() {
 					<div className="flex flex-col md:flex-row items-center md:items-start gap-8">
 						{/* Avatar */}
 						<div className="relative group">
-							<div className="w-33.5 h-33.5 rounded-full overflow-hidden border-2 border-[#3A3A3C]/60 group-hover:border-[#27BBFF]/60 transition-all duration-300">
+							<div className="w-37 h-37 rounded-full overflow-hidden border-2 border-[#3A3A3C]/60">
 								{user.image ? (
 									<Image
 										src={user.image}
 										alt={user.name}
 										width={128}
 										height={128}
-										className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+										className="w-full h-full object-cover"
 									/>
 								) : (
 									<div className="w-full h-full bg-gradient-to-br from-[#27BBFF] to-[#1E40AF] flex items-center justify-center text-white text-3xl font-bold">
 										{user.name?.[0]?.toUpperCase() || 'U'}
 									</div>
 								)}
+							</div>
+							{/* User Rank under avatar */}
+							<div className="mt-5 flex justify-center">
+								<UserRank user={user} />
 							</div>
 						</div>
 
@@ -345,19 +351,21 @@ export default function UserProfilePage() {
 									<h1 className="text-3xl font-extrabold text-white">
 										{user.name}
 									</h1>
-									<VerifiedIcon className="text-[#27BBFF] text-2xl" />
+									{user.level === 'Grandmaster' && (
+										<VerifiedIcon className="text-[#FFC008] text-2xl" />
+									)}
 								</div>
-								<p className="text-md text-white/50 mb-3">
+								<p className="text-md text-white/50 mb-4">
 									@{user.username}
 								</p>
 								{user.bio && (
-									<p className="text-md text-white/60 mb-4 max-w-md">
+									<p className="text-md text-white/60 mb-6 max-w-md">
 										{user.bio}
 									</p>
 								)}
 
 								{/* Social Icons */}
-								<div className="flex justify-center md:justify-start gap-5 mb-4">
+								<div className="flex justify-center md:justify-start gap-5 mb-4.5">
 									{user.linkedin && (
 										<a
 											href={user.linkedin}
@@ -485,6 +493,9 @@ export default function UserProfilePage() {
 						</div>
 					</div>
 				</motion.div>
+
+				{/* Watts Display (only for own profile) */}
+				<WattsDisplay user={user} isOwnProfile={isOwnProfile} />
 
 				{/* Badges Section */}
 				{/* <motion.div

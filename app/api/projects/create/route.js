@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/prisma/client';
 import { createActivity } from '@/lib/activity';
 import { generateUsername } from '@/lib/usernameUtils';
+import { awardWatts } from '@/lib/watts';
 
 export async function POST(req) {
 	try {
@@ -61,6 +62,16 @@ export async function POST(req) {
 				'PROJECT_PUBLISHED',
 				newProject.id
 			);
+
+			// Award watts for publishing a project
+			try {
+				await awardWatts(user.id, 100, 'Published a project', prisma);
+			} catch (error) {
+				console.error(
+					'Error awarding watts for project publication:',
+					error
+				);
+			}
 		}
 
 		return NextResponse.json(

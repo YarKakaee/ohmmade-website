@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import prisma from '@/prisma/client';
 import bcrypt from 'bcryptjs';
 import { uploadImage } from '@/lib/supabaseStorage';
+import { awardWatts } from '@/lib/watts';
 
 export async function GET(req) {
 	try {
@@ -88,10 +89,50 @@ export async function PUT(req) {
 				username: true,
 				email: true,
 				image: true,
+				bio: true,
+				github: true,
+				linkedin: true,
+				twitter: true,
+				instagram: true,
 				createdAt: true,
 				updatedAt: true,
+				watts: true,
+				level: true,
 			},
 		});
+
+		// Check if profile is complete and award watts
+		try {
+			const isProfileComplete =
+				updatedUser.name &&
+				updatedUser.username &&
+				updatedUser.image &&
+				updatedUser.bio;
+
+			if (isProfileComplete) {
+				// Check if user already has the profile completion bonus
+				const existingLog = await prisma.wattsLog.findFirst({
+					where: {
+						userId: updatedUser.id,
+						watts: 50,
+					},
+				});
+
+				if (!existingLog) {
+					await awardWatts(
+						updatedUser.id,
+						50,
+						'Completed profile',
+						prisma
+					);
+				}
+			}
+		} catch (error) {
+			console.error(
+				'Error awarding watts for profile completion:',
+				error
+			);
+		}
 
 		return new Response(JSON.stringify(updatedUser), {
 			status: 200,

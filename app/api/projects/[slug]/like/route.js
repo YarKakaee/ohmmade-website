@@ -4,6 +4,7 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { createActivity } from '@/lib/activity';
 import { generateUsername } from '@/lib/usernameUtils';
+import { awardWatts, canPerformAction } from '@/lib/watts';
 
 export async function POST(req, { params }) {
 	try {
@@ -84,6 +85,36 @@ export async function POST(req, { params }) {
 				});
 				// Track the activity only when liking, not when unliking
 				await createActivity(user.id, 'PROJECT_LIKED', project.id);
+
+				// Award watts for liking a project (with cooldown check)
+				try {
+					const canLike = await canPerformAction(
+						user.id,
+						'like_project',
+						tx
+					);
+					if (canLike) {
+						await awardWatts(user.id, 2, 'Liked a project', tx);
+					}
+				} catch (error) {
+					console.error('Error awarding watts for liking:', error);
+				}
+
+				// Award watts to project author for receiving a like
+				try {
+					await awardWatts(
+						project.authorId,
+						5,
+						'Project received a like',
+						tx
+					);
+				} catch (error) {
+					console.error(
+						'Error awarding watts to project author:',
+						error
+					);
+				}
+
 				return { liked: true };
 			}
 		});

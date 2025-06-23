@@ -37,6 +37,15 @@ model User {
   // Follow relationships
   followers Follow[] @relation("UserFollowers")
   following Follow[] @relation("UserFollowing")
+  
+  // Gamification fields
+  watts Int @default(0)
+  level String @default("Newbie")
+  nextLevelWatts Int @default(100)
+  lastWattsUpdated DateTime @default(now())
+  
+  // Watts tracking
+  wattsLogs WattsLog[]
 }
 
 model Project {
@@ -138,4 +147,15 @@ model Follow {
   @@unique([followerId, followingId]) // Prevent duplicate follows
   @@index([followerId])
   @@index([followingId])
+}
+
+model WattsLog {
+  id          String   @id @default(cuid())
+  userId      String
+  watts       Int
+  createdAt   DateTime @default(now())
+
+  user        User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
 }

@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/prisma/client';
+import { awardWatts, canPerformAction } from '@/lib/watts';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 export async function GET(request, { params }) {
 	try {
@@ -27,6 +30,9 @@ export async function GET(request, { params }) {
 				github: true,
 				instagram: true,
 				twitter: true,
+				watts: true,
+				level: true,
+				nextLevelWatts: true,
 			},
 		});
 
@@ -35,6 +41,33 @@ export async function GET(request, { params }) {
 				{ error: 'User not found' },
 				{ status: 404 }
 			);
+		}
+
+		// Award watts for profile visit (if authenticated)
+		try {
+			const supabase = createServerComponentClient({ cookies });
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
+
+			if (session?.user?.email) {
+				const visitor = await prisma.user.findUnique({
+					where: { email: session.user.email },
+				});
+
+				if (visitor && visitor.id !== user.id) {
+					const canVisit = await canPerformAction(
+						visitor.id,
+						'profile_visit',
+						prisma
+					);
+					if (canVisit) {
+						await awardWatts(user.id, 1, 'Profile visited', prisma);
+					}
+				}
+			}
+		} catch (error) {
+			console.error('Error awarding watts for profile visit:', error);
 		}
 
 		// Fetch user's published projects

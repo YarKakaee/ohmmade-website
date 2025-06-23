@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import prisma from '@/prisma/client';
+import { awardWatts } from '@/lib/watts';
 
 export async function POST(request) {
 	try {
@@ -68,6 +69,16 @@ export async function POST(request) {
 					followingId: targetUserId,
 				},
 			});
+
+			// Award watts to the user being followed
+			try {
+				await awardWatts(targetUserId, 20, 'Gained a follower', prisma);
+			} catch (error) {
+				console.error(
+					'Error awarding watts for gaining follower:',
+					error
+				);
+			}
 
 			return NextResponse.json({ following: true });
 		}
