@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,6 +15,7 @@ import {
 	faGithub,
 	faInstagram,
 	faTwitter,
+	faEdit,
 } from '@fortawesome/free-solid-svg-icons';
 import {
 	faLinkedin as faLinkedinBrand,
@@ -27,14 +28,18 @@ import categoryColors from '@/lib/constants/categoryColors';
 import Footer from '@/app/components/layout/Footer';
 import toast from 'react-hot-toast';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import { useSession } from '@supabase/auth-helpers-react';
 
 export default function UserProfilePage() {
 	const params = useParams();
+	const router = useRouter();
+	const session = useSession();
 	const { username } = params;
 	const [userData, setUserData] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [isFollowing, setIsFollowing] = useState(false);
+	const [currentUser, setCurrentUser] = useState(null);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -65,6 +70,27 @@ export default function UserProfilePage() {
 			fetchUserData();
 		}
 	}, [username]);
+
+	// Fetch current user data if session exists
+	useEffect(() => {
+		const fetchCurrentUser = async () => {
+			if (session?.user?.email) {
+				try {
+					const response = await fetch(
+						`/api/user/profile?email=${session.user.email}`
+					);
+					if (response.ok) {
+						const userData = await response.json();
+						setCurrentUser(userData);
+					}
+				} catch (error) {
+					console.error('Error fetching current user:', error);
+				}
+			}
+		};
+
+		fetchCurrentUser();
+	}, [session]);
 
 	const handleCopyProfileLink = async () => {
 		try {
@@ -98,6 +124,10 @@ export default function UserProfilePage() {
 		toast.success(isFollowing ? 'Unfollowed' : 'Following');
 	};
 
+	const handleEditProfile = () => {
+		router.push('/dashboard/settings');
+	};
+
 	const formatDate = (dateString) => {
 		const date = new Date(dateString);
 		return date.toLocaleDateString('en-US', {
@@ -105,6 +135,12 @@ export default function UserProfilePage() {
 			month: 'long',
 		});
 	};
+
+	// Check if current user is viewing their own profile
+	const isOwnProfile =
+		currentUser &&
+		userData &&
+		currentUser.username === userData.user.username;
 
 	if (loading) {
 		return (
@@ -268,16 +304,26 @@ export default function UserProfilePage() {
 										</a>
 									)}
 								</div>
-								<button
-									onClick={handleFollow}
-									className={`px-6 py-2 text-sm rounded-lg font-semibold transition-all duration-200 ${
-										isFollowing
-											? 'bg-[#1C1C20] border border-[#3A3A3C]/60 text-white/60 hover:bg-[#2C2F36]'
-											: 'bg-[#27BBFF] border border-[#27BBFF] text-[#101014]'
-									}`}
-								>
-									{isFollowing ? 'Following' : 'Follow'}
-								</button>
+								{isOwnProfile ? (
+									<button
+										onClick={handleEditProfile}
+										className="cursor-pointer px-6 py-2 text-sm rounded-lg font-semibold bg-[#1C1C20] border border-[#3A3A3C]/60 text-white/60 hover:bg-[#2C2F36] transition-all duration-200 flex items-center gap-2"
+									>
+										<FontAwesomeIcon icon={faEdit} />
+										Edit Profile
+									</button>
+								) : (
+									<button
+										onClick={handleFollow}
+										className={`cursor-pointer px-6 py-2 text-sm rounded-lg font-semibold transition-all duration-200 ${
+											isFollowing
+												? 'bg-[#1C1C20] border border-[#3A3A3C]/60 text-white/60 hover:bg-[#2C2F36]'
+												: 'bg-[#27BBFF] border border-[#27BBFF] text-[#101014]'
+										}`}
+									>
+										{isFollowing ? 'Following' : 'Follow'}
+									</button>
+								)}
 							</div>
 
 							{/* Right Side */}
