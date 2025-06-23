@@ -59,10 +59,13 @@ export async function GET(request, { params }) {
 			},
 		});
 
-		// Get follower/following counts (if you have these tables)
-		// For now, we'll return 0 as placeholders
-		const followerCount = 0;
-		const followingCount = 0;
+		// Get follower/following counts
+		const followerCount = await prisma.follow.count({
+			where: { followingId: user.id },
+		});
+		const followingCount = await prisma.follow.count({
+			where: { followerId: user.id },
+		});
 
 		// Calculate total project stats
 		const totalViews = projects.reduce(

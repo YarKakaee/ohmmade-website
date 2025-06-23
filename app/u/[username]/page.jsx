@@ -40,6 +40,12 @@ export default function UserProfilePage() {
 	const [error, setError] = useState(null);
 	const [isFollowing, setIsFollowing] = useState(false);
 	const [currentUser, setCurrentUser] = useState(null);
+	const [showFollowersModal, setShowFollowersModal] = useState(false);
+	const [showFollowingModal, setShowFollowingModal] = useState(false);
+	const [followers, setFollowers] = useState([]);
+	const [following, setFollowing] = useState([]);
+	const [loadingFollowers, setLoadingFollowers] = useState(false);
+	const [loadingFollowing, setLoadingFollowing] = useState(false);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -92,6 +98,33 @@ export default function UserProfilePage() {
 		fetchCurrentUser();
 	}, [session]);
 
+	// Check if current user is viewing their own profile
+	const isOwnProfile =
+		currentUser &&
+		userData &&
+		currentUser.username === userData.user.username;
+
+	// Check follow status when userData and currentUser are available
+	useEffect(() => {
+		const checkFollowStatus = async () => {
+			if (userData && currentUser && !isOwnProfile) {
+				try {
+					const response = await fetch(
+						`/api/user/follow?targetUserId=${userData.user.id}`
+					);
+					if (response.ok) {
+						const data = await response.json();
+						setIsFollowing(data.following);
+					}
+				} catch (error) {
+					console.error('Error checking follow status:', error);
+				}
+			}
+		};
+
+		checkFollowStatus();
+	}, [userData, currentUser, isOwnProfile]);
+
 	const handleCopyProfileLink = async () => {
 		try {
 			await navigator.clipboard.writeText(
@@ -119,13 +152,89 @@ export default function UserProfilePage() {
 		}
 	};
 
-	const handleFollow = () => {
-		setIsFollowing(!isFollowing);
-		toast.success(isFollowing ? 'Unfollowed' : 'Following');
+	const handleFollow = async () => {
+		if (!session) {
+			toast.error('Please sign in to follow users');
+			return;
+		}
+
+		try {
+			const response = await fetch('/api/user/follow', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					targetUserId: userData.user.id,
+				}),
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				setIsFollowing(data.following);
+				toast.success(data.following ? 'Following' : 'Unfollowed');
+
+				// Update the stats in userData to reflect the new follower count
+				setUserData((prev) => ({
+					...prev,
+					stats: {
+						...prev.stats,
+						followerCount: data.following
+							? prev.stats.followerCount + 1
+							: prev.stats.followerCount - 1,
+					},
+				}));
+			} else {
+				toast.error('Failed to update follow status');
+			}
+		} catch (error) {
+			console.error('Error following/unfollowing:', error);
+			toast.error('Failed to update follow status');
+		}
 	};
 
 	const handleEditProfile = () => {
 		router.push('/dashboard/settings');
+	};
+
+	const fetchFollowers = async () => {
+		setLoadingFollowers(true);
+		try {
+			const response = await fetch(`/api/user/${username}/followers`);
+			if (response.ok) {
+				const data = await response.json();
+				setFollowers(data.followers);
+			}
+		} catch (error) {
+			console.error('Error fetching followers:', error);
+		} finally {
+			setLoadingFollowers(false);
+		}
+	};
+
+	const fetchFollowing = async () => {
+		setLoadingFollowing(true);
+		try {
+			const response = await fetch(`/api/user/${username}/following`);
+			if (response.ok) {
+				const data = await response.json();
+				setFollowing(data.following);
+			}
+		} catch (error) {
+			console.error('Error fetching following:', error);
+		} finally {
+			setLoadingFollowing(false);
+		}
+	};
+
+	const handleFollowersClick = () => {
+		setShowFollowersModal(true);
+		fetchFollowers();
+	};
+
+	const handleFollowingClick = () => {
+		setShowFollowingModal(true);
+		fetchFollowing();
 	};
 
 	const formatDate = (dateString) => {
@@ -135,12 +244,6 @@ export default function UserProfilePage() {
 			month: 'long',
 		});
 	};
-
-	// Check if current user is viewing their own profile
-	const isOwnProfile =
-		currentUser &&
-		userData &&
-		currentUser.username === userData.user.username;
 
 	if (loading) {
 		return (
@@ -345,13 +448,19 @@ export default function UserProfilePage() {
 											{stats.projectCount} Projects
 										</span>
 										<span className="text-sm">•</span>
-										<span className="text-sm">
+										<button
+											onClick={handleFollowersClick}
+											className="text-sm hover:text-white transition-colors cursor-pointer"
+										>
 											{stats.followerCount} Followers
-										</span>
+										</button>
 										<span className="text-sm">•</span>
-										<span className="text-sm">
+										<button
+											onClick={handleFollowingClick}
+											className="text-sm hover:text-white transition-colors cursor-pointer"
+										>
 											{stats.followingCount} Following
-										</span>
+										</button>
 									</div>
 								</div>
 
@@ -497,6 +606,159 @@ export default function UserProfilePage() {
 					)}
 				</motion.div>
 			</div>
+
+			{/* Followers Modal */}
+			{showFollowersModal && (
+				<div
+					className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+					onClick={() => setShowFollowersModal(false)}
+				>
+					<div
+						className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-6 w-full max-w-md max-h-[80vh] overflow-hidden"
+						onClick={(e) => e.stopPropagation()}
+					>
+						<div className="flex items-center justify-between mb-4">
+							<h3 className="text-xl font-bold text-white">
+								Followers
+							</h3>
+							<button
+								onClick={() => setShowFollowersModal(false)}
+								className="text-white/60 hover:text-white transition-colors cursor-pointer"
+							>
+								✕
+							</button>
+						</div>
+						<div className="overflow-y-auto max-h-[60vh]">
+							{loadingFollowers ? (
+								<div className="text-center py-8">
+									<div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#27BBFF] mx-auto"></div>
+								</div>
+							) : followers.length > 0 ? (
+								<div className="space-y-3">
+									{followers.map((follower) => (
+										<div
+											key={follower.id}
+											className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#1C1C20] transition-colors cursor-pointer"
+											onClick={() => {
+												setShowFollowersModal(false);
+												router.push(
+													`/u/${follower.username}`
+												);
+											}}
+										>
+											<div className="w-10 h-10 rounded-full overflow-hidden">
+												{follower.image ? (
+													<Image
+														src={follower.image}
+														alt={follower.name}
+														width={40}
+														height={40}
+														className="w-full h-full object-cover"
+													/>
+												) : (
+													<div className="w-full h-full bg-gradient-to-br from-[#27BBFF] to-[#1E40AF] flex items-center justify-center text-white text-sm font-bold">
+														{follower.name?.[0]?.toUpperCase() ||
+															'U'}
+													</div>
+												)}
+											</div>
+											<div className="flex-1">
+												<p className="text-white font-medium">
+													{follower.name}
+												</p>
+												<p className="text-white/60 text-sm">
+													@{follower.username}
+												</p>
+											</div>
+										</div>
+									))}
+								</div>
+							) : (
+								<div className="text-center py-8 text-white/60">
+									No followers yet
+								</div>
+							)}
+						</div>
+					</div>
+				</div>
+			)}
+
+			{/* Following Modal */}
+			{showFollowingModal && (
+				<div
+					className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+					onClick={() => setShowFollowingModal(false)}
+				>
+					<div
+						className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-6 w-full max-w-md max-h-[80vh] overflow-hidden"
+						onClick={(e) => e.stopPropagation()}
+					>
+						<div className="flex items-center justify-between mb-4">
+							<h3 className="text-xl font-bold text-white">
+								Following
+							</h3>
+							<button
+								onClick={() => setShowFollowingModal(false)}
+								className="text-white/60 hover:text-white transition-colors cursor-pointer"
+							>
+								✕
+							</button>
+						</div>
+						<div className="overflow-y-auto max-h-[60vh]">
+							{loadingFollowing ? (
+								<div className="text-center py-8">
+									<div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#27BBFF] mx-auto"></div>
+								</div>
+							) : following.length > 0 ? (
+								<div className="space-y-3">
+									{following.map((followedUser) => (
+										<div
+											key={followedUser.id}
+											className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#1C1C20] transition-colors cursor-pointer"
+											onClick={() => {
+												setShowFollowingModal(false);
+												router.push(
+													`/u/${followedUser.username}`
+												);
+											}}
+										>
+											<div className="w-10 h-10 rounded-full overflow-hidden">
+												{followedUser.image ? (
+													<Image
+														src={followedUser.image}
+														alt={followedUser.name}
+														width={40}
+														height={40}
+														className="w-full h-full object-cover"
+													/>
+												) : (
+													<div className="w-full h-full bg-gradient-to-br from-[#27BBFF] to-[#1E40AF] flex items-center justify-center text-white text-sm font-bold">
+														{followedUser.name?.[0]?.toUpperCase() ||
+															'U'}
+													</div>
+												)}
+											</div>
+											<div className="flex-1">
+												<p className="text-white font-medium">
+													{followedUser.name}
+												</p>
+												<p className="text-white/60 text-sm">
+													@{followedUser.username}
+												</p>
+											</div>
+										</div>
+									))}
+								</div>
+							) : (
+								<div className="text-center py-8 text-white/60">
+									Not following anyone yet
+								</div>
+							)}
+						</div>
+					</div>
+				</div>
+			)}
+
 			<Footer />
 		</div>
 	);

@@ -33,6 +33,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
   activities UserActivity[]
+  
+  // Follow relationships
+  followers Follow[] @relation("UserFollowers")
+  following Follow[] @relation("UserFollowing")
 }
 
 model Project {
@@ -120,4 +124,18 @@ model UserActivity {
   project     Project?     @relation(fields: [projectId], references: [id])
 
   @@index([userId, createdAt])
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId]) // Prevent duplicate follows
+  @@index([followerId])
+  @@index([followingId])
 }
