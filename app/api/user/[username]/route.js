@@ -3,7 +3,7 @@ import prisma from '@/prisma/client';
 
 export async function GET(request, { params }) {
 	try {
-		const { username } = params;
+		const { username } = await params;
 
 		if (!username) {
 			return NextResponse.json(
@@ -22,8 +22,11 @@ export async function GET(request, { params }) {
 				email: true,
 				image: true,
 				createdAt: true,
-				// Add bio field if it exists in your schema
-				// bio: true,
+				bio: true,
+				linkedin: true,
+				github: true,
+				instagram: true,
+				twitter: true,
 			},
 		});
 

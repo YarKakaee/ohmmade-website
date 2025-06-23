@@ -120,7 +120,7 @@ export default function SettingsPage() {
 		const baseUrls = {
 			github: 'https://github.com/',
 			linkedin: 'https://www.linkedin.com/in/',
-			twitter: 'https://twitter.com/',
+			twitter: 'https://x.com/',
 			instagram: 'https://www.instagram.com/',
 		};
 

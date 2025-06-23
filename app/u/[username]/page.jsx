@@ -20,7 +20,7 @@ import {
 	faLinkedin as faLinkedinBrand,
 	faGithub as faGithubBrand,
 	faInstagram as faInstagramBrand,
-	faTwitter as faTwitterBrand,
+	faXTwitter as faXTwitterBrand,
 } from '@fortawesome/free-brands-svg-icons';
 import ProjectCard from '@/app/components/common/ProjectCard';
 import categoryColors from '@/lib/constants/categoryColors';
@@ -211,43 +211,62 @@ export default function UserProfilePage() {
 								<p className="text-md text-white/50 mb-3">
 									@{user.username}
 								</p>
-								<p className="text-md text-white/60 mb-4 max-w-md">
-									Electrical Engineering student at Western
-									University
-								</p>
+								{user.bio && (
+									<p className="text-md text-white/60 mb-4 max-w-md">
+										{user.bio}
+									</p>
+								)}
 
 								{/* Social Icons */}
 								<div className="flex justify-center md:justify-start gap-5 mb-4">
-									<a
-										href="#"
-										className="text-[#ACACAD] hover:text-white transition-colors"
-									>
-										<FontAwesomeIcon
-											icon={faLinkedinBrand}
-										/>
-									</a>
-									<a
-										href="#"
-										className="text-[#ACACAD] hover:text-white transition-colors"
-									>
-										<FontAwesomeIcon icon={faGithubBrand} />
-									</a>
-									<a
-										href="#"
-										className="text-[#ACACAD] hover:text-white transition-colors"
-									>
-										<FontAwesomeIcon
-											icon={faInstagramBrand}
-										/>
-									</a>
-									<a
-										href="#"
-										className="text-[#ACACAD] hover:text-white transition-colors"
-									>
-										<FontAwesomeIcon
-											icon={faTwitterBrand}
-										/>
-									</a>
+									{user.linkedin && (
+										<a
+											href={user.linkedin}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-[#ACACAD] hover:text-white transition-colors"
+										>
+											<FontAwesomeIcon
+												icon={faLinkedinBrand}
+											/>
+										</a>
+									)}
+									{user.github && (
+										<a
+											href={user.github}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-[#ACACAD] hover:text-white transition-colors"
+										>
+											<FontAwesomeIcon
+												icon={faGithubBrand}
+											/>
+										</a>
+									)}
+									{user.instagram && (
+										<a
+											href={user.instagram}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-[#ACACAD] hover:text-white transition-colors"
+										>
+											<FontAwesomeIcon
+												icon={faInstagramBrand}
+											/>
+										</a>
+									)}
+									{user.twitter && (
+										<a
+											href={user.twitter}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-[#ACACAD] hover:text-white transition-colors"
+										>
+											<FontAwesomeIcon
+												icon={faXTwitterBrand}
+											/>
+										</a>
+									)}
 								</div>
 								<button
 									onClick={handleFollow}
