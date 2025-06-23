@@ -6,6 +6,8 @@ import {
 	faGlobe,
 	faSignOutAlt,
 	faUser,
+	faAddressCard,
+	faTachometerAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'framer-motion';
@@ -264,23 +266,56 @@ export default function Nav() {
 									transition={{ duration: 0.2 }}
 									className="absolute right-0 top-full mt-4 bg-[#1C1C20]/95 border border-[#3A3A3C]/60 text-white text-sm rounded-xl shadow-xl backdrop-blur-xl w-44"
 								>
-									<Link
-										href="/dashboard"
-										onClick={() =>
-											setShowUserDropdown(false)
-										}
-										className="px-4 py-2.5 hover:bg-white/5 transition-colors rounded-t-xl flex items-center gap-2"
-									>
-										<FontAwesomeIcon icon={faUser} />
-										My Account
-									</Link>
-									<button
-										onClick={handleSignOut}
-										className="cursor-pointer w-full text-left px-4 py-2.5 hover:bg-white/5 transition-colors rounded-b-xl flex items-center gap-2"
-									>
-										<FontAwesomeIcon icon={faSignOutAlt} />
-										Sign Out
-									</button>
+									<div className="absolute top-full right-0 mt-2 w-56 bg-[#1C1C20]/95 border border-[#3A3A3C]/60 text-white text-sm rounded-xl shadow-xl backdrop-blur-xl overflow-hidden">
+										<div className="p-4 border-b border-[#3A3A3C]/60">
+											<p className="font-semibold truncate">
+												{userProfile?.name ||
+													user.user_metadata?.name ||
+													'User'}
+											</p>
+											<p className="text-xs text-white/60 truncate">
+												{user.email}
+											</p>
+										</div>
+										<div className="py-2">
+											<Link
+												href={`/u/${userProfile?.username}`}
+												onClick={() =>
+													setShowUserDropdown(false)
+												}
+												className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition-colors"
+											>
+												<FontAwesomeIcon
+													icon={faUser}
+													className="w-4"
+												/>
+												<span>Profile</span>
+											</Link>
+											<Link
+												href="/dashboard"
+												onClick={() =>
+													setShowUserDropdown(false)
+												}
+												className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition-colors"
+											>
+												<FontAwesomeIcon
+													icon={faTachometerAlt}
+													className="w-4"
+												/>
+												<span>Dashboard</span>
+											</Link>
+											<div className="h-px bg-[#3A3A3C]/60 my-1"></div>
+											<button
+												onClick={handleSignOut}
+												className="cursor-pointer w-full text-left px-4 py-2.5 hover:bg-white/5 transition-colors rounded-b-xl flex items-center gap-2"
+											>
+												<FontAwesomeIcon
+													icon={faSignOutAlt}
+												/>
+												Sign Out
+											</button>
+										</div>
+									</div>
 								</motion.div>
 							)}
 						</div>
