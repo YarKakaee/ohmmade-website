@@ -16,8 +16,8 @@ import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const AuthModal = ({ isOpen, onClose }) => {
-	const [isSignIn, setIsSignIn] = useState(true);
+const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
+	const [isSignIn, setIsSignIn] = useState(mode !== 'signup');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [name, setName] = useState('');
@@ -50,7 +50,12 @@ const AuthModal = ({ isOpen, onClose }) => {
 			setSuccess(null);
 			setShowPassword(false);
 		}
-	}, [isOpen]);
+
+		// Update isSignIn based on mode
+		if (isOpen) {
+			setIsSignIn(mode !== 'signup');
+		}
+	}, [isOpen, mode]);
 
 	useEffect(() => {
 		const handleEscape = (e) => {
