@@ -2,6 +2,7 @@ import categoryColors from '@/lib/constants/categoryColors';
 import prisma from '@/prisma/client'; // Adjust this path if needed
 import ProjectCard from '../common/ProjectCard';
 import ProjectsHeader from '../common/ProjectHeader';
+import LayoutContainer from '../common/LayoutContainer';
 
 export default async function ProjectsSection() {
 	const featuredProjects = await prisma.project.findMany({
@@ -21,11 +22,11 @@ export default async function ProjectsSection() {
 
 	return (
 		<section className="relative w-full py-20 px-8 sm:px-16 lg:px-24">
-			<div className="max-w-[1700px] mx-auto px-8 sm:px-16">
+			<LayoutContainer>
 				<ProjectsHeader />
 
 				{/* Grid */}
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 					{featuredProjects.map((project) => (
 						<ProjectCard
 							key={project.id}
@@ -45,7 +46,7 @@ export default async function ProjectsSection() {
 						/>
 					))}
 				</div>
-			</div>
+			</LayoutContainer>
 		</section>
 	);
 }

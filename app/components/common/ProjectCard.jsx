@@ -24,14 +24,14 @@ export default function ProjectCard({
 }) {
 	const isVerified = authorEmail === 'info@ohmmade.ca';
 
-	const cardHeight = 'h-[465px]';
-	const imageHeight = 'h-48 sm:h-52 md:h-56 lg:h-60';
-	const titleTextSize = 'text-[16.5px]';
-	const descTextSize = 'text-[14px]';
-	const padding = 'p-5';
+	const cardHeight = 'h-[380px]';
+	const imageHeight = 'h-40 sm:h-44 md:h-48';
+	const titleTextSize = 'text-[13px]';
+	const descTextSize = 'text-[12px]';
+	const padding = 'p-4';
 	const avatarSize = 24;
 	const divHeight = 'h-[calc(100%-240px)]';
-	const categoryTextSize = 'text-[13px]';
+	const categoryTextSize = 'text-[11px]';
 
 	return (
 		<Link href={`/projects/${slug}`}>
@@ -62,7 +62,7 @@ export default function ProjectCard({
 						<h3 className={`text-white font-bold ${titleTextSize}`}>
 							{title}
 						</h3>
-						<div className="flex items-center gap-3 text-xs text-white/60">
+						<div className="flex items-center gap-3 text-[11px] text-white/60">
 							<div className="flex items-center gap-1">
 								<FontAwesomeIcon
 									icon={faEye}

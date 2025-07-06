@@ -201,7 +201,7 @@ export default function Features() {
 							transition={{ duration: 0.6, delay: 0.2 }}
 							viewport={{ once: true }}
 						>
-							Explore Our Core Features
+							Our Core Features
 						</motion.h2>
 						<motion.p
 							className="text-gray-400 max-w-2xl text-[15px]"
