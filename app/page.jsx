@@ -7,6 +7,8 @@ import Hero from './components/sections/Hero';
 import Learn from './components/sections/Learn';
 import OurTeam from './components/sections/OurTeam';
 import ProjectsSection from './components/sections/ProjectsSection';
+import FeatureDeepDiveSection from './components/sections/FeatureDeepDiveSection';
+import Features from './components/sections/Features';
 import './globals.css';
 
 export default function Home() {
@@ -28,8 +30,11 @@ export default function Home() {
 
 				<Hero />
 
+				<FeatureDeepDiveSection />
+				<Features />
+
 				<Details />
-				<OurTeam />
+
 				<Learn />
 				<ProjectsSection />
 				<CreatorSection />

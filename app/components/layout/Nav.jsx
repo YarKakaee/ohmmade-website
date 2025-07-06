@@ -144,18 +144,15 @@ export default function Nav() {
 				<div className="relative flex items-center h-14 w-full">
 					{/* Left: Logo */}
 					<div className="flex items-center flex-shrink-0 z-10">
-						<Link href="/" className="flex items-center space-x-2">
+						<Link href="/" className="flex items-center">
 							<Image
-								src="/assets/newohmlogo.png"
-								alt="OhmMade Logo"
-								width={22}
-								height={22}
-								className="object-contain"
+								src="/assets/OMLogoBanner.png"
+								alt="OhmMade Logo Banner"
+								height={36}
+								width={190}
+								className="object-contain h-9 sm:h-9 w-auto max-w-[150px]"
 								priority
 							/>
-							<span className="text-white font-extrabold text-lg mt-1">
-								OhmMade
-							</span>
 						</Link>
 					</div>
 

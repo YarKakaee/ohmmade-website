@@ -171,9 +171,9 @@ export default function PublishProjectPage() {
 						/>
 
 						<div className="space-x-2">
-							<button className="bg-[#343437] disabled cursor-pointer text-white px-5 py-2 font-medium rounded-md text-sm hover:bg-[#3A3A3A] transition">
+							{/* <button className="bg-[#343437] disabled cursor-pointer text-white px-5 py-2 font-medium rounded-md text-sm hover:bg-[#3A3A3A] transition">
 								Save draft (coming soon)
-							</button>
+							</button> */}
 							<button
 								onClick={handlePublish}
 								disabled={isPublishing}

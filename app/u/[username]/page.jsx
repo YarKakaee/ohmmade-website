@@ -359,7 +359,7 @@ export default function UserProfilePage() {
 									@{user.username}
 								</p>
 								{user.bio && (
-									<p className="text-md text-white/60 mb-6 max-w-md">
+									<p className="text-md text-white/60 mb-6 max-w-lg">
 										{user.bio}
 									</p>
 								)}

@@ -94,7 +94,6 @@ export default function Hero() {
 				/>
 			))}
 
-			{/* Container to Match Nav Width */}
 			<motion.div
 				variants={containerVariants}
 				initial="hidden"
