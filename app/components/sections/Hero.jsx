@@ -68,6 +68,38 @@ const impactVariant = {
 	},
 };
 
+const ctaButtonUp1 = {
+	hidden: { opacity: 0, y: 80, scale: 1.12 },
+	visible: {
+		opacity: 1,
+		y: 0,
+		scale: 1,
+		transition: {
+			type: 'spring',
+			stiffness: 700,
+			damping: 22,
+			delay: 0.18,
+			mass: 1.2,
+		},
+	},
+};
+
+const ctaButtonUp2 = {
+	hidden: { opacity: 0, y: 80, scale: 1.12 },
+	visible: {
+		opacity: 1,
+		y: 0,
+		scale: 1,
+		transition: {
+			type: 'spring',
+			stiffness: 400,
+			damping: 60,
+			delay: 0.44,
+			mass: 0.7,
+		},
+	},
+};
+
 export default function Hero() {
 	const [particles, setParticles] = useState([]);
 
@@ -218,11 +250,11 @@ export default function Hero() {
 						</motion.p>
 
 						{/* CTA Buttons with Staggered Animation */}
-						<motion.div
-							variants={fadeInUp}
-							className="flex flex-col sm:flex-row gap-4 mt-6 justify-center items-center"
-						>
+						<div className="flex flex-col sm:flex-row gap-4 mt-6 justify-center items-center">
 							<motion.div
+								variants={ctaButtonUp1}
+								initial="hidden"
+								animate="visible"
 								whileHover={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
 							>
@@ -234,6 +266,9 @@ export default function Hero() {
 								</Link>
 							</motion.div>
 							<motion.div
+								variants={ctaButtonUp2}
+								initial="hidden"
+								animate="visible"
 								whileHover={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
 							>
@@ -244,7 +279,7 @@ export default function Hero() {
 									Explore Community
 								</Link>
 							</motion.div>
-						</motion.div>
+						</div>
 					</div>
 				</motion.div>
 			</LayoutContainer>

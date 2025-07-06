@@ -22,7 +22,16 @@ const cardVariants = {
 		opacity: 1,
 		y: 0,
 		scale: 1,
-		transition: { duration: 0.6, ease: 'easeOut' },
+		transition: { duration: 0.38, ease: 'easeOut' },
+	},
+};
+
+const containerVariants = {
+	hidden: {},
+	show: {
+		transition: {
+			staggerChildren: 0.35,
+		},
 	},
 };
 
@@ -150,25 +159,31 @@ export default function Features() {
 	return (
 		<section className="relative py-24">
 			<style dangerouslySetInnerHTML={{ __html: hoverStyles }} />
-			{/* Masks - fixed to viewport edges */}
-			<Image
-				src="/assets/left-gradient.png"
-				alt="Left Blur Mask"
-				width={165}
-				height={CARD_HEIGHT}
-				className="pointer-events-none fixed left-0 top-0 h-full w-[165px] z-20"
-				draggable={false}
-				style={{ top: 0, left: 0, height: '100vh' }}
-			/>
-			<Image
-				src="/assets/right-gradient.png"
-				alt="Right Blur Mask"
-				width={165}
-				height={CARD_HEIGHT}
-				className="pointer-events-none fixed right-0 top-0 h-full w-[165px] z-20"
-				draggable={false}
-				style={{ top: 0, right: 0, height: '100vh' }}
-			/>
+			{/* Masks - stretch to max-w-7xl boundary */}
+			{sideMargin > 0 && (
+				<>
+					{/* Left mask */}
+					<div
+						className="pointer-events-none absolute top-0 left-0 h-full z-20"
+						style={{
+							width: sideMargin,
+							height: '100vh',
+							background:
+								'linear-gradient(to right, #101014 20%, rgba(16,16,20,0.7) 60%, rgba(16,16,20,0.0) 100%)',
+						}}
+					/>
+					{/* Right mask */}
+					<div
+						className="pointer-events-none absolute top-0 right-0 h-full z-20"
+						style={{
+							width: sideMargin,
+							height: '100vh',
+							background:
+								'linear-gradient(to left, #101014 20%, rgba(16,16,20,0.7) 60%, rgba(16,16,20,0.0) 100%)',
+						}}
+					/>
+				</>
+			)}
 			<div className="w-full relative">
 				{/* Title Section */}
 				<LayoutContainer>
@@ -208,10 +223,10 @@ export default function Features() {
 					style={{ height: `${CARD_HEIGHT}px` }}
 				>
 					{/* Left Hover Zone */}
-					<div className="absolute left-0 top-0 w-32 h-full z-20 pointer-events-auto hover-zone-left"></div>
+					<div className="absolute left-0 top-0 w-32 lg:w-96 h-full z-20 pointer-events-auto hover-zone-left"></div>
 
 					{/* Right Hover Zone */}
-					<div className="absolute right-0 top-0 w-32 h-full z-20 pointer-events-auto hover-zone-right"></div>
+					<div className="absolute right-0 top-0 w-32 lg:w-96 h-full z-20 pointer-events-auto hover-zone-right"></div>
 
 					{/* Left Scroll Button (hover only) */}
 					<motion.button
@@ -260,7 +275,7 @@ export default function Features() {
 						/>
 					</motion.button>
 					{/* Cards container, dynamic left/right padding for virtual max-w-7xl */}
-					<div
+					<motion.div
 						ref={scrollRef}
 						className="flex gap-8 h-full overflow-x-auto overflow-y-hidden scrollbar-hide w-full"
 						style={{
@@ -269,14 +284,15 @@ export default function Features() {
 							scrollbarWidth: 'none',
 							msOverflowStyle: 'none',
 						}}
+						variants={containerVariants}
+						initial="hidden"
+						whileInView="show"
+						viewport={{ once: true }}
 					>
 						{features.map((feature, i) => (
 							<motion.div
 								key={i}
 								variants={cardVariants}
-								initial="hidden"
-								whileInView="show"
-								viewport={{ once: true }}
 								className="feature-card relative rounded-2xl border border-[#2C2F36] shadow-2xl overflow-hidden flex-shrink-0 flex flex-col justify-end"
 								style={{
 									height: `${CARD_HEIGHT}px`,
@@ -311,7 +327,7 @@ export default function Features() {
 								</div>
 							</motion.div>
 						))}
-					</div>
+					</motion.div>
 				</div>
 			</div>
 			<style jsx>{`
