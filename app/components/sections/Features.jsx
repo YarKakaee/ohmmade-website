@@ -10,6 +10,7 @@ import {
 	faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LayoutContainer from '../common/LayoutContainer';
 
 const interTight = Inter_Tight({
 	subsets: ['latin'],
@@ -26,7 +27,24 @@ const cardVariants = {
 };
 
 const CARD_HEIGHT = 480;
-const GLOBAL_MARGIN = 32; // px-8 (adjust if your global margin is different)
+const MAX_W_7XL = 1280; // px for Tailwind's max-w-7xl
+const CARD_GAP = 32;
+
+// CSS for hover zone functionality
+const hoverStyles = `
+	.hover-zone-left:hover ~ button[aria-label="Scroll left"].can-scroll-left {
+		opacity: 1 !important;
+	}
+	.hover-zone-right:hover ~ button[aria-label="Scroll right"].can-scroll-right {
+		opacity: 1 !important;
+	}
+	button[aria-label="Scroll left"].can-scroll-left:hover {
+		opacity: 1 !important;
+	}
+	button[aria-label="Scroll right"].can-scroll-right:hover {
+		opacity: 1 !important;
+	}
+`;
 
 export default function Features() {
 	const features = [
@@ -56,17 +74,49 @@ export default function Features() {
 	const scrollRef = useRef(null);
 	const [canScrollLeft, setCanScrollLeft] = useState(false);
 	const [canScrollRight, setCanScrollRight] = useState(true);
+	const [sideMargin, setSideMargin] = useState(0);
+	const [maxScroll, setMaxScroll] = useState(0);
+
+	// Calculate side margin for virtual max-w-7xl
+	useEffect(() => {
+		const calcMargin = () => {
+			const w = document.documentElement.clientWidth;
+			setSideMargin(w > MAX_W_7XL ? (w - MAX_W_7XL) / 2 : 0);
+		};
+		calcMargin();
+		window.addEventListener('resize', calcMargin);
+		return () => window.removeEventListener('resize', calcMargin);
+	}, []);
+
+	// Calculate max scroll so last card stops at virtual max-w-7xl right margin
+	useEffect(() => {
+		const container = scrollRef.current;
+		if (!container) return;
+		// Calculate total width of all cards (including gaps)
+		const cardEls = container.querySelectorAll('.feature-card');
+		let totalCardsWidth = 0;
+		cardEls.forEach((el, i) => {
+			totalCardsWidth += el.offsetWidth;
+			if (i < cardEls.length - 1) totalCardsWidth += CARD_GAP;
+		});
+		// The visible area is document.documentElement.clientWidth (accounts for scrollbar)
+		// The max scroll is when the last card's left edge is at the right virtual margin
+		const maxScrollValue = Math.max(
+			0,
+			totalCardsWidth +
+				sideMargin * 2 -
+				document.documentElement.clientWidth
+		);
+		setMaxScroll(maxScrollValue);
+	}, [sideMargin, features.length]);
 
 	// Helper to update scroll button state
 	const updateScrollButtons = () => {
 		const container = scrollRef.current;
 		if (!container) return;
 		const scrollLeft = container.scrollLeft;
-		const scrollWidth = container.scrollWidth;
-		const clientWidth = container.clientWidth;
-		const maxScroll = scrollWidth - clientWidth;
-		setCanScrollLeft(scrollLeft > 0 + GLOBAL_MARGIN - 1);
-		setCanScrollRight(scrollLeft < maxScroll - GLOBAL_MARGIN + 1);
+		setCanScrollLeft(scrollLeft > 0);
+		setCanScrollRight(scrollLeft < maxScroll - 1);
 	};
 
 	// Scroll by one card width (plus margin)
@@ -75,17 +125,11 @@ export default function Features() {
 		if (!container) return;
 		const card = container.querySelector('.feature-card');
 		if (!card) return;
-		const cardWidth = card.offsetWidth + 32; // 32px gap
+		const cardWidth = card.offsetWidth + CARD_GAP;
 		const currentScroll = container.scrollLeft;
-		const scrollWidth = container.scrollWidth;
-		const clientWidth = container.clientWidth;
-		const maxScroll = scrollWidth - clientWidth;
 		let newScroll = currentScroll + direction * cardWidth;
-		// Clamp so first card never goes past left margin, last card never past right margin
-		newScroll = Math.max(
-			GLOBAL_MARGIN,
-			Math.min(newScroll, maxScroll - GLOBAL_MARGIN)
-		);
+		// Clamp so first card can go under left mask, last card can go under right mask but not past virtual margin
+		newScroll = Math.max(0, Math.min(newScroll, maxScroll));
 		container.scrollTo({ left: newScroll, behavior: 'smooth' });
 		setTimeout(updateScrollButtons, 350);
 	};
@@ -101,103 +145,127 @@ export default function Features() {
 			container.removeEventListener('scroll', updateScrollButtons);
 			window.removeEventListener('resize', handleResize);
 		};
-	}, []);
+	}, [maxScroll]);
 
 	return (
 		<section className="relative py-24">
-			<div className="w-full relative z-10 px-8">
-				{' '}
-				{/* px-8 = 32px, matches GLOBAL_MARGIN */}
-				<motion.div
-					className="text-center mb-16"
-					initial={{ opacity: 0, y: 20 }}
-					whileInView={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6 }}
-					viewport={{ once: true }}
-				>
-					<motion.h2
-						className={`${interTight.className} text-3xl md:text-[38px] font-extrabold text-white mb-4`}
+			<style dangerouslySetInnerHTML={{ __html: hoverStyles }} />
+			{/* Masks - fixed to viewport edges */}
+			<Image
+				src="/assets/left-gradient.png"
+				alt="Left Blur Mask"
+				width={165}
+				height={CARD_HEIGHT}
+				className="pointer-events-none fixed left-0 top-0 h-full w-[165px] z-20"
+				draggable={false}
+				style={{ top: 0, left: 0, height: '100vh' }}
+			/>
+			<Image
+				src="/assets/right-gradient.png"
+				alt="Right Blur Mask"
+				width={165}
+				height={CARD_HEIGHT}
+				className="pointer-events-none fixed right-0 top-0 h-full w-[165px] z-20"
+				draggable={false}
+				style={{ top: 0, right: 0, height: '100vh' }}
+			/>
+			<div className="w-full relative">
+				{/* Title Section */}
+				<LayoutContainer>
+					<motion.div
+						className="mb-10"
 						initial={{ opacity: 0, y: 20 }}
 						whileInView={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6, delay: 0.2 }}
+						transition={{ duration: 0.6 }}
 						viewport={{ once: true }}
 					>
-						Explore Our Core Features.
-					</motion.h2>
-					<motion.p
-						className="text-gray-400 max-w-2xl mx-auto text-[15px]"
-						initial={{ opacity: 0, y: 20 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6, delay: 0.4 }}
-						viewport={{ once: true }}
-					>
-						At OhmMade, every detail is intentional — from how you
-						share your work to how others learn from it. These
-						aren't just platform features. They're pillars of how we
-						empower makers.
-					</motion.p>
-				</motion.div>
+						<motion.h2
+							className={`${interTight.className} text-3xl md:text-[38px] font-extrabold text-white mb-4`}
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.6, delay: 0.2 }}
+							viewport={{ once: true }}
+						>
+							Explore Our Core Features.
+						</motion.h2>
+						<motion.p
+							className="text-gray-400 max-w-2xl text-[15px]"
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.6, delay: 0.4 }}
+							viewport={{ once: true }}
+						>
+							Every detail is intentional — from how you share
+							your work to how others learn from it. These aren't
+							just platform features. They're pillars of how we
+							empower makers.
+						</motion.p>
+					</motion.div>
+				</LayoutContainer>
+				{/* Features Row with Scroll Buttons and Cards */}
 				<div
 					className="relative w-full"
 					style={{ height: `${CARD_HEIGHT}px` }}
 				>
-					{/* Masks - absolutely positioned at section edges, top-aligned */}
-					<Image
-						src="/assets/left-gradient.png"
-						alt="Left Blur Mask"
-						width={165}
-						height={CARD_HEIGHT}
-						className="pointer-events-none absolute left-0 top-0 h-full w-[165px] z-30"
-						draggable={false}
-					/>
-					<Image
-						src="/assets/right-gradient.png"
-						alt="Right Blur Mask"
-						width={165}
-						height={CARD_HEIGHT}
-						className="pointer-events-none absolute right-0 top-0 h-full w-[165px] z-30"
-						draggable={false}
-					/>
+					{/* Left Hover Zone */}
+					<div className="absolute left-0 top-0 w-32 h-full z-20 pointer-events-auto hover-zone-left"></div>
 
-					{/* Scroll Buttons */}
-					<button
+					{/* Right Hover Zone */}
+					<div className="absolute right-0 top-0 w-32 h-full z-20 pointer-events-auto hover-zone-right"></div>
+
+					{/* Left Scroll Button (hover only) */}
+					<motion.button
 						aria-label="Scroll left"
-						className={`hidden md:flex items-center justify-center absolute left-2 top-1/2 -translate-y-1/2 z-40 w-12 h-12 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full transition-all duration-200 ${
-							canScrollLeft
-								? 'opacity-100 cursor-pointer'
-								: 'opacity-0 pointer-events-none'
-						}`}
-						onClick={() => scrollByCard(-1)}
+						className={`hidden md:flex items-center justify-center absolute left-8 top-1/2 -translate-y-1/2 z-[100] w-12 h-12 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full border border-white/10 transition-opacity duration-300 cursor-pointer
+							${canScrollLeft ? 'opacity-0 can-scroll-left' : 'opacity-0 pointer-events-none'}
+						`}
+						whileHover={{ scale: 1.1 }}
+						whileTap={{ scale: 0.95 }}
+						transition={{
+							type: 'spring',
+							stiffness: 400,
+							damping: 17,
+						}}
 						style={{ outline: 'none' }}
+						onClick={() => scrollByCard(-1)}
 					>
 						<FontAwesomeIcon
 							icon={faChevronLeft}
 							className="text-white text-lg"
 						/>
-					</button>
-					<button
+					</motion.button>
+					{/* Right Scroll Button (hover only) */}
+					<motion.button
 						aria-label="Scroll right"
-						className={`hidden md:flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 z-40 w-12 h-12 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full transition-all duration-200 ${
-							canScrollRight
-								? 'opacity-100 cursor-pointer'
-								: 'opacity-0 pointer-events-none'
-						}`}
-						onClick={() => scrollByCard(1)}
+						className={`hidden md:flex items-center justify-center absolute right-8 top-1/2 -translate-y-1/2 z-[100] w-12 h-12 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full border border-white/10 transition-opacity duration-300 cursor-pointer
+							${
+								canScrollRight
+									? 'opacity-0 can-scroll-right'
+									: 'opacity-0 pointer-events-none'
+							}
+						`}
+						whileHover={{ scale: 1.1 }}
+						whileTap={{ scale: 0.95 }}
+						transition={{
+							type: 'spring',
+							stiffness: 400,
+							damping: 17,
+						}}
 						style={{ outline: 'none' }}
+						onClick={() => scrollByCard(1)}
 					>
 						<FontAwesomeIcon
 							icon={faChevronRight}
 							className="text-white text-lg"
 						/>
-					</button>
-
-					{/* Cards container with left/right padding for margin */}
+					</motion.button>
+					{/* Cards container, dynamic left/right padding for virtual max-w-7xl */}
 					<div
 						ref={scrollRef}
-						className="flex gap-8 h-full overflow-x-auto overflow-y-hidden scrollbar-hide px-0"
+						className="flex gap-8 h-full overflow-x-auto overflow-y-hidden scrollbar-hide w-full"
 						style={{
-							paddingLeft: GLOBAL_MARGIN,
-							paddingRight: GLOBAL_MARGIN,
+							paddingLeft: sideMargin,
+							paddingRight: sideMargin,
 							scrollbarWidth: 'none',
 							msOverflowStyle: 'none',
 						}}
