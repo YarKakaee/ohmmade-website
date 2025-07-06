@@ -7,6 +7,7 @@ import Features from './components/sections/Features';
 import Hero from './components/sections/Hero';
 import Learn from './components/sections/Learn';
 import ProjectsSection from './components/sections/ProjectsSection';
+import GamificationSection from './components/sections/GamificationSection';
 import './globals.css';
 
 export default function Home() {
@@ -28,11 +29,9 @@ export default function Home() {
 
 				<Hero />
 				<Features />
-				<Details />
-				<Learn />
+				<GamificationSection />
 				<ProjectsSection />
-				<CreatorSection />
-				<ContactUs />
+
 				<Footer />
 			</div>
 		</section>

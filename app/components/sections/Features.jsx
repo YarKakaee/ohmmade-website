@@ -35,7 +35,7 @@ const containerVariants = {
 	},
 };
 
-const CARD_HEIGHT = 480;
+const CARD_HEIGHT = 500;
 const MAX_W_7XL = 1280; // px for Tailwind's max-w-7xl
 const CARD_GAP = 32;
 
@@ -167,7 +167,7 @@ export default function Features() {
 						className="pointer-events-none absolute top-0 left-0 h-full z-20"
 						style={{
 							width: sideMargin,
-							height: '100vh',
+							height: '100%',
 							background:
 								'linear-gradient(to right, #101014 20%, rgba(16,16,20,0.7) 60%, rgba(16,16,20,0.0) 100%)',
 						}}
@@ -177,7 +177,7 @@ export default function Features() {
 						className="pointer-events-none absolute top-0 right-0 h-full z-20"
 						style={{
 							width: sideMargin,
-							height: '100vh',
+							height: '100%',
 							background:
 								'linear-gradient(to left, #101014 20%, rgba(16,16,20,0.7) 60%, rgba(16,16,20,0.0) 100%)',
 						}}
@@ -201,7 +201,7 @@ export default function Features() {
 							transition={{ duration: 0.6, delay: 0.2 }}
 							viewport={{ once: true }}
 						>
-							Explore Our Core Features.
+							Explore Our Core Features
 						</motion.h2>
 						<motion.p
 							className="text-gray-400 max-w-2xl text-[15px]"
@@ -318,10 +318,10 @@ export default function Features() {
 											'0 2px 8px rgba(0,0,0,0.45)',
 									}}
 								>
-									<h3 className="text-xl md:text-lg text-white mb-2 font-semibold">
+									<h3 className="text-xl md:text-base text-white mb-2 font-semibold">
 										{feature.heading}
 									</h3>
-									<p className="text-base md:text-base text-white/80 font-light">
+									<p className="text-base md:text-sm text-white/80 font-light">
 										{feature.description}
 									</p>
 								</div>
