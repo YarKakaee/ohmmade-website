@@ -3,12 +3,10 @@ import Footer from './components/layout/Footer';
 import ContactUs from './components/sections/ContactUs';
 import CreatorSection from './components/sections/CreatorSection';
 import Details from './components/sections/Details';
+import Features from './components/sections/Features';
 import Hero from './components/sections/Hero';
 import Learn from './components/sections/Learn';
-import OurTeam from './components/sections/OurTeam';
 import ProjectsSection from './components/sections/ProjectsSection';
-import FeatureDeepDiveSection from './components/sections/FeatureDeepDiveSection';
-import Features from './components/sections/Features';
 import './globals.css';
 
 export default function Home() {
@@ -29,12 +27,8 @@ export default function Home() {
 				</div>
 
 				<Hero />
-
-				<FeatureDeepDiveSection />
 				<Features />
-
 				<Details />
-
 				<Learn />
 				<ProjectsSection />
 				<CreatorSection />

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Inter_Tight } from 'next/font/google';
 import { useEffect, useState } from 'react';
+import LayoutContainer from '../common/LayoutContainer';
 
 const interTight = Inter_Tight({
 	subsets: ['latin'],
@@ -38,6 +39,35 @@ const blurVariants = {
 	},
 };
 
+const intoVariant = {
+	hidden: { opacity: 0, x: -40 },
+	visible: {
+		opacity: 1,
+		x: 0,
+		transition: {
+			duration: 0.6,
+			delay: 0.2,
+			type: 'spring',
+			stiffness: 120,
+		},
+	},
+};
+
+const impactVariant = {
+	hidden: { opacity: 0, x: 40, scale: 0.95 },
+	visible: {
+		opacity: 1,
+		x: 0,
+		scale: 1,
+		transition: {
+			duration: 0.7,
+			delay: 0.5,
+			type: 'spring',
+			stiffness: 100,
+		},
+	},
+};
+
 export default function Hero() {
 	const [particles, setParticles] = useState([]);
 
@@ -46,11 +76,13 @@ export default function Hero() {
 			const size = Math.random() * 3 + 1;
 			const x = Math.random() * window.innerWidth;
 			const y = Math.random() * window.innerHeight;
-			const speedX = (Math.random() - 0.5) * 0.5;
-			const speedY = (Math.random() - 0.5) * 0.5;
+			const angle = Math.random() * 2 * Math.PI;
+			const baseSpeed = Math.random() * 0.7 + 0.2; // 0.2 to 0.9
+			const speedX = Math.cos(angle) * baseSpeed;
+			const speedY = Math.sin(angle) * baseSpeed;
 			const opacity = Math.random() * 0.5 + 0.1;
-
-			return { x, y, size, speedX, speedY, opacity };
+			const driftPhase = Math.random() * 2 * Math.PI;
+			return { x, y, size, speedX, speedY, opacity, driftPhase };
 		};
 
 		const initialParticles = Array.from({ length: 50 }, createParticle);
@@ -58,15 +90,15 @@ export default function Hero() {
 
 		const animateParticles = () => {
 			setParticles((prevParticles) =>
-				prevParticles.map((particle) => {
-					let newX = particle.x + particle.speedX;
-					let newY = particle.y + particle.speedY;
-
+				prevParticles.map((particle, i) => {
+					const drift =
+						Math.sin(Date.now() / 1200 + particle.driftPhase) * 0.5;
+					let newX = particle.x + particle.speedX + drift;
+					let newY = particle.y + particle.speedY + drift;
 					if (newX < 0) newX = window.innerWidth;
 					if (newX > window.innerWidth) newX = 0;
 					if (newY < 0) newY = window.innerHeight;
 					if (newY > window.innerHeight) newY = 0;
-
 					return { ...particle, x: newX, y: newY };
 				})
 			);
@@ -77,7 +109,7 @@ export default function Hero() {
 	}, []);
 
 	return (
-		<section className="relative w-full min-h-[90vh] flex items-center justify-center px-8 sm:px-16 lg:px-24 mt-10">
+		<section className="relative w-full min-h-[90vh] flex items-center justify-center mt-10">
 			{/* Star/Particle Background */}
 			{particles.map((particle, index) => (
 				<div
@@ -94,120 +126,85 @@ export default function Hero() {
 				/>
 			))}
 
-			<motion.div
-				variants={containerVariants}
-				initial="hidden"
-				animate="visible"
-				className="mx-auto max-w-[1700px] px-8 sm:px-16 flex items-center justify-between w-full relative z-10"
-			>
-				{/* Left Side: Text Content */}
-				<div className="text-white space-y-5 max-w-xl">
-					<motion.p
-						variants={fadeInUp}
-						className="text-[15px] text-[#FFFFFF]/70 font-medium"
-					>
-						Learn What Matters. Build What's Possible.
-					</motion.p>
-
-					<motion.h1
-						variants={fadeInUp}
-						className={`text-4xl sm:text-[44px] font-[850] leading-tight ${interTight.className}`}
-					>
-						Turning One-Time Projects
-					</motion.h1>
-
-					<motion.h1
-						variants={fadeInUp}
-						className={`text-4xl sm:text-[54px] font-[900] leading-tight ${interTight.className} -mt-4`}
-					>
-						Into Lifelong Impact.
-					</motion.h1>
-
-					<motion.p
-						variants={fadeInUp}
-						className="text-[#FFFFFF]/65 max-w-lg font-normal text-[15px]"
-					>
-						A platform where ideas become hardware. Whether you're
-						lighting LEDs or building medical tech, your knowledge
-						can inspire someone. With OhmMade, you teach while you
-						build.
-					</motion.p>
-
-					{/* CTA Buttons with Staggered Animation */}
-					<motion.div
-						variants={fadeInUp}
-						className="flex space-x-4 mt-8"
-					>
-						<motion.div
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
+			<LayoutContainer>
+				<motion.div
+					variants={containerVariants}
+					initial="hidden"
+					animate="visible"
+					className="flex flex-col items-center justify-center w-full relative z-10 text-center"
+				>
+					<div className="text-white space-y-5 max-w-xl w-full flex flex-col items-center">
+						<motion.h1
+							variants={fadeInUp}
+							className={`text-4xl sm:text-[44px] font-[850] leading-tight bg-gradient-to-b from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(39,187,255,0.10)] ${interTight.className}`}
 						>
-							<Link
-								href="/learn"
-								className="bg-[#27BBFF] text-[#101014] px-5 py-3 rounded-md text-sm font-medium"
+							Turning One-Time Projects
+						</motion.h1>
+
+						<motion.h1
+							className="text-4xl sm:text-[54px] font-[900] leading-tight relative -mt-4 flex flex-wrap justify-center"
+							initial="hidden"
+							animate="visible"
+						>
+							<motion.span
+								variants={intoVariant}
+								className="text-white font-bold mr-2"
 							>
-								Start Learning
-							</Link>
-						</motion.div>
-						<motion.div
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-						>
-							<Link
-								href="/projects"
-								className="bg-[#101014]/0 text-[#FFFFFF]/65 px-5 py-3 border-[#5C5C5E] border-1 rounded-md text-sm font-medium"
+								Into
+							</motion.span>
+							<motion.span
+								variants={impactVariant}
+								className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 relative inline-block"
+								style={{ position: 'relative' }}
 							>
-								Explore Projects
-							</Link>
+								<span
+									className="absolute inset-x-2 inset-y-1 bg-gradient-to-r from-purple-400 to-pink-600 blur-2xl opacity-50 pointer-events-none"
+									aria-hidden="true"
+								/>
+								Lifelong Impact.
+							</motion.span>
+						</motion.h1>
+
+						<motion.p
+							variants={fadeInUp}
+							className="text-[#FFFFFF]/65 max-w-xl font-normal text-[15px] mx-auto"
+						>
+							OhmMade transforms student and hobby projects into
+							lasting, shareable knowledge — for creators and
+							future innovators everywhere.
+						</motion.p>
+
+						{/* CTA Buttons with Staggered Animation */}
+						<motion.div
+							variants={fadeInUp}
+							className="flex flex-col sm:flex-row gap-4 mt-8 justify-center items-center"
+						>
+							<motion.div
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
+							>
+								<Link
+									href="/learn"
+									className="relative inline-flex items-center justify-center bg-[#27BBFF] text-[#101014] px-5 py-3 rounded-md text-sm font-semibold shadow-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#27BBFF]/60 before:absolute before:inset-0 before:rounded-md before:blur-md before:opacity-60 before:bg-gradient-to-r before:from-[#27BBFF] before:to-[#6EE7FF] before:z-[-1] overflow-hidden scale-pulse static-glow"
+								>
+									Start Your First Project
+								</Link>
+							</motion.div>
+							<motion.div
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
+							>
+								<Link
+									href="/projects"
+									className="bg-[#101014]/0 text-[#FFFFFF]/65 px-5 py-3 border-[#5C5C5E] border-1 rounded-md text-sm font-medium"
+								>
+									Explore Community
+								</Link>
+							</motion.div>
 						</motion.div>
-					</motion.div>
-				</div>
-
-				{/* Right Side: Hero Video with Blurred Background */}
-				<div className="hidden md:block relative w-[920px] h-[520px]">
-					{/* Blurred Background Video */}
-					<motion.div
-						variants={blurVariants}
-						initial="hidden"
-						animate="visible"
-						className="absolute inset-0 w-full h-full overflow-hidden rounded-lg blur-[60px] opacity-100 z-0"
-					>
-						<video
-							autoPlay
-							loop
-							muted
-							playsInline
-							className="object-cover w-full h-full"
-						>
-							<source
-								src="/assets/herovid.mp4"
-								type="video/mp4"
-							/>
-						</video>
-					</motion.div>
-
-					{/* Main Foreground Video */}
-					<motion.div
-						variants={videoVariants}
-						initial="hidden"
-						animate="visible"
-						className="absolute inset-0 w-full h-full z-10"
-					>
-						<video
-							autoPlay
-							loop
-							muted
-							playsInline
-							className="rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.3)] object-cover w-full h-full"
-						>
-							<source
-								src="/assets/herovid.mp4"
-								type="video/mp4"
-							/>
-						</video>
-					</motion.div>
-				</div>
-			</motion.div>
+					</div>
+				</motion.div>
+			</LayoutContainer>
 		</section>
 	);
 }

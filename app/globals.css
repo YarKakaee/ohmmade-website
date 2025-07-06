@@ -79,3 +79,20 @@
 .cdx-search-field__input {
 	color: #1c1c20;
 }
+
+@keyframes scale-pulse {
+	0%,
+	100% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.04);
+	}
+}
+.scale-pulse {
+	animation: scale-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.static-glow {
+	box-shadow: 0 0 32px 8px #27bbff66, 0 0 0 0 #27bbff00;
+}
