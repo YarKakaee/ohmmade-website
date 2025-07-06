@@ -11,7 +11,7 @@ import {
 	faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -38,6 +38,14 @@ export default function Nav() {
 	const [authMode, setAuthMode] = useState('login');
 	const [atTop, setAtTop] = useState(true);
 	const [hasScrolled, setHasScrolled] = useState(false);
+	const [hoveredLink, setHoveredLink] = useState(null);
+	const [highlightStyle, setHighlightStyle] = useState({
+		opacity: 0,
+		left: 0,
+		top: 0,
+		width: 0,
+		height: 0,
+	});
 
 	useEffect(() => {
 		const refreshSession = async () => {
@@ -89,6 +97,14 @@ export default function Nav() {
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, [lastScrollY, atTop]);
 
+	// Initialize navbar state based on current scroll position
+	useEffect(() => {
+		const currentY = window.scrollY;
+		setAtTop(currentY === 0);
+		setHasScrolled(currentY > 0);
+		setShowFloating(false);
+	}, []);
+
 	useEffect(() => {
 		const handleClickOutside = (e) => {
 			if (
@@ -108,6 +124,32 @@ export default function Nav() {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
+
+	// Update highlight position when hovered link changes
+	useEffect(() => {
+		if (hoveredLink) {
+			const rect = hoveredLink.getBoundingClientRect();
+			const navContainer = hoveredLink.closest('nav');
+			const navRect = navContainer.getBoundingClientRect();
+
+			setHighlightStyle({
+				opacity: 1,
+				left: rect.left - navRect.left - 8,
+				top: rect.top - navRect.top,
+				width: rect.width + 16,
+				height: rect.height,
+			});
+		}
+	}, [hoveredLink]);
+
+	const handleLinkHover = (e) => {
+		setHoveredLink(e.currentTarget);
+	};
+
+	const handleNavLeave = () => {
+		setHoveredLink(null);
+		setHighlightStyle((prev) => ({ ...prev, opacity: 0 }));
+	};
 
 	const handleSignOut = async () => {
 		await supabaseClient.auth.signOut(); // ✅ use supabaseClient instead of supabase
@@ -159,83 +201,75 @@ export default function Nav() {
 
 						{/* Center: Nav Links (absolute center) */}
 						<div className="absolute left-1/2 top-0 -translate-x-1/2 h-full flex items-center justify-center">
-							<nav className="flex items-center space-x-6 text-white font-[450] text-[14px]">
-								{/* Learn Dropdown */}
-								<div className="relative group">
-									<div className="flex items-center px-2 py-2 cursor-pointer hover:text-[#ACACAD] transition-colors">
-										Learn
-										<FontAwesomeIcon
-											icon={faAngleDown}
-											size="xs"
-											className="ml-1.5 transition-transform duration-300 group-hover:rotate-180"
-										/>
-									</div>
-									<div className="absolute top-full left-0 mt-3 min-w-[200px] bg-[#1C1C20]/95 border border-[#3A3A3C]/60 text-white rounded-xl shadow-xl backdrop-blur-xl opacity-0 invisible translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-out overflow-hidden z-30">
-										{[
-											'basic-electronics',
-											'arduino-uno',
-											'raspberry-pi-4',
-											'raspberry-pi-pico-w',
-										].map((path, index) => (
-											<Link
-												key={path}
-												href={`/learn/${path}`}
-												className="block px-5 py-3 hover:bg-white/5 transition-colors text-[15px] font-[450]"
-											>
-												{path
-													.replace(/-/g, ' ')
-													.replace(/\b\w/g, (c) =>
-														c.toUpperCase()
-													)}
-											</Link>
-										))}
-									</div>
-								</div>
+							<nav
+								className="flex items-center space-x-6 text-white/90 font-[450] text-[14px] relative"
+								onMouseLeave={handleNavLeave}
+							>
+								{/* Animated highlight background */}
+								<motion.div
+									className="absolute bg-white/5 rounded-full pointer-events-none"
+									animate={highlightStyle}
+									transition={{
+										type: 'spring',
+										stiffness: 400,
+										damping: 30,
+										opacity: { duration: 0.2 },
+									}}
+									style={{
+										zIndex: 1,
+									}}
+								/>
 
-								{/* Projects Dropdown */}
-								<div className="relative group">
-									<div className="flex items-center px-2 py-2 cursor-pointer hover:text-[#ACACAD] transition-colors">
-										<Link
-											href="/projects"
-											className="flex items-center"
-										>
-											Projects
-											<FontAwesomeIcon
-												icon={faAngleDown}
-												size="xs"
-												className="ml-1.5 transition-transform duration-300 group-hover:rotate-180"
-											/>
-										</Link>
-									</div>
-									<div className="absolute top-full left-0 mt-3 min-w-[200px] bg-[#1C1C20]/95 border border-[#3A3A3C]/60 text-white rounded-xl shadow-xl backdrop-blur-xl opacity-0 invisible translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-out overflow-hidden z-30">
-										<Link
-											href="/projects"
-											className="block px-5 py-3 hover:bg-white/5 transition-colors text-[15px] font-[450] rounded-t-xl"
-										>
-											Explore Projects
-										</Link>
-										<Link
-											href="/projects/publish"
-											className="block px-5 py-3 hover:bg-white/5 transition-colors text-[15px] font-[450] rounded-b-xl"
-										>
-											Publish Your Own
-										</Link>
-									</div>
-								</div>
+								{/* Explore */}
+								<Link
+									href="/projects"
+									className="transition relative z-10 px-2 py-2"
+									onMouseEnter={handleLinkHover}
+								>
+									Explore
+								</Link>
 
-								{/* Static links */}
-								{['blog', 'help', 'about'].map((page) => (
-									<Link
-										key={page}
-										href={`/${page}`}
-										className="hover:text-[#ACACAD] transition"
-									>
-										{page.charAt(0).toUpperCase() +
-											page.slice(1)}
-									</Link>
-								))}
-								<div className="relative" ref={languageRef}>
-									<button className="text-white/90 hover:text-white transition cursor-pointer">
+								{/* Create */}
+								<Link
+									href="/publish"
+									className="transition relative z-10 px-2 py-2"
+									onMouseEnter={handleLinkHover}
+								>
+									Create
+								</Link>
+
+								{/* Help */}
+								<Link
+									href="/forum"
+									className="transition relative z-10 px-2 py-2"
+									onMouseEnter={handleLinkHover}
+								>
+									Help
+								</Link>
+
+								{/* Blog */}
+								<Link
+									href="/blog"
+									className="transition relative z-10 px-2 py-2"
+									onMouseEnter={handleLinkHover}
+								>
+									Blog
+								</Link>
+
+								{/* About */}
+								<Link
+									href="/about"
+									className="transition relative z-10 px-2 py-2"
+									onMouseEnter={handleLinkHover}
+								>
+									About
+								</Link>
+
+								<div
+									className="relative z-10"
+									ref={languageRef}
+								>
+									<button className="text-white/80 hover:text-white transition cursor-pointer">
 										<FontAwesomeIcon
 											icon={faMagnifyingGlass}
 											size="md"
@@ -298,73 +332,87 @@ export default function Nav() {
 										</span>
 									</button>
 
-									{showUserDropdown && (
-										<motion.div
-											initial={{ opacity: 0, y: 8 }}
-											animate={{ opacity: 1, y: 0 }}
-											exit={{ opacity: 0, y: 8 }}
-											transition={{ duration: 0.2 }}
-											className="absolute right-0 top-full mt-4 bg-[#1C1C20]/95 text-white rounded-xl shadow-xl backdrop-blur-xl w-44"
-										>
-											<div className="absolute top-full right-0 mt-2 w-56 bg-[#1C1C20]/95 border border-[#3A3A3C]/60 text-white text-sm rounded-xl shadow-xl backdrop-blur-xl overflow-hidden">
-												<div className="p-4 border-b border-[#3A3A3C]/60">
-													<p className="font-semibold truncate">
-														{userProfile?.name ||
-															user.user_metadata
-																?.name ||
-															'User'}
-													</p>
-													<p className="text-xs text-white/60 truncate">
-														{user.email}
-													</p>
-												</div>
-												<div className="py-2">
-													<Link
-														href={`/u/${userProfile?.username}`}
-														onClick={() =>
-															setShowUserDropdown(
-																false
-															)
-														}
-														className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition-colors"
-													>
-														<FontAwesomeIcon
-															icon={faUser}
-															className="w-4"
-														/>
-														<span>Profile</span>
-													</Link>
-													<Link
-														href="/dashboard"
-														onClick={() =>
-															setShowUserDropdown(
-																false
-															)
-														}
-														className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition-colors"
-													>
-														<FontAwesomeIcon
-															icon={
-																faTachometerAlt
+									<AnimatePresence>
+										{showUserDropdown && (
+											<motion.div
+												initial={{ opacity: 0, y: 8 }}
+												animate={{ opacity: 1, y: 0 }}
+												exit={{ opacity: 0, y: 8 }}
+												transition={{
+													type: 'spring',
+													stiffness: 400,
+													damping: 30,
+													duration: 0.2,
+												}}
+												className="absolute right-0 top-full mt-4 bg-[#1C1C20]/95 text-white rounded-xl shadow-xl backdrop-blur-xl w-44"
+											>
+												<div className="absolute top-full right-0 mt-2 w-56 bg-[#1C1C20]/95 border border-[#3A3A3C]/60 text-white text-sm rounded-xl shadow-xl backdrop-blur-xl overflow-hidden">
+													<div className="p-4 border-b border-[#3A3A3C]/60">
+														<p className="font-semibold truncate">
+															{userProfile?.name ||
+																user
+																	.user_metadata
+																	?.name ||
+																'User'}
+														</p>
+														<p className="text-xs text-white/60 truncate">
+															{user.email}
+														</p>
+													</div>
+													<div className="py-2">
+														<Link
+															href={`/u/${userProfile?.username}`}
+															onClick={() =>
+																setShowUserDropdown(
+																	false
+																)
 															}
-															className="w-4"
-														/>
-														<span>Dashboard</span>
-													</Link>
-													<div className="h-px bg-[#3A3A3C]/60 my-1"></div>
-													<button
-														onClick={handleSignOut}
-														className="cursor-pointer w-full text-left px-4 py-2.5 hover:bg-white/5 transition-colors rounded-b-xl flex items-center gap-2"
-													>
-														<FontAwesomeIcon
-															icon={faSignOutAlt}
-														/>
-														Sign Out
-													</button>
+															className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition-colors"
+														>
+															<FontAwesomeIcon
+																icon={faUser}
+																className="w-4"
+															/>
+															<span>Profile</span>
+														</Link>
+														<Link
+															href="/dashboard"
+															onClick={() =>
+																setShowUserDropdown(
+																	false
+																)
+															}
+															className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition-colors"
+														>
+															<FontAwesomeIcon
+																icon={
+																	faTachometerAlt
+																}
+																className="w-4"
+															/>
+															<span>
+																Dashboard
+															</span>
+														</Link>
+														<div className="h-px bg-[#3A3A3C]/60 my-1"></div>
+														<button
+															onClick={
+																handleSignOut
+															}
+															className="cursor-pointer w-full text-left px-4 py-2.5 hover:bg-white/5 transition-colors rounded-b-xl flex items-center gap-2"
+														>
+															<FontAwesomeIcon
+																icon={
+																	faSignOutAlt
+																}
+															/>
+															Sign Out
+														</button>
+													</div>
 												</div>
-											</div>
-										</motion.div>
-									)}
+											</motion.div>
+										)}
+									</AnimatePresence>
 								</div>
 							) : (
 								<div className="flex items-center gap-1">

@@ -166,18 +166,61 @@ export default function Hero() {
 						</motion.h1>
 
 						<motion.p
-							variants={fadeInUp}
-							className="text-[#FFFFFF]/65 max-w-xl font-normal text-[15px] mx-auto"
+							className="text-[#FFFFFF]/65 max-w-xl font-normal text-[15px] mx-auto flex flex-wrap justify-center"
+							initial="hidden"
+							animate="visible"
 						>
-							OhmMade transforms student and hobby projects into
-							lasting, shareable knowledge — for creators and
-							future innovators everywhere.
+							{[
+								'We',
+								'transform',
+								'student',
+								'and',
+								'hobby',
+								'projects',
+								'into',
+								'timeless',
+								'guides',
+								'that',
+								'empower',
+								'future',
+								'creators',
+								'and',
+								'help',
+								'ideas',
+								'live',
+								'far',
+								'beyond',
+								'the',
+								'classroom.',
+							].map((word, i) => (
+								<motion.span
+									key={i}
+									initial={{
+										opacity: 0,
+										y: 20,
+										filter: 'blur(4px)',
+									}}
+									animate={{
+										opacity: 1,
+										y: 0,
+										filter: 'blur(0px)',
+									}}
+									transition={{
+										duration: 0.5,
+										delay: 0.05 * i,
+										ease: 'easeOut',
+									}}
+									className="mr-1 inline-block"
+								>
+									{word}
+								</motion.span>
+							))}
 						</motion.p>
 
 						{/* CTA Buttons with Staggered Animation */}
 						<motion.div
 							variants={fadeInUp}
-							className="flex flex-col sm:flex-row gap-4 mt-8 justify-center items-center"
+							className="flex flex-col sm:flex-row gap-4 mt-6 justify-center items-center"
 						>
 							<motion.div
 								whileHover={{ scale: 1.05 }}
