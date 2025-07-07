@@ -32,29 +32,21 @@ export default function NotFound() {
 				)}
 
 				{/* Main Content - 404 Section */}
-				<div className="text-center max-w-md relative z-10">
-					<h1 className="text-7xl font-extrabold text-white">404</h1>
-					<p className="text-2xl font-semibold mt-2 text-white">
-						PAGE NOT FOUND
+				<div className="text-center max-w-xl relative z-10">
+					<div className="inline-block bg-[#101014]/70 backdrop-blur border border-[#3A3A3C]/60 rounded-xl px-4 py-1 shadow-2xl mb-3">
+						<h1 className="text-lg font-bold text-white">404</h1>
+					</div>
+					<p className="text-5xl font-extrabold mt-2 text-white mb-5">
+						Couldn't find that page.
 					</p>
-					<p className="text-sm mt-4 text-[#ACACAD]">
+					<p className="text-sm mt-4 text-white/70 max-w-md mx-auto">
 						The page you were looking for was not found. Please
-						verify the link/URL or try starting back at our home
-						page.
-					</p>
-
-					{/* Button to return to Home with animation */}
-					<motion.div
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.95 }}
-						className="mt-6"
-					>
-						<Link href="/">
-							<button className="bg-[#27BBFF] text-[#101014] font-medium px-6 py-2 rounded-md transition-colors cursor-pointer">
-								Go to Home Page
-							</button>
+						verify the link/URL or try starting back at our{' '}
+						<Link href="/" className="text-[#27BBFF]">
+							homepage
 						</Link>
-					</motion.div>
+						.
+					</p>
 				</div>
 			</div>
 		</section>
