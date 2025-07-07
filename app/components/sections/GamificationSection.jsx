@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import LayoutContainer from '../common/LayoutContainer';
 
 const yellow = '#FFD600';
@@ -115,21 +116,22 @@ export default function GamificationSection() {
 						</motion.span>
 					</span>
 				</h2>
-				<p className="text-gray-300 text-lg mb-7 max-w-lg mx-auto">
+				<p className="text-gray-300 text-lg mb-10 max-w-lg mx-auto">
 					Make, share, and engage to power up your Watts, unlock
 					badges, and climb the leaderboard.
 				</p>
-				<motion.a
-					href="#"
-					whileHover={{
-						scale: 1.05,
-						boxShadow: '0 0 24px #FFD60099',
-					}}
+				<motion.div
+					whileHover={{ scale: 1.05 }}
 					whileTap={{ scale: 0.97 }}
-					className="inline-block bg-[#FFD600] text-[#101014] font-bold px-7 py-3 rounded-full shadow-lg transition-all duration-200"
+					className="inline-block"
 				>
-					How Watts Works
-				</motion.a>
+					<Link
+						href="/help/watts-and-leveling"
+						className="bg-[#FFD600] text-[16px] text-[#101014] font-bold px-8 py-4 rounded-full transition-all duration-300 shadow-[0_2px_8px_0_rgba(0,0,0,0.10)] hover:shadow-[0_2px_8px_0_rgba(0,0,0,0.10),0_0_32px_#FFD60099] ease-in-out"
+					>
+						How Watts Works
+					</Link>
+				</motion.div>
 			</LayoutContainer>
 		</motion.section>
 	);

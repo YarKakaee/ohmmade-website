@@ -3,30 +3,20 @@
 import { Inter_Tight } from 'next/font/google';
 import Image from 'next/image';
 import Footer from '@/app/components/layout/Footer';
+import LayoutContainer from '@/app/components/common/LayoutContainer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 
 export default function ProfileGuidelinesPage() {
 	return (
 		<div className="bg-[#101014]">
-			<section className="w-full pt-26 pb-34 px-8 sm:px-16 lg:px-24 text-white relative min-h-screen overflow-hidden">
-				{/* Blurred background */}
-				<div className="absolute inset-0 pointer-events-none">
-					<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1200px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 blur-[125px] opacity-70 transform-gpu">
-						<Image
-							src="https://cms-assets.unrealengine.com/AiKUh5PQCTaOFnmJDZJBfz/oXIAOr5gQny2cAfPpq02"
-							alt="Blurred background"
-							width={1200}
-							height={1200}
-							className="w-full h-auto"
-							priority
-						/>
+			<section className="w-full pt-26 pb-34 text-white relative min-h-screen overflow-hidden">
+				<LayoutContainer className="relative space-y-10">
+					<div className="inline-block px-3 py-1 rounded-xl border border-[#333333] bg-[#1A1A1E] text-[#BBBBBB] text-sm font-medium mt-10">
+						HELP /
 					</div>
-				</div>
-
-				<div className="relative max-w-[1200px] mx-auto space-y-10">
 					<h1
-						className={`text-5xl font-extrabold mt-20 ${interTight.className}`}
+						className={`text-5xl font-extrabold ${interTight.className}`}
 					>
 						Profile Guidelines
 					</h1>
@@ -206,7 +196,7 @@ export default function ProfileGuidelinesPage() {
 							.
 						</p>
 					</section>
-				</div>
+				</LayoutContainer>
 			</section>
 
 			<Footer />

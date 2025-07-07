@@ -2,31 +2,21 @@
 
 import { Inter_Tight } from 'next/font/google';
 import Image from 'next/image';
-import Footer from '../components/layout/Footer';
+import Footer from '../../components/layout/Footer';
+import LayoutContainer from '../../components/common/LayoutContainer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 
 export default function PrivacyPolicy() {
 	return (
 		<div className="bg-[#101014]">
-			<section className="w-full pt-26 pb-34 px-8 sm:px-16 lg:px-24 text-white relative min-h-screen bg-[#101014] overflow-hidden">
-				{/* Blurred background effect */}
-				<div className="absolute inset-0 pointer-events-none">
-					<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1200px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 blur-[125px] opacity-70 transform-gpu">
-						<Image
-							src="https://cms-assets.unrealengine.com/AiKUh5PQCTaOFnmJDZJBfz/oXIAOr5gQny2cAfPpq02"
-							alt="Abstract light pattern"
-							width={1200}
-							height={1200}
-							className="w-full h-auto"
-							priority
-						/>
+			<section className="w-full pt-26 pb-34 text-white relative min-h-screen bg-[#101014] overflow-hidden">
+				<LayoutContainer className="relative space-y-10">
+					<div className="inline-block px-3 py-1 rounded-xl border border-[#333333] bg-[#1A1A1E] text-[#BBBBBB] text-sm font-medium mt-10">
+						LEGAL /
 					</div>
-				</div>
-
-				<div className="relative max-w-[1200px] mx-auto space-y-10">
 					<h1
-						className={`text-5xl font-extrabold mt-20 ${interTight.className}`}
+						className={`text-5xl font-extrabold ${interTight.className}`}
 					>
 						Privacy Policy
 					</h1>
@@ -98,7 +88,7 @@ export default function PrivacyPolicy() {
 
 					<section>
 						<h2 className="text-2xl font-bold mb-4">
-							6. Children’s Privacy
+							6. Children's Privacy
 						</h2>
 						<p className="text-[#CCCCCC] leading-relaxed">
 							OhmMade does not knowingly collect data from
@@ -145,7 +135,7 @@ export default function PrivacyPolicy() {
 							.
 						</p>
 					</section>
-				</div>
+				</LayoutContainer>
 			</section>
 			<Footer />
 		</div>

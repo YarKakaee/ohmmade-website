@@ -77,11 +77,14 @@ export default function Footer() {
 
 				{/* Right: Legal Links */}
 				<div className="flex space-x-6">
-					<Link href="/tos" className="hover:text-white transition">
+					<Link
+						href="/legal/terms"
+						className="hover:text-white transition"
+					>
 						Terms of Service
 					</Link>
 					<Link
-						href="/privacy-policy"
+						href="/legal/privacy"
 						className="hover:text-white transition"
 					>
 						Privacy Policy
