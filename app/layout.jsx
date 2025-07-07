@@ -67,7 +67,7 @@ export default function RootLayout({ children }) {
 						position="top-center"
 						reverseOrder={false}
 						containerStyle={{
-							top: '80px',
+							top: '100px',
 						}}
 					/>
 				</SupabaseProvider>

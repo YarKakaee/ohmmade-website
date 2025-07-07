@@ -14,6 +14,7 @@ import axios from 'axios';
 import { Inter_Tight } from 'next/font/google';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import LayoutContainer from '@/app/components/common/LayoutContainer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 export default function PublishProjectPage() {
@@ -141,10 +142,10 @@ export default function PublishProjectPage() {
 
 	return (
 		<div className="relative min-h-screen bg-[#101014] overflow-hidden">
-			<section className="relative w-full pt-16 px-8 sm:px-16 lg:px-24">
-				<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-20">
+			<section className="relative w-full pt-16">
+				<LayoutContainer className="py-20">
 					<h2
-						className={`text-[44px] font-black mb-4 text-white leading-tight relative z-10 ${interTight.className}`}
+						className={`text-[40px] font-black mb-4 text-white leading-tight relative z-10 ${interTight.className}`}
 					>
 						Publish Your Project
 					</h2>
@@ -167,7 +168,7 @@ export default function PublishProjectPage() {
 								)
 							}
 							placeholder="Enter title here..."
-							className="bg-transparent text-white text-[17px] placeholder-white/50 focus:outline-none w-2/3 font-medium mt-4"
+							className="bg-transparent text-white text-[15px] placeholder-white/50 focus:outline-none w-2/3 font-medium mt-4"
 						/>
 
 						<div className="space-x-2">
@@ -180,7 +181,7 @@ export default function PublishProjectPage() {
 								className={`px-5 py-2 text-sm font-medium rounded-md transition ${
 									isPublishing
 										? 'bg-[#27BBFF] opacity-50 cursor-not-allowed'
-										: 'bg-[#27BBFF] text-[#101014] hover:brightness-80 cursor-pointer'
+										: 'bg-[#27BBFF] text-[#101014] cursor-pointer hover:brightness-110'
 								}`}
 							>
 								{isPublishing ? (
@@ -204,12 +205,12 @@ export default function PublishProjectPage() {
 					{/* Main Content Area */}
 					<div className="flex">
 						{/* Left: Editor */}
-						<div className="w-3/4 border-r border-white/60 min-h-[600px] p-8 text-white/50">
+						<div className="w-4/6 border-r border-white/60 min-h-[600px] p-8 text-white/50">
 							<CodexEditorWrapper ref={editorRef} />
 						</div>
 
 						{/* Right: Sidebar */}
-						<div className="w-1/4 space-y-6">
+						<div className="w-2/6 space-y-6">
 							<div className="px-8 pt-5 text-sm text-white">
 								<h3 className="text-white font-extrabold text-[20px] mb-2">
 									Thank you for sharing your knowledge!
@@ -605,7 +606,7 @@ export default function PublishProjectPage() {
 						</div>
 					</div>
 					{/* End main row */}
-				</div>
+				</LayoutContainer>
 			</section>
 			<Footer />
 		</div>

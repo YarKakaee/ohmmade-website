@@ -231,7 +231,7 @@ export default function Nav() {
 
 								{/* Create */}
 								<Link
-									href="/publish"
+									href="/projects/publish"
 									className="transition relative z-10 px-2 py-2"
 									onMouseEnter={handleLinkHover}
 								>

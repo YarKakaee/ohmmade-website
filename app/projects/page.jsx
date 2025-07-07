@@ -21,21 +21,21 @@ import Footer from '../components/layout/Footer';
 import { checkSession } from '@/lib/auth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import LayoutContainer from '../components/common/LayoutContainer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 
 const SkeletonCard = () => (
 	<div className="bg-[#1E2025] border border-[#2C2F36] p-6 rounded-2xl animate-pulse">
 		<div className="flex flex-col gap-4">
-			<div className="w-full h-52 bg-[#2C2F36] rounded-lg" />
+			<div className="w-full h-42 bg-[#2C2F36] rounded-lg" />
 			<div className="flex-1">
-				<div className="h-6 w-3/4 bg-[#2C2F36] rounded mb-4" />
+				<div className="h-5 w-3/4 bg-[#2C2F36] rounded mb-4" />
 				<div className="h-4 w-full bg-[#2C2F36] rounded mb-2" />
 				<div className="h-4 w-full bg-[#2C2F36] rounded mb-2" />
 				<div className="h-4 w-full bg-[#2C2F36] rounded mb-2" />
-				<div className="h-4 w-full bg-[#2C2F36] rounded mb-2" />
-				<div className="h-4 w-full bg-[#2C2F36] rounded mb-4" />
-				<div className="h-4 w-full bg-[#2C2F36] rounded mb-2" />
+				<div className="h-4 w-full bg-[#2C2F36] rounded mb-3" />
+				<div className="h-3 w-full bg-[#2C2F36] rounded" />
 			</div>
 		</div>
 	</div>
@@ -238,7 +238,7 @@ export default function ExploreProjectsPage() {
 
 	return (
 		<div className="flex flex-col min-h-screen bg-[#101014] overflow-hidden">
-			<section className="flex-1 relative w-full pt-16 px-8 sm:px-16 lg:px-24">
+			<section className="flex-1 relative w-full pt-16">
 				{/* Blurred background */}
 				<div
 					className="absolute top-[100px] left-1/2 -translate-x-1/2 z-0 w-full max-w-[1500px] h-[500px] bg-center bg-no-repeat bg-cover opacity-40 pointer-events-none select-none"
@@ -249,7 +249,7 @@ export default function ExploreProjectsPage() {
 					}}
 				/>
 
-				<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-20 relative z-10">
+				<LayoutContainer className="py-20 relative z-10">
 					<h2
 						className={`text-[44px] font-black mb-4 text-white leading-tight ${interTight.className}`}
 					>
@@ -704,7 +704,7 @@ export default function ExploreProjectsPage() {
 							</p>
 						</div>
 					)}
-				</div>
+				</LayoutContainer>
 			</section>
 			<Footer />
 		</div>

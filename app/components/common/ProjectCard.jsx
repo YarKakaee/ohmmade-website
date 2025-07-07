@@ -27,11 +27,11 @@ export default function ProjectCard({
 	const cardHeight = 'h-[380px]';
 	const imageHeight = 'h-40 sm:h-44 md:h-48';
 	const titleTextSize = 'text-[13px]';
-	const descTextSize = 'text-[12px]';
+	const descTextSize = 'text-[11.5px]';
 	const padding = 'p-4';
 	const avatarSize = 24;
-	const divHeight = 'h-[calc(100%-240px)]';
-	const categoryTextSize = 'text-[11px]';
+	const divHeight = 'h-[calc(100%-190px)]';
+	const categoryTextSize = 'text-[10.5px]';
 
 	return (
 		<Link href={`/projects/${slug}`}>
