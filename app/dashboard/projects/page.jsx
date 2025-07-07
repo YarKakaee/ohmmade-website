@@ -14,6 +14,7 @@ import ProjectCard from '@/app/components/common/ProjectCard';
 import categoryColors from '@/lib/constants/categoryColors';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
 import Footer from '@/app/components/layout/Footer';
+import LayoutContainer from '@/app/components/common/LayoutContainer';
 
 export default function MyProjectsPage() {
 	const router = useRouter();
@@ -153,7 +154,7 @@ export default function MyProjectsPage() {
 	return (
 		<div className="min-h-screen bg-[#101014] flex flex-col">
 			<div className="flex-1">
-				<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-16">
+				<LayoutContainer className="py-16">
 					<div className="flex">
 						{/* Fixed Sidebar */}
 						<div className="fixed h-screen">
@@ -166,7 +167,7 @@ export default function MyProjectsPage() {
 						{/* Scrollable Main Content */}
 						<div className="flex-1 pt-24 ml-[280px] pl-16">
 							<div className="flex items-center justify-between mb-8">
-								<h1 className="text-[44px] font-black text-white">
+								<h1 className="text-[32px] font-black text-white">
 									My Projects
 								</h1>
 								<Link
@@ -321,7 +322,7 @@ export default function MyProjectsPage() {
 							)}
 						</div>
 					</div>
-				</div>
+				</LayoutContainer>
 			</div>
 			<Footer />
 		</div>

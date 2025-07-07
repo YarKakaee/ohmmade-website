@@ -14,6 +14,7 @@ import ProjectCard from '@/app/components/common/ProjectCard';
 import categoryColors from '@/lib/constants/categoryColors';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
 import Footer from '@/app/components/layout/Footer';
+import LayoutContainer from '@/app/components/common/LayoutContainer';
 
 export default function LikedProjectsPage() {
 	const router = useRouter();
@@ -153,7 +154,7 @@ export default function LikedProjectsPage() {
 	return (
 		<div className="min-h-screen bg-[#101014] flex flex-col">
 			<div className="flex-1">
-				<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-16">
+				<LayoutContainer className="py-16">
 					<div className="flex">
 						{/* Fixed Sidebar */}
 						<div className="fixed h-screen">
@@ -166,7 +167,7 @@ export default function LikedProjectsPage() {
 						{/* Scrollable Main Content */}
 						<div className="flex-1 pt-24 ml-[280px] pl-16">
 							<div className="flex items-center justify-between mb-8">
-								<h1 className="text-[44px] font-black text-white">
+								<h1 className="text-[32px] font-black text-white">
 									Liked Projects
 								</h1>
 							</div>
@@ -199,7 +200,7 @@ export default function LikedProjectsPage() {
 										</p>
 										<Link
 											href="/projects"
-											className="inline-flex items-center gap-2 px-4 py-2 bg-[#27BBFF] text-[#101014] rounded-lg font-medium hover:bg-[#27BBFF]/90 transition-colors"
+											className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#27BBFF] text-[#101014] rounded-lg font-medium hover:bg-[#27BBFF]/90 transition-colors text-sm"
 										>
 											Browse Projects
 										</Link>
@@ -312,7 +313,7 @@ export default function LikedProjectsPage() {
 							)}
 						</div>
 					</div>
-				</div>
+				</LayoutContainer>
 			</div>
 			<Footer />
 		</div>

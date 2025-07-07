@@ -31,6 +31,7 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import { useSession } from '@supabase/auth-helpers-react';
 import WattsDisplay from '@/app/components/common/WattsDisplay';
 import UserRank from '@/app/components/common/UserRank';
+import LayoutContainer from '@/app/components/common/LayoutContainer';
 
 export default function UserProfilePage() {
 	const params = useParams();
@@ -250,7 +251,7 @@ export default function UserProfilePage() {
 	if (loading) {
 		return (
 			<div className="min-h-screen bg-[#101014] pt-24">
-				<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-8">
+				<LayoutContainer className="py-8">
 					<div className="animate-pulse">
 						{/* Header Skeleton */}
 						<div className="bg-[#13151A]/50 backdrop-blur-sm border border-[#3A3A3C]/60 rounded-3xl p-8 mb-8">
@@ -285,7 +286,7 @@ export default function UserProfilePage() {
 							))}
 						</div>
 					</div>
-				</div>
+				</LayoutContainer>
 			</div>
 		);
 	}
@@ -311,7 +312,7 @@ export default function UserProfilePage() {
 
 	return (
 		<div className="min-h-screen bg-[#101014] pt-24">
-			<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-8">
+			<LayoutContainer className="py-8">
 				{/* Header Section */}
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
@@ -616,7 +617,7 @@ export default function UserProfilePage() {
 						</div>
 					)}
 				</motion.div>
-			</div>
+			</LayoutContainer>
 
 			{/* Followers Modal */}
 			{showFollowersModal && (

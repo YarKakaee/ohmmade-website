@@ -13,6 +13,7 @@ import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import LayoutContainer from '@/app/components/common/LayoutContainer';
 
 export default function UserDashboardPage() {
 	const router = useRouter();
@@ -203,7 +204,7 @@ export default function UserDashboardPage() {
 	return (
 		<div className="min-h-screen bg-[#101014] flex flex-col">
 			<div className="flex-1">
-				<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-16">
+				<LayoutContainer className="py-16">
 					<div className="flex">
 						{/* Sidebar */}
 						<div className="fixed h-screen">
@@ -215,8 +216,8 @@ export default function UserDashboardPage() {
 
 						{/* Main scrollable Content */}
 						<div className="flex-1 pt-24 ml-[280px] pl-16">
-							<div className="mb-8">
-								<h1 className="text-[44px] font-black text-white mb-2">
+							<div className="mb-5">
+								<h1 className="text-[32px] font-black text-white">
 									Account Dashboard
 								</h1>
 							</div>
@@ -225,10 +226,10 @@ export default function UserDashboardPage() {
 							<div className="rounded-2xl mb-8 ">
 								<div className="flex items-start justify-between">
 									<div>
-										<h2 className="text-2xl font-bold text-white mb-2">
+										<h2 className="text-xl font-bold text-white mb-2">
 											Welcome back, {user.name} 👋
 										</h2>
-										<p className="text-white/60">
+										<p className="text-white/60 text-sm">
 											Share your projects to inspire
 											people!
 										</p>
@@ -245,12 +246,12 @@ export default function UserDashboardPage() {
 							</div>
 
 							{/* Recent Activity */}
-							<div className="bg-[#13151A] rounded-2xl p-8 border border-[#3A3A3C]/60">
-								<h2 className="text-xl font-bold text-white mb-6">
+							<div className="bg-[#13151A] rounded-2xl p-6 border border-[#3A3A3C]/60">
+								<h2 className="text-lg font-bold text-white mb-4">
 									Recent Activity
 								</h2>
 								<div className="overflow-x-auto">
-									<table className="w-full">
+									<table className="w-full text-sm">
 										<thead>
 											<tr className="text-left border-b border-[#3A3A3C]/60">
 												<th className="pb-4 text-white/60 font-medium">
@@ -416,7 +417,7 @@ export default function UserDashboardPage() {
 							</div>
 						</div>
 					</div>
-				</div>
+				</LayoutContainer>
 			</div>
 			<Footer />
 		</div>

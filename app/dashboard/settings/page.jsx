@@ -22,6 +22,7 @@ import {
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
 import Footer from '@/app/components/layout/Footer';
+import LayoutContainer from '@/app/components/common/LayoutContainer';
 
 export default function SettingsPage() {
 	const router = useRouter();
@@ -277,7 +278,7 @@ export default function SettingsPage() {
 	return (
 		<div className="min-h-screen bg-[#101014] flex flex-col">
 			<div className="flex-1">
-				<div className="max-w-[1700px] mx-auto px-8 sm:px-16 py-16">
+				<LayoutContainer className="py-16">
 					<div className="flex">
 						{/* Fixed Sidebar */}
 						<div className="fixed h-screen">
@@ -291,7 +292,7 @@ export default function SettingsPage() {
 						<div className="flex-1 pt-24 ml-[280px] pl-16">
 							<div>
 								<div className="mb-8">
-									<h1 className="text-[44px] font-black text-white">
+									<h1 className="text-[32px] font-black text-white">
 										Settings
 									</h1>
 								</div>
@@ -334,10 +335,10 @@ export default function SettingsPage() {
 								{activeTab === 'profile' && (
 									<form onSubmit={handleSubmit}>
 										<div className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-8 shadow-2xl flex flex-col w-full">
-											<h2 className="text-2xl font-bold text-white mb-4">
+											<h2 className="text-xl font-bold text-white mb-4">
 												Profile
 											</h2>
-											<p className="text-white/60 text-sm mb-10">
+											<p className="text-white/60 text-xs mb-8">
 												Update your profile picture,
 												display name, and username.
 												These will be visible on your
@@ -460,10 +461,10 @@ export default function SettingsPage() {
 
 										{/* Public Info Section */}
 										<div className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-8 shadow-2xl flex flex-col w-full mt-8">
-											<h2 className="text-2xl font-bold text-white mb-4">
+											<h2 className="text-xl font-bold text-white mb-4">
 												Public Info
 											</h2>
-											<p className="text-white/60 text-sm mb-10">
+											<p className="text-white/60 text-xs mb-8">
 												Add a bio and social links to
 												complete your profile.
 											</p>
@@ -573,7 +574,7 @@ export default function SettingsPage() {
 												disabled={
 													!hasChanges || isUpdating
 												}
-												className={`px-6 py-2 rounded-lg font-semibold transition-all text-sm shadow-sm
+												className={`px-6 py-2 rounded-lg font-semibold transition-all text-xs shadow-sm
 													${
 														hasChanges &&
 														!isUpdating
@@ -591,7 +592,7 @@ export default function SettingsPage() {
 							</div>
 						</div>
 					</div>
-				</div>
+				</LayoutContainer>
 			</div>
 			<Footer />
 		</div>
