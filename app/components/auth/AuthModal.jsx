@@ -259,7 +259,7 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 									},
 								}}
 							>
-								<div className="bg-[#1C1C20] rounded-2xl p-8 relative border border-[#3A3A3C]/60 shadow-xl">
+								<div className="bg-[#101014]/60 backdrop-blur-lg rounded-2xl p-8 relative border border-[#3A3A3C]/60 shadow-xl">
 									<Dialog.Close className="cursor-pointer absolute top-4 right-4 text-[#FFFFFF]/60 hover:text-white transition-colors">
 										<FontAwesomeIcon
 											icon={faXmark}
@@ -269,14 +269,14 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 
 									<div className="flex flex-col items-center mb-6 mt-4">
 										<div className="flex items-center justify-center gap-2">
-											<img
-												src="https://ujaylejhopvncyjvduvj.supabase.co/storage/v1/object/public/ohmmade-assets//Frame%205%20(4).png"
-												alt="OhmMade Logo"
-												className="w-9 mb-4"
+											<Image
+												src="/assets/OMLogoBanner.png"
+												alt="OhmMade Logo Banner"
+												height={40}
+												width={192}
+												className="object-contain h-10 w-auto mb-4"
+												priority
 											/>
-											<h1 className="text-3xl font-extrabold text-white mb-2">
-												OhmMade
-											</h1>
 										</div>
 										<Dialog.Title className="text-[20px] font-semibold text-white mb-2 mt-2">
 											{isSignIn
@@ -314,7 +314,7 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 																e.target.value
 															)
 														}
-														className="w-full pl-10 pr-4 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
+														className="w-full pl-10 pr-4 py-2 bg-white/5 backdrop-blur-xl border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm transition-all"
 														placeholder="John Doe"
 														required={!isSignIn}
 													/>
@@ -340,7 +340,7 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 													onChange={(e) =>
 														setEmail(e.target.value)
 													}
-													className="w-full pl-10 pr-4 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
+													className="w-full pl-10 pr-4 py-2 bg-white/5 backdrop-blur-xl border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm transition-all"
 													placeholder="john.doe@gmail.com"
 													required
 												/>
@@ -370,7 +370,7 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 															e.target.value
 														)
 													}
-													className="w-full pl-10 pr-24 py-2 bg-[#2c2d2e] border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm"
+													className="w-full pl-10 pr-24 py-2 bg-white/5 backdrop-blur-xl border border-[#3A3A3C]/60 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-transparent placeholder:text-sm transition-all"
 													placeholder="Min. 6 characters"
 													required
 												/>
@@ -423,7 +423,7 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 											disabled={loading}
 											whileHover={{ scale: 1.02 }}
 											whileTap={{ scale: 0.98 }}
-											className="mt-1 cursor-pointer w-full bg-[#27BBFF] text-[#101014] font-semibold py-2 px-4 rounded-lg hover:bg-[#1ea8e6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+											className="mt-1 cursor-pointer w-full bg-[#27BBFF] text-[#101014] font-semibold py-2 px-4 rounded-lg hover:bg-[#1ea8e6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#27BBFF]/20"
 										>
 											{loading
 												? 'Loading...'
@@ -432,15 +432,12 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 												: 'Create Account'}
 										</motion.button>
 
-										<div className="relative">
-											<div className="absolute inset-0 flex items-center">
-												<div className="w-full border-t border-[#3A3A3C]/60"></div>
-											</div>
-											<div className="relative flex justify-center text-sm">
-												<span className="px-2 bg-[#1C1C20] text-[#ACACAD]">
-													or
-												</span>
-											</div>
+										<div className="flex items-center">
+											<div className="flex-1 h-px bg-[#3A3A3C]/60" />
+											<span className="mx-4 text-[#ACACAD] text-sm z-10">
+												or
+											</span>
+											<div className="flex-1 h-px bg-[#3A3A3C]/60" />
 										</div>
 
 										<motion.button
@@ -449,7 +446,7 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 											disabled={loading}
 											whileHover={{ scale: 1.02 }}
 											whileTap={{ scale: 0.98 }}
-											className="cursor-pointer w-full flex items-center justify-center gap-2 bg-[#2c2d2e] text-white font-medium py-2 px-4 rounded-lg border border-[#3A3A3C]/60 hover:bg-[#3A3A3C] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+											className="cursor-pointer w-full flex items-center justify-center gap-2 bg-white/5 backdrop-blur-xl text-white font-medium py-2 px-4 rounded-lg border border-[#3A3A3C]/60 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-white/10"
 										>
 											<svg
 												width="18"
@@ -482,7 +479,7 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 										<p className="text-[#ACACAD] text-xs mt-4">
 											By proceeding, you agree to our{' '}
 											<Link
-												href="/tos"
+												href="/legal/terms"
 												onClick={onClose}
 												className="text-white hover:text-white/80 cursor-pointer relative group"
 											>
@@ -491,7 +488,7 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 											</Link>{' '}
 											and{' '}
 											<Link
-												href="/privacy-policy"
+												href="/legal/privacy"
 												onClick={onClose}
 												className="text-white hover:text-white/80 cursor-pointer relative group"
 											>
