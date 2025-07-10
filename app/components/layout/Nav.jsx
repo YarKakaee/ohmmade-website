@@ -1,23 +1,19 @@
 'use client';
 
-import { supabase } from '@/lib/supabaseClient';
+import { useAuthModal } from '@/app/providers/AuthModalProvider';
 import {
-	faAngleDown,
-	faGlobe,
-	faSignOutAlt,
-	faUser,
-	faAddressCard,
-	faTachometerAlt,
 	faMagnifyingGlass,
+	faSignOutAlt,
+	faTachometerAlt,
+	faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
-import AuthModal from '../auth/AuthModal';
 import LayoutContainer from '../common/LayoutContainer';
 
 export default function Nav() {
@@ -29,15 +25,8 @@ export default function Nav() {
 
 	const [user, setUser] = useState(session?.user || null);
 	const [userProfile, setUserProfile] = useState(null);
-	const [scrolled, setScrolled] = useState(false);
 	const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 	const [showUserDropdown, setShowUserDropdown] = useState(false);
-	const [showAuthModal, setShowAuthModal] = useState(false);
-	const [showFloating, setShowFloating] = useState(false);
-	const [lastScrollY, setLastScrollY] = useState(0);
-	const [authMode, setAuthMode] = useState('login');
-	const [atTop, setAtTop] = useState(true);
-	const [hasScrolled, setHasScrolled] = useState(false);
 	const [hoveredLink, setHoveredLink] = useState(null);
 	const [highlightStyle, setHighlightStyle] = useState({
 		opacity: 0,
@@ -46,6 +35,8 @@ export default function Nav() {
 		width: 0,
 		height: 0,
 	});
+	const [atTop, setAtTop] = useState(true);
+	const [lastScrollY, setLastScrollY] = useState(0);
 
 	useEffect(() => {
 		const refreshSession = async () => {
@@ -65,28 +56,14 @@ export default function Nav() {
 			.then((data) => setUserProfile(data));
 	}, [session]);
 
+	// Floating nav logic
 	useEffect(() => {
 		let ticking = false;
 		const handleScroll = () => {
 			if (!ticking) {
 				window.requestAnimationFrame(() => {
 					const currentY = window.scrollY;
-					const wasAtTop = atTop;
 					setAtTop(currentY === 0);
-
-					// Set hasScrolled when we first leave the top
-					if (wasAtTop && currentY > 0) {
-						setHasScrolled(true);
-					}
-					// Reset hasScrolled when we're back at the top
-					if (currentY === 0) {
-						setHasScrolled(false);
-						setShowFloating(false);
-					} else if (currentY > lastScrollY) {
-						setShowFloating(false);
-					} else {
-						setShowFloating(true);
-					}
 					setLastScrollY(currentY);
 					ticking = false;
 				});
@@ -95,14 +72,12 @@ export default function Nav() {
 		};
 		window.addEventListener('scroll', handleScroll);
 		return () => window.removeEventListener('scroll', handleScroll);
-	}, [lastScrollY, atTop]);
+	}, []);
 
-	// Initialize navbar state based on current scroll position
 	useEffect(() => {
 		const currentY = window.scrollY;
 		setAtTop(currentY === 0);
-		setHasScrolled(currentY > 0);
-		setShowFloating(false);
+		setLastScrollY(currentY);
 	}, []);
 
 	useEffect(() => {
@@ -125,7 +100,6 @@ export default function Nav() {
 		};
 	}, []);
 
-	// Update highlight position when hovered link changes
 	useEffect(() => {
 		if (hoveredLink) {
 			const rect = hoveredLink.getBoundingClientRect();
@@ -152,12 +126,9 @@ export default function Nav() {
 	};
 
 	const handleSignOut = async () => {
-		await supabaseClient.auth.signOut(); // ✅ use supabaseClient instead of supabase
-		setUser(null); // instantly update UI
-
-		// Optionally refetch session to make sure context is synced
+		await supabaseClient.auth.signOut();
+		setUser(null);
 		await supabaseClient.auth.getSession();
-
 		router.push('/');
 	};
 
@@ -167,6 +138,8 @@ export default function Nav() {
 		if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
 		return (words[0][0] + words[1][0]).toUpperCase();
 	};
+
+	const { openAuthModal } = useAuthModal();
 
 	return (
 		<header className="fixed top-0 left-0 w-full z-50 flex justify-center pointer-events-none">
@@ -277,15 +250,6 @@ export default function Nav() {
 									Help
 								</Link>
 
-								{/* Blog */}
-								{/* <Link
-									href="/blog"
-									className="transition relative z-10 px-2 py-2"
-									onMouseEnter={handleLinkHover}
-								>
-									Blog
-								</Link> */}
-
 								{/* About */}
 								<Link
 									href="/about"
@@ -309,29 +273,8 @@ export default function Nav() {
 							</nav>
 						</div>
 
-						{/* Right: Search, Language, User */}
+						{/* Right: User */}
 						<div className="flex items-center flex-shrink-0 ml-auto z-10">
-							{/* Search Icon */}
-
-							{/* Language */}
-							{/* <div className="relative" ref={languageRef}>
-								<button
-									onClick={() =>
-										setShowLanguageMenu(!showLanguageMenu)
-									}
-									className="text-white/90 hover:text-white transition cursor-pointer"
-								>
-									<FontAwesomeIcon icon={faGlobe} size="xl" />
-								</button>
-								{showLanguageMenu && (
-									<div className="absolute top-full left-[-12px] mt-4 w-32 bg-[#2c2d2e] border border-[#454547] text-white text-sm rounded-lg p-3 shadow-lg z-50 backdrop-blur-3xl">
-										<p className="text-center">
-											Coming soon...
-										</p>
-									</div>
-								)}
-							</div> */}
-
 							{/* User Auth Section */}
 							{user ? (
 								<div className="relative" ref={userRef}>
@@ -447,19 +390,13 @@ export default function Nav() {
 							) : (
 								<div className="flex items-center gap-1">
 									<button
-										onClick={() => {
-											setAuthMode('login');
-											setShowAuthModal(true);
-										}}
+										onClick={() => openAuthModal('login')}
 										className="text-white text-[14px] font-medium px-4 py-2 rounded-full cursor-pointer hover:text-[#ACACAD] transition"
 									>
 										Log in
 									</button>
 									<button
-										onClick={() => {
-											setAuthMode('signup');
-											setShowAuthModal(true);
-										}}
+										onClick={() => openAuthModal('signup')}
 										className="bg-[#27BBFF] text-[14px] text-[#101014] font-medium px-4 py-2 rounded-full cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg hover:bg-[#27BBFF]"
 									>
 										Sign up
@@ -470,11 +407,6 @@ export default function Nav() {
 					</div>
 				</div>
 			</LayoutContainer>
-			<AuthModal
-				isOpen={showAuthModal}
-				onClose={() => setShowAuthModal(false)}
-				mode={authMode}
-			/>
 		</header>
 	);
 }

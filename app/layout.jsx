@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import Nav from './components/layout/Nav';
 import './globals.css';
 import SupabaseProvider from './providers/SupabaseProvider';
+import AuthModalProvider from './providers/AuthModalProvider';
 config.autoAddCss = false;
 
 const inter = Inter({
@@ -61,15 +62,17 @@ export default function RootLayout({ children }) {
 		<html lang="en">
 			<body className={`${inter.className} antialiased`}>
 				<SupabaseProvider>
-					<Nav />
-					{children}
-					<Toaster
-						position="top-center"
-						reverseOrder={false}
-						containerStyle={{
-							top: '100px',
-						}}
-					/>
+					<AuthModalProvider>
+						<Nav />
+						{children}
+						<Toaster
+							position="top-center"
+							reverseOrder={false}
+							containerStyle={{
+								top: '100px',
+							}}
+						/>
+					</AuthModalProvider>
 				</SupabaseProvider>
 			</body>
 		</html>

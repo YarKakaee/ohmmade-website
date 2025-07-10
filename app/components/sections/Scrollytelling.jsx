@@ -130,10 +130,9 @@ export default function Scrollytelling() {
 	const bg = useTransform(
 		scrollYProgress,
 		slides.map((_, i) => i / (slideCount - 1)),
-		// Make the gradient smaller and more saturated
 		slides.map(
 			(slide) =>
-				`radial-gradient(ellipse at center, ${slide.color}44 10%, ${slide.color}20 45%, transparent 65%)`
+				`radial-gradient(ellipse at center, ${slide.color}33 0%, #101014 55%)`
 		)
 	);
 
@@ -185,15 +184,15 @@ export default function Scrollytelling() {
 							className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl flex flex-col items-center justify-center text-center px-4"
 							style={{ pointerEvents: 'auto' }}
 						>
-							<motion.h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-white drop-shadow-lg">
+							<motion.h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-white drop-shadow-lg leading-tight">
 								{slide.heading}
 							</motion.h2>
-							<motion.p className="text-base sm:text-lg md:text-xl mb-8 text-white/80 font-light">
+							<motion.p className="text-base sm:text-lg md:text-lg mb-10 text-gray-300">
 								{slide.description}
 							</motion.p>
 							<motion.a
 								href={slide.button.link}
-								className={`px-7 py-4 rounded-full font-bold text-[16px] border border-white/20 backdrop-blur transition shadow-lg cursor-pointer`}
+								className={`px-8 py-4 rounded-full font-bold text-[16px] backdrop-blur transition shadow-lg cursor-pointer`}
 								style={{
 									background: slide.color,
 									color: slide.textColor,

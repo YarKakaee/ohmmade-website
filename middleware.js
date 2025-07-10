@@ -10,7 +10,7 @@ export async function middleware(req) {
 	} = await supabase.auth.getSession();
 
 	// Protected routes
-	const protectedRoutes = ['/user', '/projects/publish'];
+	const protectedRoutes = ['/user'];
 
 	// Check if the current path starts with any protected route
 	const isProtectedRoute = protectedRoutes.some((route) =>
@@ -29,5 +29,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-	matcher: ['/user/:path*', '/projects/publish/:path*'],
+	matcher: ['/user/:path*'],
 };

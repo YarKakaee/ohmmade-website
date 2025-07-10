@@ -23,11 +23,13 @@ import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
 import Footer from '@/app/components/layout/Footer';
 import LayoutContainer from '@/app/components/common/LayoutContainer';
+import { useAuthModal } from '@/app/providers/AuthModalProvider';
 
 export default function SettingsPage() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const session = useSession();
+	const { openAuthModal } = useAuthModal();
 	const supabaseClient = useSupabaseClient();
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
@@ -50,19 +52,12 @@ export default function SettingsPage() {
 	const [initialFormData, setInitialFormData] = useState(null);
 	const [initialAvatar, setInitialAvatar] = useState(null);
 
-	// Session refresh logic (must be first)
 	useEffect(() => {
-		let timeout;
-		if (session === undefined || session === null) {
-			setLoading(true);
-			timeout = setTimeout(() => {
-				if (session === undefined || session === null) {
-					router.replace('/signin');
-				}
-			}, 500); // 500ms delay
+		if (session === null) {
+			router.replace('/');
+			setTimeout(() => openAuthModal('login'), 200);
 		}
-		return () => clearTimeout(timeout);
-	}, [session, router]);
+	}, [session, router, openAuthModal]);
 
 	// Fetch user data only if session is truthy
 	useEffect(() => {
@@ -262,6 +257,10 @@ export default function SettingsPage() {
 				formData.instagram !== initialFormData.instagram ||
 				avatarFile !== null)) ||
 		(avatarPreview !== initialAvatar && avatarFile !== null);
+
+	if (!session) {
+		return <div className="fixed inset-0 bg-[#101014] z-50" />;
+	}
 
 	if (loading) {
 		return (

@@ -14,12 +14,14 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import LayoutContainer from '@/app/components/common/LayoutContainer';
+import { useAuthModal } from '@/app/providers/AuthModalProvider';
 
 export default function UserDashboardPage() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const session = useSession();
 	const supabaseClient = useSupabaseClient();
+	const { openAuthModal } = useAuthModal();
 	const [user, setUser] = useState(null);
 	const [activities, setActivities] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -29,31 +31,13 @@ export default function UserDashboardPage() {
 	const totalPages = Math.ceil(total / limit);
 
 	useEffect(() => {
-		let timeout;
-		if (session === undefined || session === null) {
-			setLoading(true);
-			timeout = setTimeout(() => {
-				if (session === undefined || session === null) {
-					router.replace('/signin');
-				} else {
-					setLoading(false);
-				}
-			}, 500); // 500ms delay
-		} else {
-			setLoading(false);
-			if (!session) {
-				router.replace('/signin');
-			}
+		if (session === null) {
+			router.replace('/');
+			setTimeout(() => openAuthModal('login'), 200);
 		}
-		return () => clearTimeout(timeout);
-	}, [session, router]);
+	}, [session, router, openAuthModal]);
 
 	useEffect(() => {
-		if (!session && !loading) {
-			setLoading(false);
-			return;
-		}
-
 		if (!session) {
 			setLoading(true);
 			return;
@@ -99,7 +83,6 @@ export default function UserDashboardPage() {
 					});
 				} else {
 					setUser(null);
-					router.push('/signin');
 				}
 
 				// Fetch user activities with pagination
@@ -187,6 +170,10 @@ export default function UserDashboardPage() {
 
 	function getPageHref(p) {
 		return `/dashboard?page=${p}`;
+	}
+
+	if (!session) {
+		return <div className="fixed inset-0 bg-[#101014] z-50" />;
 	}
 
 	if (loading) {

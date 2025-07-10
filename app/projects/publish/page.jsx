@@ -13,11 +13,29 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { Inter_Tight } from 'next/font/google';
 import { useEffect, useRef, useState } from 'react';
+import { useSession } from '@supabase/auth-helpers-react';
+import { useRouter } from 'next/navigation';
+import { useAuthModal } from '@/app/providers/AuthModalProvider';
 import toast from 'react-hot-toast';
 import LayoutContainer from '@/app/components/common/LayoutContainer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 export default function PublishProjectPage() {
+	const session = useSession();
+	const router = useRouter();
+	const { openAuthModal } = useAuthModal();
+
+	useEffect(() => {
+		if (session === null) {
+			router.replace('/');
+			setTimeout(() => openAuthModal('login'), 200);
+		}
+	}, [session, router, openAuthModal]);
+
+	if (!session) {
+		return <div className="fixed inset-0 bg-[#101014] z-50" />;
+	}
+
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [category, setCategory] = useState('');

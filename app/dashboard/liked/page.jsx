@@ -15,11 +15,13 @@ import categoryColors from '@/lib/constants/categoryColors';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
 import Footer from '@/app/components/layout/Footer';
 import LayoutContainer from '@/app/components/common/LayoutContainer';
+import { useAuthModal } from '@/app/providers/AuthModalProvider';
 
 export default function LikedProjectsPage() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const session = useSession();
+	const { openAuthModal } = useAuthModal();
 	const supabaseClient = useSupabaseClient();
 	const [user, setUser] = useState(null);
 	const [projects, setProjects] = useState([]);
@@ -38,31 +40,13 @@ export default function LikedProjectsPage() {
 	}, [currentPage, router, searchParams]);
 
 	useEffect(() => {
-		let timeout;
-		if (session === undefined || session === null) {
-			setLoading(true);
-			timeout = setTimeout(() => {
-				if (session === undefined || session === null) {
-					router.replace('/signin');
-				} else {
-					setLoading(false);
-				}
-			}, 500); // 500ms delay
-		} else {
-			setLoading(false);
-			if (!session) {
-				router.replace('/signin');
-			}
+		if (session === null) {
+			router.replace('/');
+			setTimeout(() => openAuthModal('login'), 200);
 		}
-		return () => clearTimeout(timeout);
-	}, [session, router]);
+	}, [session, router, openAuthModal]);
 
 	useEffect(() => {
-		if (!session && !loading) {
-			setLoading(false);
-			return;
-		}
-
 		if (!session) {
 			setLoading(true);
 			return;
@@ -118,7 +102,6 @@ export default function LikedProjectsPage() {
 					setTotalItems(projectsData.total);
 				} else {
 					setUser(null);
-					router.push('/signin');
 				}
 			} catch (err) {
 				console.error('Failed to fetch dashboard data:', err);
@@ -138,6 +121,10 @@ export default function LikedProjectsPage() {
 		setCurrentPage(newPage);
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 	};
+
+	if (!session) {
+		return <div className="fixed inset-0 bg-[#101014] z-50" />;
+	}
 
 	if (loading) {
 		return (
