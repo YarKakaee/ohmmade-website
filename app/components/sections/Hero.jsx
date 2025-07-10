@@ -141,7 +141,7 @@ export default function Hero() {
 	}, []);
 
 	return (
-		<section className="relative w-full min-h-[90vh] flex items-center justify-center mt-10">
+		<section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-hidden">
 			{/* Star/Particle Background */}
 			{particles.map((particle, index) => (
 				<div
@@ -260,7 +260,7 @@ export default function Hero() {
 							>
 								<Link
 									href="/learn"
-									className="relative inline-flex items-center justify-center bg-[#27BBFF] text-[#101014] px-5 py-3 rounded-md text-sm font-semibold shadow-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#27BBFF]/60 before:absolute before:inset-0 before:rounded-md before:blur-md before:opacity-60 before:bg-gradient-to-r before:from-[#27BBFF] before:to-[#6EE7FF] before:z-[-1] overflow-hidden scale-pulse static-glow"
+									className="relative inline-flex items-center justify-center bg-[#27BBFF] text-[#101014] px-5 py-3 rounded-md text-sm font-semibold shadow-[0_4px_24px_0_rgba(39,187,255,0.25)] transition-all duration-300  before:absolute before:inset-0 before:rounded-md before:blur before:opacity-50 before:bg-gradient-to-r before:from-[#27BBFF] before:to-[#6EE7FF] before:z-[-1] overflow-hidden"
 								>
 									Start Your First Project
 								</Link>

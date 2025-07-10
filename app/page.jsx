@@ -8,12 +8,13 @@ import Hero from './components/sections/Hero';
 import Learn from './components/sections/Learn';
 import ProjectsSection from './components/sections/ProjectsSection';
 import GamificationSection from './components/sections/GamificationSection';
+import Scrollytelling from './components/sections/Scrollytelling';
 import './globals.css';
 
 export default function Home() {
 	return (
 		<section>
-			<div className="relative min-h-screen bg-[#101014] overflow-hidden">
+			<div className="relative min-h-screen bg-[#101014]">
 				<div className="absolute inset-0 pointer-events-none">
 					<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1200px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 blur-[125px] opacity-70 transform-gpu">
 						<Image
@@ -29,8 +30,10 @@ export default function Home() {
 
 				<Hero />
 				<Features />
-				<GamificationSection />
+
 				<ProjectsSection />
+
+				<Scrollytelling />
 
 				<Footer />
 			</div>

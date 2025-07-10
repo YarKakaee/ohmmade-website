@@ -176,7 +176,7 @@ export default function Nav() {
 					${
 						atTop
 							? 'rounded-none shadow-none bg-transparent backdrop-blur-lg border-transparent translate-y-0'
-							: 'rounded-full shadow-2xl bg-[#101014]/60 backdrop-blur-lg border border-[#3A3A3C]/60 translate-y-4'
+							: 'rounded-full bg-[#101014]/60 backdrop-blur-lg border-t border-t-white/20 shadow-[0_4px_24px_0_rgba(0,0,0,0.10)] translate-y-4'
 					}
 				`}
 				>

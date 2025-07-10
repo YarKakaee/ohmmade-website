@@ -446,7 +446,7 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 											disabled={loading}
 											whileHover={{ scale: 1.02 }}
 											whileTap={{ scale: 0.98 }}
-											className="cursor-pointer w-full flex items-center justify-center gap-2 bg-white/5 backdrop-blur-xl text-white font-medium py-2 px-4 rounded-lg border border-[#3A3A3C]/60 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-white/10"
+											className="cursor-pointer w-full flex items-center justify-center gap-2 bg-gray-600/10 backdrop-blur border-t border-t-white/20 shadow-[0_2px_8px_0_rgba(0,0,0,0.10)] rounded-lg py-[10.5px] px-4 text-white text-[15px] font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
 										>
 											<svg
 												width="18"
