@@ -207,13 +207,43 @@ export default function Nav() {
 							>
 								{/* Animated highlight background */}
 								<motion.div
-									className="absolute bg-white/5 rounded-full pointer-events-none"
+									className="absolute bg-white/10 rounded-full pointer-events-none"
 									animate={highlightStyle}
 									transition={{
 										type: 'spring',
-										stiffness: 400,
-										damping: 30,
-										opacity: { duration: 0.2 },
+										stiffness: 200,
+										damping: 20,
+										mass: 0.6,
+										opacity: {
+											type: 'spring',
+											stiffness: 350,
+											damping: 30,
+											duration: 0.12,
+										},
+										left: {
+											type: 'spring',
+											stiffness: 180,
+											damping: 18,
+											mass: 0.5,
+										},
+										width: {
+											type: 'spring',
+											stiffness: 220,
+											damping: 22,
+											mass: 0.6,
+										},
+										top: {
+											type: 'spring',
+											stiffness: 200,
+											damping: 20,
+											mass: 0.5,
+										},
+										height: {
+											type: 'spring',
+											stiffness: 200,
+											damping: 20,
+											mass: 0.5,
+										},
 									}}
 									style={{
 										zIndex: 1,
@@ -248,13 +278,13 @@ export default function Nav() {
 								</Link>
 
 								{/* Blog */}
-								<Link
+								{/* <Link
 									href="/blog"
 									className="transition relative z-10 px-2 py-2"
 									onMouseEnter={handleLinkHover}
 								>
 									Blog
-								</Link>
+								</Link> */}
 
 								{/* About */}
 								<Link
