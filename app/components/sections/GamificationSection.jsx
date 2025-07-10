@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import LayoutContainer from '../common/LayoutContainer';
 
 const yellow = '#FFD600';
@@ -31,6 +32,27 @@ const letterVariants = {
 };
 
 export default function GamificationSection() {
+	const [particles, setParticles] = useState([]);
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		setIsClient(true);
+		// Generate particles only on client side to avoid hydration mismatch
+		const generatedParticles = [...Array(18)].map((_, i) => ({
+			id: i,
+			width: Math.random() * 4 + 2,
+			height: Math.random() * 4 + 2,
+			left: Math.random() * 100,
+			top: Math.random() * 100,
+			opacity: 0.18 + Math.random() * 0.22,
+			animateY: Math.random() * 40 - 20,
+			animateX: Math.random() * 40 - 20,
+			duration: 2.5 + Math.random() * 1.5,
+			delay: Math.random(),
+		}));
+		setParticles(generatedParticles);
+	}, []);
+
 	return (
 		<motion.section
 			initial="hidden"
@@ -51,32 +73,33 @@ export default function GamificationSection() {
 					}}
 				/>
 				{/* Animated sparks/particles */}
-				{[...Array(18)].map((_, i) => (
-					<motion.div
-						key={i}
-						className="absolute rounded-full"
-						style={{
-							width: `${Math.random() * 4 + 2}px`,
-							height: `${Math.random() * 4 + 2}px`,
-							background: yellow,
-							left: `${Math.random() * 100}%`,
-							top: `${Math.random() * 100}%`,
-							opacity: 0.18 + Math.random() * 0.22,
-							filter: 'blur(1.5px)',
-						}}
-						animate={{
-							y: [0, Math.random() * 40 - 20, 0],
-							x: [0, Math.random() * 40 - 20, 0],
-							opacity: [0.18, 0.32, 0.18],
-						}}
-						transition={{
-							duration: 2.5 + Math.random() * 1.5,
-							repeat: Infinity,
-							repeatType: 'loop',
-							delay: Math.random(),
-						}}
-					/>
-				))}
+				{isClient &&
+					particles.map((particle) => (
+						<motion.div
+							key={particle.id}
+							className="absolute rounded-full"
+							style={{
+								width: `${particle.width}px`,
+								height: `${particle.height}px`,
+								background: yellow,
+								left: `${particle.left}%`,
+								top: `${particle.top}%`,
+								opacity: particle.opacity,
+								filter: 'blur(1.5px)',
+							}}
+							animate={{
+								y: [0, particle.animateY, 0],
+								x: [0, particle.animateX, 0],
+								opacity: [0.18, 0.32, 0.18],
+							}}
+							transition={{
+								duration: particle.duration,
+								repeat: Infinity,
+								repeatType: 'loop',
+								delay: particle.delay,
+							}}
+						/>
+					))}
 			</div>
 
 			<LayoutContainer className="relative z-10 flex flex-col items-center justify-center text-center min-h-[340px]">
