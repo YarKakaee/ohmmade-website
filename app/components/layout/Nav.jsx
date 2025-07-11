@@ -21,11 +21,9 @@ export default function Nav() {
 	const supabaseClient = useSupabaseClient();
 	const router = useRouter();
 	const userRef = useRef(null);
-	const languageRef = useRef(null);
 
 	const [user, setUser] = useState(session?.user || null);
 	const [userProfile, setUserProfile] = useState(null);
-	const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 	const [showUserDropdown, setShowUserDropdown] = useState(false);
 	const [hoveredLink, setHoveredLink] = useState(null);
 	const [highlightStyle, setHighlightStyle] = useState({
@@ -36,7 +34,6 @@ export default function Nav() {
 		height: 0,
 	});
 	const [atTop, setAtTop] = useState(true);
-	const [lastScrollY, setLastScrollY] = useState(0);
 
 	useEffect(() => {
 		const refreshSession = async () => {
@@ -64,7 +61,6 @@ export default function Nav() {
 				window.requestAnimationFrame(() => {
 					const currentY = window.scrollY;
 					setAtTop(currentY === 0);
-					setLastScrollY(currentY);
 					ticking = false;
 				});
 				ticking = true;
@@ -77,17 +73,10 @@ export default function Nav() {
 	useEffect(() => {
 		const currentY = window.scrollY;
 		setAtTop(currentY === 0);
-		setLastScrollY(currentY);
 	}, []);
 
 	useEffect(() => {
 		const handleClickOutside = (e) => {
-			if (
-				languageRef.current &&
-				!languageRef.current.contains(e.target)
-			) {
-				setShowLanguageMenu(false);
-			}
 			if (userRef.current && !userRef.current.contains(e.target)) {
 				setShowUserDropdown(false);
 			}
@@ -180,7 +169,7 @@ export default function Nav() {
 							>
 								{/* Animated highlight background */}
 								<motion.div
-									className="absolute bg-white/10 rounded-full pointer-events-none"
+									className="absolute bg-gray-700/30 rounded-full pointer-events-none"
 									animate={highlightStyle}
 									transition={{
 										type: 'spring',
@@ -259,10 +248,7 @@ export default function Nav() {
 									About
 								</Link>
 
-								<div
-									className="relative z-10"
-									ref={languageRef}
-								>
+								<div className="relative z-10">
 									<button className="text-white/80 hover:text-white transition cursor-pointer">
 										<FontAwesomeIcon
 											icon={faMagnifyingGlass}
@@ -389,18 +375,43 @@ export default function Nav() {
 								</div>
 							) : (
 								<div className="flex items-center gap-1">
-									<button
+									<motion.button
 										onClick={() => openAuthModal('login')}
-										className="text-white text-[14px] font-medium px-4 py-2 rounded-full cursor-pointer hover:text-[#ACACAD] transition"
+										className="text-white text-[14px] font-medium px-4 py-2 rounded-full cursor-pointer"
+										whileHover={{
+											color: '#ACACAD',
+											scale: 1.02,
+										}}
+										whileTap={{
+											scale: 0.98,
+										}}
+										transition={{
+											type: 'spring',
+											stiffness: 400,
+											damping: 25,
+										}}
 									>
 										Log in
-									</button>
-									<button
+									</motion.button>
+									<motion.button
 										onClick={() => openAuthModal('signup')}
-										className="bg-[#27BBFF] text-[14px] text-[#101014] font-medium px-4 py-2 rounded-full cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg hover:bg-[#27BBFF]"
+										className="bg-[#27BBFF] text-[14px] text-[#101014] font-medium px-4 py-2 rounded-full cursor-pointer"
+										whileHover={{
+											scale: 1.05,
+											boxShadow:
+												'0 4px 20px rgba(39, 187, 255, 0.4)',
+										}}
+										whileTap={{
+											scale: 0.95,
+										}}
+										transition={{
+											type: 'spring',
+											stiffness: 400,
+											damping: 25,
+										}}
 									>
 										Sign up
-									</button>
+									</motion.button>
 								</div>
 							)}
 						</div>

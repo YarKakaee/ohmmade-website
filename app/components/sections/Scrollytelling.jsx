@@ -14,30 +14,30 @@ const slides = [
 		key: 'share',
 		color: '#27BBFF',
 		textColor: '#101014',
-		heading: 'Share What You Build',
+		heading: 'Showcase Your Creations',
 		description:
-			'Show off your projects and inspire other makers around the world.',
-		button: { text: 'Start Sharing', link: '/create' },
+			'Share your builds, tell your story, and inspire makers around the globe to start creating.',
+		button: { text: 'Start Sharing', link: '/projects/publish' },
 		particleColor: 'rgba(39,187,255,0.7)',
 	},
 	{
 		key: 'explore',
 		color: '#50147A',
 		textColor: '#FFFFFF',
-		heading: 'Explore Real Projects',
+		heading: 'Discover Real Projects',
 		description:
-			'Dive into real student and hobby builds to see exactly how they work and learn from others.',
-		button: { text: 'Explore Projects', link: '/explore' },
+			'Explore authentic student and hobbyist projects. Break them down, learn how they work, and spark your own ideas.',
+		button: { text: 'Browse Projects', link: '/projects' },
 		particleColor: 'rgba(155,89,182,0.7)',
 	},
 	{
 		key: 'watts',
 		color: '#FFD600',
 		textColor: '#101014',
-		heading: 'Grow Your Watts',
+		heading: 'Earn Your Watts',
 		description:
-			'Make, share, and engage to power up your Watts, unlock badges, and climb the leaderboard.',
-		button: { text: 'How Watts Works', link: '/help/watts-and-leveling' },
+			'Build, share, and engage to earn Watts, unlock unique badges, and rise through the ranks — from Newbie to Grandmaster.',
+		button: { text: 'Learn About Watts', link: '/help/watts-and-leveling' },
 		particleColor: 'rgba(255,214,0,0.7)',
 	},
 	{
@@ -46,18 +46,18 @@ const slides = [
 		textColor: '#101014',
 		heading: 'Connect & Collaborate',
 		description:
-			'Find your people. Comment, follow, and work together on projects that spark your curiosity.',
-		button: { text: 'Join Community', link: '/community' },
+			'Find your people, join discussions, and team up on projects that push your creativity further.',
+		button: { text: 'Join the Community', link: '/projects' },
 		particleColor: 'rgba(0,200,150,0.7)',
 	},
 	{
 		key: 'featured',
 		color: '#FF4F81',
 		textColor: '#101014',
-		heading: 'Get Featured',
+		heading: 'Be Featured',
 		description:
-			'Publish your projects and get showcased on our homepage every week.',
-		button: { text: 'Submit a Project', link: '/create' },
+			'Publish your projects and get a chance to be showcased on our homepage and inspire the entire community.',
+		button: { text: 'Submit Your Project', link: '/projects/publish' },
 		particleColor: 'rgba(255,79,129,0.7)',
 	},
 ];
@@ -181,13 +181,13 @@ export default function Scrollytelling() {
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -40 }}
 							transition={{ duration: 0.5, ease: 'easeOut' }}
-							className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl flex flex-col items-center justify-center text-center px-4"
+							className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl flex flex-col items-center justify-center text-center px-4"
 							style={{ pointerEvents: 'auto' }}
 						>
 							<motion.h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-white drop-shadow-lg leading-tight">
 								{slide.heading}
 							</motion.h2>
-							<motion.p className="text-base sm:text-lg md:text-lg mb-10 text-gray-300">
+							<motion.p className="text-base sm:text-lg md:text-lg mb-10 text-gray-300 max-w-xl">
 								{slide.description}
 							</motion.p>
 							<motion.a
