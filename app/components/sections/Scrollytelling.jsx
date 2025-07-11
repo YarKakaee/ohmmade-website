@@ -22,7 +22,7 @@ const slides = [
 	},
 	{
 		key: 'explore',
-		color: '#50147A',
+		color: '#4F2683',
 		textColor: '#FFFFFF',
 		heading: 'Discover Real Projects',
 		description:
@@ -165,7 +165,7 @@ export default function Scrollytelling() {
 					style={{
 						background: bg,
 						filter: 'blur(60px)',
-						opacity: 0.7,
+						opacity: 1,
 					}}
 				/>
 				{/* Particles background for all slides */}
