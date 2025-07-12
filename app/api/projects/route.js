@@ -51,7 +51,7 @@ export async function GET(request) {
 	try {
 		if (searchQuery) {
 			// Use raw SQL for partial tag search
-			const projects = await prisma.$queryRaw`
+			const projectsRaw = await prisma.$queryRaw`
 				SELECT * FROM "Project"
 				WHERE status = 'published'
 				  AND (
@@ -87,6 +87,28 @@ export async function GET(request) {
 				  )
 			`;
 			const total = parseInt(totalResult[0]?.count || 0, 10);
+
+			// Fetch full project objects with author info
+			const projectIds = projectsRaw.map((p) => p.id);
+			let projects = [];
+			if (projectIds.length > 0) {
+				projects = await prisma.project.findMany({
+					where: { id: { in: projectIds } },
+					include: {
+						author: {
+							select: { name: true, image: true, email: true },
+						},
+					},
+				});
+				// Preserve the original order from the raw query
+				const idToProject = Object.fromEntries(
+					projects.map((p) => [p.id, p])
+				);
+				projects = projectIds
+					.map((id) => idToProject[id])
+					.filter(Boolean);
+			}
+
 			return NextResponse.json(
 				{
 					projects,
