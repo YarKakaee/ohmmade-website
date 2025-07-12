@@ -36,16 +36,16 @@ export async function POST(req, { params }) {
 			return new Response('Project not found', { status: 404 });
 		}
 
-		// Make sure user exists
+		// Make sure user exists (upsert by userId, never update username)
 		await prisma.user.upsert({
-			where: { email },
-			update: { name, image, username },
+			where: { id: userId },
+			update: { name, image }, // DO NOT update username
 			create: { id: userId, email, name, image, username },
 		});
 
 		// Fetch the user to get the correct id
 		const user = await prisma.user.findUnique({
-			where: { email },
+			where: { id: userId },
 		});
 
 		// Check if already liked and perform like/unlike in a single transaction

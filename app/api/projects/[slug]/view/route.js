@@ -35,10 +35,10 @@ export async function POST(req, { params }) {
 				username = await generateUsername(name || email.split('@')[0]);
 			}
 
-			// Upsert user into DB if not already there (by email)
+			// Upsert user into DB if not already there (by userId, never update username)
 			await prisma.user.upsert({
-				where: { email },
-				update: {},
+				where: { id: userId },
+				update: { name, image }, // DO NOT update username
 				create: {
 					id: userId,
 					email,
@@ -50,7 +50,7 @@ export async function POST(req, { params }) {
 
 			// Fetch the user to get the correct id
 			const user = await prisma.user.findUnique({
-				where: { email },
+				where: { id: userId },
 			});
 
 			let viewAdded = false;
