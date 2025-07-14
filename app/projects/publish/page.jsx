@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { Inter_Tight } from 'next/font/google';
 import { useEffect, useRef, useState } from 'react';
-import { useSession } from '@supabase/auth-helpers-react';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
 import { useAuthModal } from '@/app/providers/AuthModalProvider';
 import toast from 'react-hot-toast';
@@ -21,21 +21,11 @@ import LayoutContainer from '@/app/components/common/LayoutContainer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 export default function PublishProjectPage() {
-	const session = useSession();
+	const { session, isLoading } = useSessionContext();
 	const router = useRouter();
 	const { openAuthModal } = useAuthModal();
 
-	useEffect(() => {
-		if (session === null) {
-			router.replace('/');
-			setTimeout(() => openAuthModal('login'), 200);
-		}
-	}, [session, router, openAuthModal]);
-
-	if (!session) {
-		return <div className="fixed inset-0 bg-[#101014] z-50" />;
-	}
-
+	// All hooks must be called before any return
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [category, setCategory] = useState('');
@@ -46,14 +36,38 @@ export default function PublishProjectPage() {
 	const [thumbnailUrl, setThumbnailUrl] = useState(null);
 	const [user, setUser] = useState(null);
 	const [isPublishing, setIsPublishing] = useState(false);
-
 	const [checkingSession, setCheckingSession] = useState(true);
-
 	const inputRef = useRef(null);
 	const tagInputRef = useRef(null);
-
 	const [components, setComponents] = useState([]);
 	const [newComponent, setNewComponent] = useState('');
+	const editorRef = useRef(null);
+
+	useEffect(() => {
+		if (!isLoading && !session) {
+			router.replace('/');
+			setTimeout(() => openAuthModal('login'), 200);
+		}
+	}, [isLoading, session, router, openAuthModal]);
+
+	useEffect(() => {
+		const fetchUser = async () => {
+			const { data: sessionData } = await supabase.auth.getSession();
+			if (sessionData?.session?.user) {
+				setUser(sessionData.session.user);
+			}
+			setCheckingSession(false);
+		};
+		fetchUser();
+	}, []);
+
+	if (isLoading || session === undefined) {
+		return <div className="fixed inset-0 bg-[#101014] z-50" />;
+	}
+	if (!session) {
+		return <div className="fixed inset-0 bg-[#101014] z-50" />;
+	}
+	if (checkingSession) return null;
 
 	const handleAddTag = () => {
 		if (!newTag.trim() || tags.length >= 6) return;
@@ -77,21 +91,6 @@ export default function PublishProjectPage() {
 
 	const MAX_TITLE_LENGTH = 32;
 	const MAX_DESCRIPTION_LENGTH = 195;
-
-	const editorRef = useRef(null);
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			const { data: sessionData } = await supabase.auth.getSession();
-			if (sessionData?.session?.user) {
-				setUser(sessionData.session.user);
-			}
-			setCheckingSession(false);
-		};
-		fetchUser();
-	}, []);
-
-	if (checkingSession) return null;
 
 	const handlePublish = async () => {
 		if (

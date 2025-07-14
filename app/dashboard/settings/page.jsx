@@ -19,7 +19,10 @@ import {
 	faLinkedin,
 	faTwitter,
 } from '@fortawesome/free-brands-svg-icons';
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
+import {
+	useSessionContext,
+	useSupabaseClient,
+} from '@supabase/auth-helpers-react';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
 import Footer from '@/app/components/layout/Footer';
 import LayoutContainer from '@/app/components/common/LayoutContainer';
@@ -28,7 +31,7 @@ import { useAuthModal } from '@/app/providers/AuthModalProvider';
 export default function SettingsPage() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
-	const session = useSession();
+	const { session, isLoading } = useSessionContext();
 	const { openAuthModal } = useAuthModal();
 	const supabaseClient = useSupabaseClient();
 	const [user, setUser] = useState(null);
@@ -53,11 +56,11 @@ export default function SettingsPage() {
 	const [initialAvatar, setInitialAvatar] = useState(null);
 
 	useEffect(() => {
-		if (session === null) {
+		if (!isLoading && session === null) {
 			router.replace('/');
 			setTimeout(() => openAuthModal('login'), 200);
 		}
-	}, [session, router, openAuthModal]);
+	}, [session, isLoading, router, openAuthModal]);
 
 	// Fetch user data only if session is truthy
 	useEffect(() => {
@@ -258,16 +261,16 @@ export default function SettingsPage() {
 				avatarFile !== null)) ||
 		(avatarPreview !== initialAvatar && avatarFile !== null);
 
-	if (!session) {
-		return <div className="fixed inset-0 bg-[#101014] z-50" />;
-	}
-
-	if (loading) {
+	if (isLoading || loading) {
 		return (
 			<div className="min-h-screen bg-[#101014] flex items-center justify-center">
 				<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#27BBFF]"></div>
 			</div>
 		);
+	}
+
+	if (!session) {
+		return <div className="fixed inset-0 bg-[#101014] z-50" />;
 	}
 
 	if (!user) {

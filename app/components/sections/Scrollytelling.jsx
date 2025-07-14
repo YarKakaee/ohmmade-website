@@ -190,19 +190,29 @@ export default function Scrollytelling() {
 							<motion.p className="text-base sm:text-lg md:text-lg mb-10 text-gray-300 max-w-xl">
 								{slide.description}
 							</motion.p>
-							<motion.a
-								href={slide.button.link}
-								className={`px-8 py-4 rounded-full font-bold text-[16px] backdrop-blur transition shadow-lg cursor-pointer`}
+							<motion.div
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.96 }}
+								className="px-8 py-4 rounded-full font-bold text-[16px] backdrop-blur transition shadow-lg cursor-pointer"
 								style={{
 									background: slide.color,
 									color: slide.textColor,
 									boxShadow: `0 0 24px 6px ${slide.color}66, 0 0 0 0 ${slide.color}00`,
 								}}
-								whileHover={{ scale: 1.05 }}
-								whileTap={{ scale: 0.96 }}
 							>
-								{slide.button.text}
-							</motion.a>
+								<Link
+									href={slide.button.link}
+									legacyBehavior
+									passHref
+								>
+									<a
+										className="block w-full h-full text-center"
+										tabIndex={0}
+									>
+										{slide.button.text}
+									</a>
+								</Link>
+							</motion.div>
 						</motion.div>
 					</AnimatePresence>
 				</div>

@@ -8,7 +8,10 @@ import {
 	faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
+import {
+	useSessionContext,
+	useSupabaseClient,
+} from '@supabase/auth-helpers-react';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -19,7 +22,7 @@ import { useAuthModal } from '@/app/providers/AuthModalProvider';
 export default function UserDashboardPage() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
-	const session = useSession();
+	const { session, isLoading } = useSessionContext();
 	const supabaseClient = useSupabaseClient();
 	const { openAuthModal } = useAuthModal();
 	const [user, setUser] = useState(null);
@@ -31,11 +34,11 @@ export default function UserDashboardPage() {
 	const totalPages = Math.ceil(total / limit);
 
 	useEffect(() => {
-		if (session === null) {
+		if (!isLoading && session === null) {
 			router.replace('/');
 			setTimeout(() => openAuthModal('login'), 200);
 		}
-	}, [session, router, openAuthModal]);
+	}, [session, isLoading, router, openAuthModal]);
 
 	useEffect(() => {
 		if (!session) {
@@ -117,19 +120,6 @@ export default function UserDashboardPage() {
 		router.replace(`?${params.toString()}`, { scroll: false });
 	}, [page, router, searchParams]);
 
-	const handleSignOut = async () => {
-		await supabaseClient.auth.signOut();
-		router.push('/');
-	};
-
-	const formatDate = (date) => {
-		return new Date(date).toLocaleDateString('en-US', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-		});
-	};
-
 	const getMemberDuration = (createdAt) => {
 		if (!createdAt) return 'New member';
 
@@ -168,20 +158,16 @@ export default function UserDashboardPage() {
 		}
 	};
 
-	function getPageHref(p) {
-		return `/dashboard?page=${p}`;
-	}
-
-	if (!session) {
-		return <div className="fixed inset-0 bg-[#101014] z-50" />;
-	}
-
-	if (loading) {
+	if (isLoading || loading) {
 		return (
 			<div className="min-h-screen bg-[#101014] flex items-center justify-center">
 				<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#27BBFF]"></div>
 			</div>
 		);
+	}
+
+	if (!session) {
+		return <div className="fixed inset-0 bg-[#101014] z-50" />;
 	}
 
 	if (!user) {

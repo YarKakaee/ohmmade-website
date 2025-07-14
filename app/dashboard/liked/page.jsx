@@ -9,7 +9,10 @@ import {
 	faChevronLeft,
 	faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
+import {
+	useSessionContext,
+	useSupabaseClient,
+} from '@supabase/auth-helpers-react';
 import ProjectCard from '@/app/components/common/ProjectCard';
 import categoryColors from '@/lib/constants/categoryColors';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
@@ -20,9 +23,9 @@ import { useAuthModal } from '@/app/providers/AuthModalProvider';
 export default function LikedProjectsPage() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
-	const session = useSession();
-	const { openAuthModal } = useAuthModal();
+	const { session, isLoading } = useSessionContext();
 	const supabaseClient = useSupabaseClient();
+	const { openAuthModal } = useAuthModal();
 	const [user, setUser] = useState(null);
 	const [projects, setProjects] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -40,11 +43,11 @@ export default function LikedProjectsPage() {
 	}, [currentPage, router, searchParams]);
 
 	useEffect(() => {
-		if (session === null) {
+		if (!isLoading && session === null) {
 			router.replace('/');
 			setTimeout(() => openAuthModal('login'), 200);
 		}
-	}, [session, router, openAuthModal]);
+	}, [session, isLoading, router, openAuthModal]);
 
 	useEffect(() => {
 		if (!session) {
@@ -122,16 +125,16 @@ export default function LikedProjectsPage() {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 	};
 
-	if (!session) {
-		return <div className="fixed inset-0 bg-[#101014] z-50" />;
-	}
-
-	if (loading) {
+	if (isLoading || loading) {
 		return (
 			<div className="min-h-screen bg-[#101014] flex items-center justify-center">
 				<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#27BBFF]"></div>
 			</div>
 		);
+	}
+
+	if (!session) {
+		return <div className="fixed inset-0 bg-[#101014] z-50" />;
 	}
 
 	if (!user) {
