@@ -1,0 +1,98 @@
+@import 'tailwindcss';
+.ce-toolbar__plus {
+	color: white !important;
+	background-color: transparent !important;
+	transition: background 0.2s ease;
+}
+
+.ce-toolbar__plus:hover {
+	background-color: #ffffff !important;
+	color: #1c1c20 !important;
+}
+
+.ce-toolbar__settings-btn {
+	color: white !important;
+}
+
+.ce-toolbar__settings-btn:hover {
+	background-color: #ffffff !important;
+	color: #1c1c20 !important;
+}
+
+/* /styles/editor.css */
+.ce-block h1 {
+	font-weight: 1000;
+	font-size: 36px;
+	color: white;
+}
+
+.ce-block h2 {
+	font-weight: 900;
+	font-size: 32px;
+	color: white;
+}
+
+.ce-block h3 {
+	font-weight: 800;
+	font-size: 28px;
+	color: white;
+}
+
+.ce-block h4 {
+	font-weight: 700;
+	font-size: 24px;
+	color: white;
+}
+
+.ce-block h5 {
+	font-weight: 600;
+	font-size: 22px;
+	color: white;
+}
+
+.ce-block h6 {
+	font-weight: 500;
+	font-size: 20px;
+	color: white;
+}
+
+.ce-paragraph {
+	color: #ffffff;
+	font-size: 16px;
+	line-height: 1.75;
+}
+
+.cdx-list__item-content {
+	color: #ffffff;
+}
+
+/* styles/editor.css */
+.ce-block__content,
+.ce-toolbar__content {
+	max-width: 90% !important;
+}
+
+.ce-inline-tool-input {
+	color: #1c1c20;
+}
+
+.cdx-search-field__input {
+	color: #1c1c20;
+}
+
+@keyframes scale-pulse {
+	0%,
+	100% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.04);
+	}
+}
+.scale-pulse {
+	animation: scale-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.static-glow {
+	box-shadow: 0 0 32px 8px #27bbff66, 0 0 0 0 #27bbff00;
+}
