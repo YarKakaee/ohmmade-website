@@ -1,37 +1,32 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LayoutContainer from '@/app/components/common/LayoutContainer';
+import ProjectCard from '@/app/components/common/ProjectCard';
+import UserRank from '@/app/components/common/UserRank';
+import WattsDisplay from '@/app/components/common/WattsDisplay';
+import categoryColors from '@/lib/constants/categoryColors';
+import {
+	faGithub as faGithubBrand,
+	faInstagram as faInstagramBrand,
+	faLinkedin as faLinkedinBrand,
+	faXTwitter as faXTwitterBrand,
+} from '@fortawesome/free-brands-svg-icons';
 import {
 	faCalendar,
 	faCopy,
-	faShare,
-	faHeart,
-	faEye,
-	faLinkedin,
-	faGithub,
-	faInstagram,
-	faTwitter,
 	faEdit,
+	faEye,
+	faHeart,
+	faShare,
 } from '@fortawesome/free-solid-svg-icons';
-import {
-	faLinkedin as faLinkedinBrand,
-	faGithub as faGithubBrand,
-	faInstagram as faInstagramBrand,
-	faXTwitter as faXTwitterBrand,
-} from '@fortawesome/free-brands-svg-icons';
-import ProjectCard from '@/app/components/common/ProjectCard';
-import categoryColors from '@/lib/constants/categoryColors';
-import Footer from '@/app/components/layout/Footer';
-import toast from 'react-hot-toast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { useSession } from '@supabase/auth-helpers-react';
-import WattsDisplay from '@/app/components/common/WattsDisplay';
-import UserRank from '@/app/components/common/UserRank';
-import LayoutContainer from '@/app/components/common/LayoutContainer';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function UserProfilePage() {
 	const params = useParams();
@@ -770,8 +765,6 @@ export default function UserProfilePage() {
 					</div>
 				</div>
 			)}
-
-			<Footer />
 		</div>
 	);
 }

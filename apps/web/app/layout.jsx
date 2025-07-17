@@ -3,6 +3,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import Nav from './components/layout/Nav';
+import Footer from './components/layout/Footer';
 import './globals.css';
 import SupabaseProvider from './providers/SupabaseProvider';
 import AuthModalProvider from './providers/AuthModalProvider';
@@ -72,6 +73,7 @@ export default function RootLayout({ children }) {
 								top: '100px',
 							}}
 						/>
+						<Footer />
 					</AuthModalProvider>
 				</SupabaseProvider>
 			</body>

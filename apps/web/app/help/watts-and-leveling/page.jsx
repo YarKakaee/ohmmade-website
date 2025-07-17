@@ -1,9 +1,7 @@
 'use client';
 
-import { Inter_Tight } from 'next/font/google';
-import Image from 'next/image';
-import Footer from '@/app/components/layout/Footer';
 import LayoutContainer from '@/app/components/common/LayoutContainer';
+import { Inter_Tight } from 'next/font/google';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 
@@ -132,8 +130,6 @@ export default function WattsGuidePage() {
 					</section>
 				</LayoutContainer>
 			</section>
-
-			<Footer />
 		</div>
 	);
 }

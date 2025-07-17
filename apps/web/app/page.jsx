@@ -1,13 +1,7 @@
 import Image from 'next/image';
-import Footer from './components/layout/Footer';
-import ContactUs from './components/sections/ContactUs';
-import CreatorSection from './components/sections/CreatorSection';
-import Details from './components/sections/Details';
 import Features from './components/sections/Features';
 import Hero from './components/sections/Hero';
-import Learn from './components/sections/Learn';
 import ProjectsSection from './components/sections/ProjectsSection';
-import GamificationSection from './components/sections/GamificationSection';
 import Scrollytelling from './components/sections/Scrollytelling';
 import './globals.css';
 
@@ -34,8 +28,6 @@ export default function Home() {
 				<ProjectsSection />
 
 				<Scrollytelling />
-
-				<Footer />
 			</div>
 		</section>
 	);

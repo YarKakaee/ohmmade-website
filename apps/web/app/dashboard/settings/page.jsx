@@ -1,18 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Image from 'next/image';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-	faUser,
-	faEnvelope,
-	faLock,
-	faTrash,
-	faCamera,
-	faUpRightFromSquare,
-	faGlobe,
-} from '@fortawesome/free-solid-svg-icons';
+import LayoutContainer from '@/app/components/common/LayoutContainer';
+import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
+import { useAuthModal } from '@/app/providers/AuthModalProvider';
 import {
 	faGithub,
 	faInstagram,
@@ -20,13 +10,20 @@ import {
 	faTwitter,
 } from '@fortawesome/free-brands-svg-icons';
 import {
+	faCamera,
+	faEnvelope,
+	faTrash,
+	faUpRightFromSquare,
+	faUser,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
 	useSessionContext,
 	useSupabaseClient,
 } from '@supabase/auth-helpers-react';
-import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
-import Footer from '@/app/components/layout/Footer';
-import LayoutContainer from '@/app/components/common/LayoutContainer';
-import { useAuthModal } from '@/app/providers/AuthModalProvider';
+import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function SettingsPage() {
 	const router = useRouter();
@@ -596,7 +593,6 @@ export default function SettingsPage() {
 					</div>
 				</LayoutContainer>
 			</div>
-			<Footer />
 		</div>
 	);
 }

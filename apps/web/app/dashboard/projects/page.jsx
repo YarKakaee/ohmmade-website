@@ -1,24 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LayoutContainer from '@/app/components/common/LayoutContainer';
+import ProjectCard from '@/app/components/common/ProjectCard';
+import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
+import { useAuthModal } from '@/app/providers/AuthModalProvider';
+import categoryColors from '@/lib/constants/categoryColors';
 import {
-	faPlus,
 	faChevronLeft,
 	faChevronRight,
+	faPlus,
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	useSessionContext,
 	useSupabaseClient,
 } from '@supabase/auth-helpers-react';
-import ProjectCard from '@/app/components/common/ProjectCard';
-import categoryColors from '@/lib/constants/categoryColors';
-import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
-import Footer from '@/app/components/layout/Footer';
-import LayoutContainer from '@/app/components/common/LayoutContainer';
-import { useAuthModal } from '@/app/providers/AuthModalProvider';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function MyProjectsPage() {
 	const router = useRouter();
@@ -313,7 +312,6 @@ export default function MyProjectsPage() {
 					</div>
 				</LayoutContainer>
 			</div>
-			<Footer />
 		</div>
 	);
 }

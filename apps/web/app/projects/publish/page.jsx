@@ -1,6 +1,7 @@
 'use client';
 import CodexEditorWrapper from '@/app/components/codex/CodexEditorWrapper';
-import Footer from '@/app/components/layout/Footer';
+import LayoutContainer from '@/app/components/common/LayoutContainer';
+import { useAuthModal } from '@/app/providers/AuthModalProvider';
 import { supabase } from '@/lib/supabaseClient';
 import {
 	faArrowUpRightFromSquare,
@@ -10,14 +11,12 @@ import {
 	faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 import axios from 'axios';
 import { Inter_Tight } from 'next/font/google';
-import { useEffect, useRef, useState } from 'react';
-import { useSessionContext } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
-import { useAuthModal } from '@/app/providers/AuthModalProvider';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import LayoutContainer from '@/app/components/common/LayoutContainer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 export default function PublishProjectPage() {
@@ -625,7 +624,6 @@ export default function PublishProjectPage() {
 					{/* End main row */}
 				</LayoutContainer>
 			</section>
-			<Footer />
 		</div>
 	);
 }

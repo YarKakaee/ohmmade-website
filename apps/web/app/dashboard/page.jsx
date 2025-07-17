@@ -1,7 +1,8 @@
 'use client';
 
+import LayoutContainer from '@/app/components/common/LayoutContainer';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
-import Footer from '@/app/components/layout/Footer';
+import { useAuthModal } from '@/app/providers/AuthModalProvider';
 import { formatActivityMessage } from '@/lib/activity';
 import {
 	faChevronLeft,
@@ -16,8 +17,6 @@ import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import LayoutContainer from '@/app/components/common/LayoutContainer';
-import { useAuthModal } from '@/app/providers/AuthModalProvider';
 
 export default function UserDashboardPage() {
 	const router = useRouter();
@@ -392,7 +391,6 @@ export default function UserDashboardPage() {
 					</div>
 				</LayoutContainer>
 			</div>
-			<Footer />
 		</div>
 	);
 }

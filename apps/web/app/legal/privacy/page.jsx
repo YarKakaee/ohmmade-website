@@ -1,8 +1,6 @@
 'use client';
 
 import { Inter_Tight } from 'next/font/google';
-import Image from 'next/image';
-import Footer from '../../components/layout/Footer';
 import LayoutContainer from '../../components/common/LayoutContainer';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
@@ -137,7 +135,6 @@ export default function PrivacyPolicy() {
 					</section>
 				</LayoutContainer>
 			</section>
-			<Footer />
 		</div>
 	);
 }

@@ -1,7 +1,6 @@
 import CodexViewer from '@/app/components/codex/CodexViewer';
-import ProjectSlugHeader from '@/app/components/common/ProjectSlugHeader';
 import LayoutContainer from '@/app/components/common/LayoutContainer';
-import Footer from '@/app/components/layout/Footer';
+import ProjectSlugHeader from '@/app/components/common/ProjectSlugHeader';
 import prisma from '@/prisma/client';
 import {
 	faCheck,
@@ -85,7 +84,6 @@ export default async function ProjectPage({ params }) {
 						</div>
 					</div>
 				</LayoutContainer>
-				<Footer />
 			</div>
 		</section>
 	);

@@ -5,7 +5,6 @@ import { Inter_Tight } from 'next/font/google';
 const interTight = Inter_Tight({ subsets: ['latin'] });
 
 import Image from 'next/image';
-import Footer from '../../components/layout/Footer';
 import LayoutContainer from '../../components/common/LayoutContainer';
 
 export default function TermsOfService() {
@@ -134,7 +133,6 @@ export default function TermsOfService() {
 					</section>
 				</LayoutContainer>
 			</section>
-			<Footer />
 		</div>
 	);
 }

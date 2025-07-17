@@ -15,7 +15,7 @@ import Link from 'next/link';
 
 export default function Footer() {
 	return (
-		<footer className="border-t border-[#2C2C2E] relative w-full py-8 px-8 sm:px-16 lg:px-24">
+		<footer className="bg-[#101014] border-t border-[#2C2C2E] relative w-full py-8 px-8 sm:px-16 lg:px-24">
 			<div className="flex flex-col sm:flex-row items-center justify-between space-y-6 sm:space-y-0 text-[#FFFFFF]/70 text-sm max-w-[1700px] mx-auto px-8 sm:px-16">
 				{/* Left: Copyright */}
 				<p>
