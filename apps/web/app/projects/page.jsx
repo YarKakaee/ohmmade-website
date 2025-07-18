@@ -18,7 +18,7 @@ import { Inter_Tight } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import LayoutContainer from '../components/common/LayoutContainer';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 

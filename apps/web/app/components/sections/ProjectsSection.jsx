@@ -2,7 +2,7 @@ import categoryColors from '@/lib/constants/categoryColors';
 import prisma from '@/prisma/client'; // Adjust this path if needed
 import ProjectCard from '../common/ProjectCard';
 import ProjectsHeader from '../common/ProjectHeader';
-import LayoutContainer from '../common/LayoutContainer';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 
 export default async function ProjectsSection() {
 	const featuredProjects = await prisma.project.findMany({

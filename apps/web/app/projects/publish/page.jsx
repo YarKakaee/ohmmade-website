@@ -1,6 +1,6 @@
 'use client';
 import CodexEditorWrapper from '@/app/components/codex/CodexEditorWrapper';
-import LayoutContainer from '@/app/components/common/LayoutContainer';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 import { useAuthModal } from '@ohmmade/providers';
 import { supabase } from '@/lib/supabaseClient';
 import {

@@ -10,7 +10,7 @@ import {
 	faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import LayoutContainer from '../common/LayoutContainer';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 
 const interTight = Inter_Tight({
 	subsets: ['latin'],

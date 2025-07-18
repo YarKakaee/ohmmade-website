@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useAuthModal } from '@ohmmade/providers';
 import ProjectSlugHeader from '@/app/components/common/ProjectSlugHeader';
-import LayoutContainer from '@/app/components/common/LayoutContainer';
+import { useAuthModal } from '@ohmmade/providers';
+import LayoutContainer from '@ohmmade/ui/layout-container';
+import { useSession } from '@supabase/auth-helpers-react';
 
 export default function ClientProjectSlugHeader({ project }) {
 	const session = useSession();

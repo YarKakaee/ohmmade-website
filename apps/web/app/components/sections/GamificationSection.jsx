@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import LayoutContainer from '../common/LayoutContainer';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 
 const yellow = '#FFD600';
 

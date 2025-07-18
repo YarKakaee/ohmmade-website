@@ -1,5 +1,5 @@
 import CodexViewer from '@/app/components/codex/CodexViewer';
-import LayoutContainer from '@/app/components/common/LayoutContainer';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 import ProjectSlugHeader from '@/app/components/common/ProjectSlugHeader';
 import prisma from '@/prisma/client';
 import {

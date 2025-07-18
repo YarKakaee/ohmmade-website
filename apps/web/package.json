@@ -28,6 +28,7 @@
 		"@mui/material": "^7.0.1",
 		"@ohmmade/providers": "workspace:*",
 		"@ohmmade/tailwind-config": "workspace:*",
+		"@ohmmade/ui": "workspace:*",
 		"@prisma/client": "^6.12.0",
 		"@radix-ui/react-dialog": "^1.1.7",
 		"@rxpm/editor-js-code": "^0.0.1",

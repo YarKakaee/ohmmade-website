@@ -1,7 +1,7 @@
 'use client';
 
 import { Inter_Tight } from 'next/font/google';
-import LayoutContainer from '../../components/common/LayoutContainer';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
 

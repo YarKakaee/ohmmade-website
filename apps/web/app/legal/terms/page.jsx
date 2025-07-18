@@ -5,7 +5,7 @@ import { Inter_Tight } from 'next/font/google';
 const interTight = Inter_Tight({ subsets: ['latin'] });
 
 import Image from 'next/image';
-import LayoutContainer from '../../components/common/LayoutContainer';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 
 export default function TermsOfService() {
 	return (

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Inter_Tight } from 'next/font/google';
 import { useEffect, useState } from 'react';
-import LayoutContainer from '../common/LayoutContainer';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 
 const interTight = Inter_Tight({
 	subsets: ['latin'],

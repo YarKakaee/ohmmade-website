@@ -1,6 +1,6 @@
 'use client';
 
-import LayoutContainer from '@/app/components/common/LayoutContainer';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 import ProjectCard from '@/app/components/common/ProjectCard';
 import UserRank from '@/app/components/common/UserRank';
 import WattsDisplay from '@/app/components/common/WattsDisplay';
