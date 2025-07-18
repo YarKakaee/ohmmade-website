@@ -5,8 +5,7 @@
 	"main": "./index.js",
 	"types": "./index.d.ts",
 	"exports": {
-		".": "./index.js",
-		"./styles.css": "./styles.css"
+		".": "./index.js"
 	},
 	"scripts": {
 		"build": "echo 'No build step needed for providers'",

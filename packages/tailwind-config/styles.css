@@ -1,0 +1,4 @@
+@source "../providers/**/*.{js,jsx,ts,tsx}";
+@source "../ui/**/*.{js,jsx,ts,tsx}";
+@source "../components/**/*.{js,jsx,ts,tsx}";
+@source "../utils/**/*.{js,jsx,ts,tsx}";

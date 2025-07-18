@@ -109,6 +109,9 @@ importers:
       '@ohmmade/providers':
         specifier: workspace:*
         version: link:../../packages/providers
+      '@ohmmade/tailwind-config':
+        specifier: workspace:*
+        version: link:../../packages/tailwind-config
       '@prisma/client':
         specifier: ^6.12.0
         version: 6.12.0(prisma@6.12.0(typescript@5.8.3))(typescript@5.8.3)
@@ -218,6 +221,8 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.1.0
+
+  packages/tailwind-config: {}
 
 packages:
 

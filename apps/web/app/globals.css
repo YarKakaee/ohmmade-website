@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import '@ohmmade/providers/styles.css';
+@import '@ohmmade/tailwind-config/styles.css';
 
 .ce-toolbar__plus {
 	color: white !important;
