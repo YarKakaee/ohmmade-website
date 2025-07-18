@@ -1,11 +1,8 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect } from 'react';
-import {
-	SessionContextProvider,
-	createBrowserClient,
-} from '@supabase/auth-helpers-react';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from './supabaseClient';
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const CustomSessionContext = createContext();
 

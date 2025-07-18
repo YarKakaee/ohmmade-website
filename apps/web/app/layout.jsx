@@ -5,8 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import Nav from './components/layout/Nav';
 import Footer from './components/layout/Footer';
 import './globals.css';
-import SupabaseProvider from './providers/SupabaseProvider';
-import AuthModalProvider from './providers/AuthModalProvider';
+import { SupabaseProvider, AuthModalProvider } from '@ohmmade/providers';
 config.autoAddCss = false;
 
 const inter = Inter({

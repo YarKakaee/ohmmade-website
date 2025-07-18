@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthModal } from '@/app/providers/AuthModalProvider';
+import { useAuthModal } from '@ohmmade/providers';
 import {
 	faMagnifyingGlass,
 	faSignOutAlt,

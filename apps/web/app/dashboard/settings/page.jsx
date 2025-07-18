@@ -2,7 +2,7 @@
 
 import LayoutContainer from '@/app/components/common/LayoutContainer';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
-import { useAuthModal } from '@/app/providers/AuthModalProvider';
+import { useAuthModal } from '@ohmmade/providers';
 import {
 	faGithub,
 	faInstagram,

@@ -12,7 +12,7 @@ import {
 	faEye,
 	faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from './supabaseClient';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -428,8 +428,8 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 											{loading
 												? 'Loading...'
 												: isSignIn
-												? 'Sign In'
-												: 'Create Account'}
+													? 'Sign In'
+													: 'Create Account'}
 										</motion.button>
 
 										<div className="flex items-center">

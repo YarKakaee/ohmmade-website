@@ -1,0 +1,32 @@
+{
+	"name": "@ohmmade/providers",
+	"version": "1.0.0",
+	"private": true,
+	"main": "./index.js",
+	"types": "./index.d.ts",
+	"exports": {
+		".": "./index.js",
+		"./styles.css": "./styles.css"
+	},
+	"scripts": {
+		"build": "echo 'No build step needed for providers'",
+		"dev": "echo 'No dev step needed for providers'",
+		"lint": "echo 'No lint step needed for providers'"
+	},
+	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^6.7.2",
+		"@fortawesome/free-solid-svg-icons": "^6.7.2",
+		"@fortawesome/react-fontawesome": "^0.2.2",
+		"@radix-ui/react-dialog": "^1.1.7",
+		"@supabase/auth-helpers-nextjs": "^0.10.0",
+		"@supabase/auth-helpers-react": "^0.5.0",
+		"@supabase/supabase-js": "^2.49.4",
+		"framer-motion": "^12.6.2",
+		"next": "15.2.4",
+		"react": "^19.0.0"
+	},
+	"peerDependencies": {
+		"react": "^19.0.0",
+		"next": "15.2.4"
+	}
+}

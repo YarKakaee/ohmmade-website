@@ -1,7 +1,7 @@
 'use client';
 import CodexEditorWrapper from '@/app/components/codex/CodexEditorWrapper';
 import LayoutContainer from '@/app/components/common/LayoutContainer';
-import { useAuthModal } from '@/app/providers/AuthModalProvider';
+import { useAuthModal } from '@ohmmade/providers';
 import { supabase } from '@/lib/supabaseClient';
 import {
 	faArrowUpRightFromSquare,

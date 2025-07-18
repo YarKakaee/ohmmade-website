@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+@import '@ohmmade/providers/styles.css';
+
 .ce-toolbar__plus {
 	color: white !important;
 	background-color: transparent !important;
@@ -94,5 +96,7 @@
 }
 
 .static-glow {
-	box-shadow: 0 0 32px 8px #27bbff66, 0 0 0 0 #27bbff00;
+	box-shadow:
+		0 0 32px 8px #27bbff66,
+		0 0 0 0 #27bbff00;
 }

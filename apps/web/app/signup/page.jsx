@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthModal } from '@/app/providers/AuthModalProvider';
+import { useAuthModal } from '@ohmmade/providers';
 
 export default function SignUpPage() {
 	const router = useRouter();

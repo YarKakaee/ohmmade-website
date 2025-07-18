@@ -3,7 +3,7 @@
 import LayoutContainer from '@/app/components/common/LayoutContainer';
 import ProjectCard from '@/app/components/common/ProjectCard';
 import DashboardSidebar from '@/app/components/dashboard/DashboardSidebar';
-import { useAuthModal } from '@/app/providers/AuthModalProvider';
+import { useAuthModal } from '@ohmmade/providers';
 import categoryColors from '@/lib/constants/categoryColors';
 import {
 	faChevronLeft,
