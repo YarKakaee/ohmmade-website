@@ -37,7 +37,10 @@ const slides = [
 		heading: 'Earn Your Watts',
 		description:
 			'Build, share, and engage to earn Watts, unlock unique badges, and rise through the ranks — from Newbie to Grandmaster.',
-		button: { text: 'Learn About Watts', link: '/help/watts-and-leveling' },
+		button: {
+			text: 'Learn About Watts',
+			link: 'https://support.ohmmade.ca/articles/watts-and-leveling',
+		},
 		particleColor: 'rgba(255,214,0,0.7)',
 	},
 	{

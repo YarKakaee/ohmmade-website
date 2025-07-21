@@ -149,7 +149,7 @@ export default function GamificationSection() {
 					className="inline-block"
 				>
 					<Link
-						href="/help/watts-and-leveling"
+						href="https://support.ohmmade.ca/articles/watts-and-leveling"
 						className="bg-[#FFD600] text-[16px] text-[#101014] font-bold px-8 py-4 rounded-full transition-all duration-300 shadow-[0_2px_8px_0_rgba(0,0,0,0.10)] hover:shadow-[0_2px_8px_0_rgba(0,0,0,0.10),0_0_32px_#FFD60099] ease-in-out"
 					>
 						How Watts Works

@@ -194,6 +194,22 @@ export default function HeroSection({
 		}, 500);
 	};
 
+	// Popular links data with their respective article URLs
+	const popularLinks = [
+		{
+			text: 'Profile Setup & Guidelines',
+			href: '/articles/profile-guidelines',
+		},
+		{
+			text: 'Project Publishing Rules',
+			href: '/articles/publishing-guidelines',
+		},
+		{
+			text: 'Watts & Leveling System',
+			href: '/articles/watts-and-leveling',
+		},
+	];
+
 	return (
 		<section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-[#101014]">
 			{/* Star/Particle Background */}
@@ -302,14 +318,10 @@ export default function HeroSection({
 								Popular Links:{' '}
 							</span>
 							<div className="flex flex-wrap justify-center gap-4 mt-2">
-								{[
-									'Profile Setup & Guidelines',
-									'Project Publishing Rules',
-									'Watts & Leveling System',
-								].map((link, i) => (
+								{popularLinks.map((link, i) => (
 									<motion.a
 										key={i}
-										href="#"
+										href={link.href}
 										initial={{ opacity: 0, y: 10 }}
 										animate={{ opacity: 1, y: 0 }}
 										transition={{
@@ -323,7 +335,7 @@ export default function HeroSection({
 										}}
 										className="hover:underline transition-all duration-200 font-medium"
 									>
-										{link}
+										{link.text}
 									</motion.a>
 								))}
 							</div>

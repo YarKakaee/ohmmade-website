@@ -550,7 +550,7 @@ export default function SettingsPage() {
 												Learn more about{' '}
 												<span className="relative inline-block group align-middle ml-1">
 													<a
-														href="/help/profile-guidelines"
+														href="https://support.ohmmade.ca/articles/profile-guidelines"
 														target="_blank"
 														rel="noopener noreferrer"
 														className="text-[#27BBFF] text-sm font-medium flex items-center"

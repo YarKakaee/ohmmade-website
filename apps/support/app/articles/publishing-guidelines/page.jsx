@@ -98,36 +98,119 @@ export default function PublishingGuidelinesPage() {
 
 					<section>
 						<h2 className="text-2xl font-bold mb-3">
-							4. What Not to Include
+							4. Content Quality
 						</h2>
 						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
 							<li>
-								Plagiarized or uncredited code/content from
-								others.
+								Make sure your project actually works and you've
+								tested it.
 							</li>
 							<li>
-								Adult content, hate speech, or offensive
-								language.
+								Include a clear list of materials and components
+								needed.
 							</li>
-							<li>Sensitive personal data.</li>
+							<li>
+								Explain the "why" behind your choices, not just
+								the "how".
+							</li>
+							<li>
+								Share any troubleshooting tips or common issues
+								you encountered.
+							</li>
 						</ul>
 					</section>
 
 					<section>
 						<h2 className="text-2xl font-bold mb-3">
-							5. Need Help?
+							5. Images &amp; Media
 						</h2>
-						<p className="text-[#CCCCCC]">
-							If you're unsure about formatting or need feedback,
-							feel free to reach out at{' '}
-							<a
-								href="mailto:support@ohmmade.ca"
-								className="text-[#27BBFF] underline"
-							>
-								support@ohmmade.ca
-							</a>
-							.
-						</p>
+						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
+							<li>
+								Use high-quality, well-lit photos of your
+								project.
+							</li>
+							<li>
+								Include close-ups of important details and
+								connections.
+							</li>
+							<li>
+								Show both the finished project and key steps
+								along the way.
+							</li>
+							<li>
+								Add wiring diagrams or schematics when helpful.
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2 className="text-2xl font-bold mb-3">
+							6. Code Examples
+						</h2>
+						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
+							<li>
+								Use the Code block feature with proper language
+								tags.
+							</li>
+							<li>
+								Add comments to explain what each section does.
+							</li>
+							<li>
+								Include the complete, working code that readers
+								can copy.
+							</li>
+							<li>
+								Mention any libraries or dependencies needed.
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2 className="text-2xl font-bold mb-3">
+							7. Community Standards
+						</h2>
+						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
+							<li>
+								Be respectful and inclusive in your language and
+								examples.
+							</li>
+							<li>
+								Don't plagiarize – credit original sources and
+								inspiration.
+							</li>
+							<li>
+								Avoid promoting commercial products or services
+								excessively.
+							</li>
+							<li>
+								Keep content appropriate for all ages and skill
+								levels.
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2 className="text-2xl font-bold mb-3">
+							8. After Publishing
+						</h2>
+						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
+							<li>
+								Respond to comments and questions from the
+								community.
+							</li>
+							<li>
+								Update your project if you make improvements or
+								find errors.
+							</li>
+							<li>
+								Share your project on social media to help
+								others discover it.
+							</li>
+							<li>
+								Engage with other makers' projects to build the
+								community.
+							</li>
+						</ul>
 					</section>
 				</LayoutContainer>
 			</section>

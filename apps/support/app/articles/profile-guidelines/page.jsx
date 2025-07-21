@@ -97,41 +97,46 @@ export default function ProfileGuidelinesPage() {
 						</h2>
 						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
 							<li>
-								Your profile picture gives your account
-								personality!
+								Your profile picture gives your account a visual
+								identity and helps others recognize you.
 							</li>
 							<li>
-								You can upload your own image or use one of
-								OhmMade's default avatars.
+								Use a clear, high-quality image that represents
+								you well.
 							</li>
 							<li>
-								Please avoid uploading inappropriate or
-								copyrighted images.
+								Keep it appropriate and professional — avoid
+								offensive or inappropriate content.
 							</li>
 							<li>
-								For best quality, we recommend square images
-								(minimum 400x400px).
+								You can update your profile picture at any time
+								from your settings.
 							</li>
 						</ul>
 					</section>
 
 					<section>
 						<h2 className="text-2xl font-bold mb-3">
-							5. Public Profile
+							5. Bio &amp; Description
 						</h2>
 						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
-							<li>Display name, username, and profile picture</li>
-							<li>Your bio (if filled)</li>
-							<li>Projects you've published</li>
 							<li>
-								Community activity (like comments, liked
-								projects)
+								Your bio is a short description that appears on
+								your profile page.
+							</li>
+							<li>
+								Use it to share your interests, expertise, or
+								what you're working on.
+							</li>
+							<li>
+								Keep it concise and relevant to the OhmMade
+								community.
+							</li>
+							<li>
+								Avoid sharing personal contact information or
+								sensitive details.
 							</li>
 						</ul>
-						<p className="text-[#CCCCCC] mt-2">
-							Other users can visit your profile page to learn
-							more about you and follow your work.
-						</p>
 					</section>
 
 					<section>
@@ -140,58 +145,72 @@ export default function ProfileGuidelinesPage() {
 						</h2>
 						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
 							<li>
-								Sensitive info (like your email) is never shown
-								publicly.
+								Your profile is public by default, meaning
+								anyone can view it.
 							</li>
 							<li>
-								You control what projects you publish or keep
-								private.
+								Don't share personal information like your full
+								name, address, phone number, or email in your
+								profile.
 							</li>
 							<li>
-								If you encounter harassment or impersonation,
-								report it to our support team immediately.
+								Be mindful of what you share — your profile
+								represents you to the community.
+							</li>
+							<li>
+								If you need to report inappropriate content or
+								behavior, use the report function.
 							</li>
 						</ul>
 					</section>
 
 					<section>
 						<h2 className="text-2xl font-bold mb-3">
-							7. Tips for a Great Profile
+							7. Community Guidelines
 						</h2>
 						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
-							<li>Use a high-quality profile photo or avatar</li>
 							<li>
-								Write a short, engaging bio about your interests
+								Be respectful and inclusive in your profile
+								content.
 							</li>
 							<li>
-								Regularly share projects or updates to build
-								your reputation
+								Avoid hate speech, harassment, or discriminatory
+								language.
 							</li>
 							<li>
-								Link your social media accounts (if you want to
-								grow your reach)
+								Don't use your profile to spam, advertise, or
+								promote inappropriate content.
+							</li>
+							<li>
+								Respect intellectual property — don't use
+								copyrighted images or content without
+								permission.
 							</li>
 						</ul>
-						<p className="text-[#CCCCCC] mt-2">
-							Remember: OhmMade is a space for makers and
-							learners. Keep your profile positive, respectful,
-							and true to your work!
+					</section>
+
+					<section>
+						<h2 className="text-2xl font-bold mb-3">
+							8. Profile Activity
+						</h2>
+						<p className="text-[#CCCCCC] leading-relaxed">
+							Your profile page shows your recent activity,
+							including published projects, comments, and
+							interactions. This helps others understand your
+							contributions to the community and discover your
+							work.
 						</p>
 					</section>
 
 					<section>
-						<h2 className="text-2xl font-bold mb-3">8. Support</h2>
-						<p className="text-[#CCCCCC]">
-							If you have any questions or need help with your
-							profile, visit our Help Center or contact the
-							OhmMade team at{' '}
-							<a
-								href="mailto:support@ohmmade.ca"
-								className="text-[#27BBFF] underline"
-							>
-								support@ohmmade.ca
-							</a>
-							.
+						<h2 className="text-2xl font-bold mb-3">
+							9. Getting Help
+						</h2>
+						<p className="text-[#CCCCCC] leading-relaxed">
+							If you have questions about your profile or need
+							help with settings, you can contact our support team
+							or check our other help articles. We're here to help
+							you make the most of your OhmMade experience.
 						</p>
 					</section>
 				</LayoutContainer>

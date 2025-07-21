@@ -100,32 +100,123 @@ export default function WattsGuidePage() {
 						</h2>
 						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
 							<li>
-								Showcase your dedication and expertise to the
-								community.
+								<strong>Recognition:</strong> Show off your
+								expertise and contributions to the community.
 							</li>
-							<li>Get featured more often as a trusted maker.</li>
-							<li>Access exclusive rewards and opportunities.</li>
 							<li>
-								Motivate yourself to keep learning, building,
-								and sharing.
+								<strong>Trust:</strong> Higher levels help
+								others know they can rely on your advice and
+								projects.
+							</li>
+							<li>
+								<strong>Features:</strong> Unlock special
+								features, early access, or exclusive content.
+							</li>
+							<li>
+								<strong>Community:</strong> Join exclusive
+								groups or events for high-level members.
 							</li>
 						</ul>
 					</section>
 
 					<section>
 						<h2 className="text-2xl font-bold mb-3">
-							6. Need Help?
+							6. Watts Multipliers
 						</h2>
-						<p className="text-[#CCCCCC]">
-							If you have questions about Watts, leveling, or
-							badges, reach out to us at{' '}
-							<a
-								href="mailto:support@ohmmade.ca"
-								className="text-[#27BBFF] underline"
-							>
-								support@ohmmade.ca
-							</a>
-							.
+						<p className="text-[#CCCCCC] leading-relaxed">
+							Some activities give you bonus Watts! Here are ways
+							to maximize your earning:
+						</p>
+						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
+							<li>
+								<strong>Quality Content:</strong> Well-written,
+								detailed projects earn more Watts than basic
+								ones.
+							</li>
+							<li>
+								<strong>Community Help:</strong> Answering
+								questions and helping others earns bonus Watts.
+							</li>
+							<li>
+								<strong>Consistency:</strong> Regular activity
+								and engagement builds momentum.
+							</li>
+							<li>
+								<strong>Innovation:</strong> Unique or creative
+								projects get extra recognition.
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2 className="text-2xl font-bold mb-3">
+							7. Tracking Your Progress
+						</h2>
+						<p className="text-[#CCCCCC] leading-relaxed">
+							You can see your Watts and level progress in several
+							places:
+						</p>
+						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
+							<li>
+								<strong>Profile Page:</strong> Your current
+								level and total Watts are displayed prominently.
+							</li>
+							<li>
+								<strong>Activity Feed:</strong> See recent Watts
+								earned from specific actions.
+							</li>
+							<li>
+								<strong>Dashboard:</strong> Track your progress
+								toward the next level.
+							</li>
+							<li>
+								<strong>Badges Section:</strong> View all your
+								earned achievements and what's next.
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2 className="text-2xl font-bold mb-3">
+							8. Tips for Earning More Watts
+						</h2>
+						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
+							<li>
+								<strong>Be Active:</strong> Regular engagement
+								keeps your Watts growing steadily.
+							</li>
+							<li>
+								<strong>Share Knowledge:</strong> Help others
+								learn and you'll earn Watts while building the
+								community.
+							</li>
+							<li>
+								<strong>Create Quality:</strong> Take time to
+								make your projects detailed and helpful.
+							</li>
+							<li>
+								<strong>Engage Authentically:</strong> Real
+								interactions earn more than just clicking
+								around.
+							</li>
+							<li>
+								<strong>Stay Consistent:</strong> Regular
+								activity is better than occasional bursts.
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2 className="text-2xl font-bold mb-3">
+							9. Community Impact
+						</h2>
+						<p className="text-[#CCCCCC] leading-relaxed">
+							Remember, Watts aren't just about numbers — they
+							represent your positive impact on the OhmMade
+							community. Every project you share, every question
+							you answer, and every maker you inspire contributes
+							to building a better learning environment for
+							everyone.
 						</p>
 					</section>
 				</LayoutContainer>
