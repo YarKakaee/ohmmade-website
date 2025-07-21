@@ -179,15 +179,14 @@ export default function UserDashboardPage() {
 				<LayoutContainer className="py-16">
 					<div className="flex">
 						{/* Sidebar */}
-						<div className="fixed h-screen">
-							<DashboardSidebar
-								user={user}
-								currentPath="/dashboard"
-							/>
-						</div>
+
+						<DashboardSidebar
+							user={user}
+							currentPath="/dashboard"
+						/>
 
 						{/* Main scrollable Content */}
-						<div className="flex-1 pt-24 ml-[280px] pl-16">
+						<div className="flex-1 pt-24 pl-16">
 							<div className="mb-5">
 								<h1 className="text-[32px] font-black text-white">
 									Account Dashboard

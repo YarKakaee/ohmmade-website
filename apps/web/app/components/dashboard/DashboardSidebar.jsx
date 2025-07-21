@@ -32,7 +32,7 @@ export default function DashboardSidebar({ user, currentPath }) {
 	};
 
 	return (
-		<div className="w-[280px] pt-24 pr-8">
+		<div className="w-[280px] pr-8 sticky top-42 self-start">
 			<div className="flex flex-col items-center mb-8">
 				<div className="w-24 h-24 rounded-full overflow-hidden ring-2 ring-[#3A3A3C]/60 mb-4">
 					<Image
@@ -83,7 +83,7 @@ export default function DashboardSidebar({ user, currentPath }) {
 					<FontAwesomeIcon icon={faHeart} />
 					Liked Projects
 				</Link>
-				<Link
+				{/* <Link
 					href="/dashboard/saved"
 					className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${
 						isActive('/dashboard/saved')
@@ -93,8 +93,8 @@ export default function DashboardSidebar({ user, currentPath }) {
 				>
 					<FontAwesomeIcon icon={faBookmark} />
 					Saved Projects
-				</Link>
-				<Link
+				</Link> */}
+				{/* <Link
 					href="/dashboard/learning"
 					className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${
 						isActive('/dashboard/learning')
@@ -104,7 +104,7 @@ export default function DashboardSidebar({ user, currentPath }) {
 				>
 					<FontAwesomeIcon icon={faBook} />
 					Learning Progress
-				</Link>
+				</Link> */}
 				<Link
 					href="/dashboard/settings"
 					className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${

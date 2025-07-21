@@ -145,15 +145,14 @@ export default function LikedProjectsPage() {
 				<LayoutContainer className="py-16">
 					<div className="flex">
 						{/* Fixed Sidebar */}
-						<div className="fixed h-screen">
-							<DashboardSidebar
-								user={user}
-								currentPath="/dashboard/liked"
-							/>
-						</div>
+
+						<DashboardSidebar
+							user={user}
+							currentPath="/dashboard/liked"
+						/>
 
 						{/* Scrollable Main Content */}
-						<div className="flex-1 pt-24 ml-[280px] pl-16">
+						<div className="flex-1 pt-24 pl-16 min-h-[calc(100vh-8rem)]">
 							<div className="flex items-center justify-between mb-8">
 								<h1 className="text-[32px] font-black text-white">
 									Liked Projects

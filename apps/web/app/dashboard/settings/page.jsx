@@ -280,15 +280,13 @@ export default function SettingsPage() {
 				<LayoutContainer className="py-16">
 					<div className="flex">
 						{/* Fixed Sidebar */}
-						<div className="fixed h-screen">
-							<DashboardSidebar
-								user={user}
-								currentPath="/dashboard/settings"
-							/>
-						</div>
+						<DashboardSidebar
+							user={user}
+							currentPath="/dashboard/settings"
+						/>
 
 						{/* Main Content */}
-						<div className="flex-1 pt-24 ml-[280px] pl-16">
+						<div className="flex-1 pt-24 pl-16">
 							<div>
 								<div className="mb-8">
 									<h1 className="text-[32px] font-black text-white">

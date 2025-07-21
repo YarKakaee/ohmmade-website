@@ -1,6 +1,5 @@
 'use client';
 
-import { useAuthModal } from '@ohmmade/providers';
 import {
 	faMagnifyingGlass,
 	faSignOutAlt,
@@ -8,14 +7,14 @@ import {
 	faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useAuthModal, useCustomSession } from '@ohmmade/providers';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import LayoutContainer from '@ohmmade/ui/layout-container';
-import { useCustomSession } from '@ohmmade/providers';
 
 export default function Nav() {
 	const session = useSession();

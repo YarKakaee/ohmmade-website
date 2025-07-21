@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import {
 	faDiscord,
 	faGithub,
@@ -10,17 +9,12 @@ import {
 	faXTwitter,
 	faYoutube,
 } from '@fortawesome/free-brands-svg-icons';
-import {
-	faDownload,
-	faEnvelope,
-	faBolt,
-	faExternalLinkAlt,
-	faArrowDown,
-} from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Link from 'next/link';
-import Image from 'next/image';
 import LayoutContainer from '@ohmmade/ui/layout-container';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Footer() {
 	const currentYear = new Date().getFullYear();
