@@ -15,24 +15,19 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import LayoutContainer from '@ohmmade/ui/layout-container';
+import { useCustomSession } from '@ohmmade/providers';
 
 export default function Nav() {
 	const session = useSession();
+	const { isLoading } = useCustomSession();
 	const supabaseClient = useSupabaseClient();
 	const router = useRouter();
 	const userRef = useRef(null);
 
 	const [user, setUser] = useState(session?.user || null);
 	const [userProfile, setUserProfile] = useState(null);
+	const [isProfileLoading, setIsProfileLoading] = useState(false);
 	const [showUserDropdown, setShowUserDropdown] = useState(false);
-	const [hoveredLink, setHoveredLink] = useState(null);
-	const [highlightStyle, setHighlightStyle] = useState({
-		opacity: 0,
-		left: 0,
-		top: 0,
-		width: 0,
-		height: 0,
-	});
 	const [atTop, setAtTop] = useState(true);
 
 	useEffect(() => {
@@ -47,10 +42,24 @@ export default function Nav() {
 
 	// Fetch user profile from your own DB
 	useEffect(() => {
-		if (!session?.user?.email) return;
+		if (!session?.user?.email) {
+			setUserProfile(null);
+			setIsProfileLoading(false);
+			return;
+		}
+
+		setIsProfileLoading(true);
 		fetch(`/api/user/profile?email=${session.user.email}`)
 			.then((res) => res.json())
-			.then((data) => setUserProfile(data));
+			.then((data) => {
+				setUserProfile(data);
+			})
+			.catch((error) => {
+				console.error('Error fetching user profile:', error);
+			})
+			.finally(() => {
+				setIsProfileLoading(false);
+			});
 	}, [session]);
 
 	// Floating nav logic
@@ -89,31 +98,6 @@ export default function Nav() {
 		};
 	}, []);
 
-	useEffect(() => {
-		if (hoveredLink) {
-			const rect = hoveredLink.getBoundingClientRect();
-			const navContainer = hoveredLink.closest('nav');
-			const navRect = navContainer.getBoundingClientRect();
-
-			setHighlightStyle({
-				opacity: 1,
-				left: rect.left - navRect.left - 8,
-				top: rect.top - navRect.top,
-				width: rect.width + 16,
-				height: rect.height,
-			});
-		}
-	}, [hoveredLink]);
-
-	const handleLinkHover = (e) => {
-		setHoveredLink(e.currentTarget);
-	};
-
-	const handleNavLeave = () => {
-		setHoveredLink(null);
-		setHighlightStyle((prev) => ({ ...prev, opacity: 0 }));
-	};
-
 	const handleSignOut = async () => {
 		await supabaseClient.auth.signOut();
 		setUser(null);
@@ -149,120 +133,49 @@ export default function Nav() {
 					>
 						{/* Left: Logo */}
 						<div className="flex items-center flex-shrink-0 z-10">
-							<Link href="/" className="flex items-center">
+							<Link href="/" className="flex items-center gap-2">
 								<Image
-									src="/assets/OMLogoBanner.png"
+									src="/assets/OMSupportLogoBanner.png"
 									alt="OhmMade Logo Banner"
 									height={160}
-									width={769}
-									className="object-contain h-9 sm:h-9 w-auto max-w-[140px]"
+									width={1273}
+									className="object-contain h-9 sm:h-9 w-auto max-h-[28px]"
 									priority
 								/>
 							</Link>
 						</div>
 
-						{/* Center: Nav Links (absolute center) */}
-						<div className="absolute left-1/2 top-0 -translate-x-1/2 h-full flex items-center justify-center">
-							<nav
-								className="flex items-center space-x-6 text-white/90 font-[450] text-[14px] relative"
-								onMouseLeave={handleNavLeave}
-							>
-								{/* Animated highlight background */}
-								<motion.div
-									className="absolute bg-gray-700/30 rounded-full pointer-events-none"
-									animate={highlightStyle}
-									transition={{
-										type: 'spring',
-										stiffness: 200,
-										damping: 20,
-										mass: 0.6,
-										opacity: {
-											type: 'spring',
-											stiffness: 350,
-											damping: 30,
-											duration: 0.12,
-										},
-										left: {
-											type: 'spring',
-											stiffness: 180,
-											damping: 18,
-											mass: 0.5,
-										},
-										width: {
-											type: 'spring',
-											stiffness: 220,
-											damping: 22,
-											mass: 0.6,
-										},
-										top: {
-											type: 'spring',
-											stiffness: 200,
-											damping: 20,
-											mass: 0.5,
-										},
-										height: {
-											type: 'spring',
-											stiffness: 200,
-											damping: 20,
-											mass: 0.5,
-										},
-									}}
-									style={{
-										zIndex: 1,
-									}}
-								/>
-
-								{/* Explore */}
-								<Link
-									href="/projects"
-									className="transition relative z-10 px-2 py-2"
-									onMouseEnter={handleLinkHover}
-								>
-									Explore
-								</Link>
-
-								{/* Create */}
-								<Link
-									href="/projects/publish"
-									className="transition relative z-10 px-2 py-2"
-									onMouseEnter={handleLinkHover}
-								>
-									Create
-								</Link>
-
-								{/* Help */}
-								<Link
-									href="/forum"
-									className="transition relative z-10 px-2 py-2"
-									onMouseEnter={handleLinkHover}
-								>
-									Help
-								</Link>
-
-								{/* About */}
-								<Link
-									href="/about"
-									className="transition relative z-10 px-2 py-2"
-									onMouseEnter={handleLinkHover}
-								>
-									About
-								</Link>
-
-								<div className="relative z-10">
-									<button className="text-white/80 hover:text-white transition cursor-pointer">
-										<FontAwesomeIcon
-											icon={faMagnifyingGlass}
-											size="md"
-										/>
-									</button>
-								</div>
-							</nav>
-						</div>
-
 						{/* Right: User */}
 						<div className="flex items-center flex-shrink-0 ml-auto z-10">
+							<motion.button
+								className="text-white text-[14px] font-medium px-4 py-2 rounded-full cursor-pointer mr-4"
+								whileHover={{
+									color: '#ACACAD',
+									scale: 1.02,
+								}}
+								whileTap={{
+									scale: 0.98,
+								}}
+								transition={{
+									type: 'spring',
+									stiffness: 400,
+									damping: 25,
+								}}
+							>
+								<Link href="https://ohmmade.ca">
+									Back to Home
+								</Link>
+							</motion.button>
+
 							{/* User Auth Section */}
-							{user ? (
+							{isProfileLoading ? (
+								<div className="flex items-center gap-2">
+									<div className="w-[28px] h-[28px] rounded-full bg-[#1C1C20] border border-[#3A3A3C]/60 flex items-center justify-center">
+										<div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white/40"></div>
+									</div>
+									<div className="w-16 h-4 bg-[#1C1C20] rounded animate-pulse"></div>
+								</div>
+							) : user ? (
 								<div className="relative" ref={userRef}>
 									<button
 										onClick={() =>
