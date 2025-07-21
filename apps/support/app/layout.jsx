@@ -3,6 +3,7 @@ import { AuthModalProvider } from '@ohmmade/providers';
 import './globals.css';
 import { SupabaseProvider } from '@ohmmade/providers';
 import Nav from './components/layout/Nav';
+import Footer from './components/layout/Footer';
 import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({
@@ -60,6 +61,7 @@ export default function RootLayout({ children }) {
 					<AuthModalProvider>
 						<Nav />
 						{children}
+
 						<Toaster
 							position="top-center"
 							reverseOrder={false}
@@ -67,6 +69,7 @@ export default function RootLayout({ children }) {
 								top: '100px',
 							}}
 						/>
+						<Footer />
 					</AuthModalProvider>
 				</SupabaseProvider>
 			</body>

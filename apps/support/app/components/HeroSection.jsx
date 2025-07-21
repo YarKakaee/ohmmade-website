@@ -288,7 +288,7 @@ export default function HeroSection({
 									}
 									onFocus={() => setIsSearchFocused(true)}
 									onBlur={() => setIsSearchFocused(false)}
-									className="w-full px-5 py-4 rounded-xl bg-white/10 backdrop-blur-md text-white placeholder:text-white/60 border border-white/20 shadow-[0_8px_32px_0_rgba(53,172,71,0.15)] focus:outline-none focus:ring-2 focus:ring-[#35AC47]/50 focus:border-[#35AC47]/50 transition-all duration-300 text-base"
+									className="w-full px-5 py-4 rounded-2xl bg-white/10 backdrop-blur-md text-white placeholder:text-white/60 border border-white/20 shadow-[0_8px_32px_0_rgba(53,172,71,0.15)] focus:outline-none focus:ring-2 focus:ring-[#35AC47]/50 focus:border-[#35AC47]/50 transition-all duration-300 text-base"
 								/>
 								{!isSearchFocused && !searchQuery && (
 									<div className="absolute left-5 top-1/2 transform -translate-y-1/2 pointer-events-none">

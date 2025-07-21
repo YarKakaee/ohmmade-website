@@ -20,7 +20,7 @@ export default function PublishingGuidelinesPage() {
 					</h1>
 
 					<p className="text-[#BBBBBB]">
-						Last updated: April 4, 2025
+						Last updated: July 21, 2025
 					</p>
 
 					<section>
@@ -41,7 +41,7 @@ export default function PublishingGuidelinesPage() {
 						</h2>
 						<ul className="list-disc pl-6 text-[#CCCCCC] space-y-2">
 							<li>
-								Be clear and beginner-friendly – explain each
+								Be clear and beginner-friendly - explain each
 								step simply.
 							</li>
 							<li>
@@ -175,7 +175,7 @@ export default function PublishingGuidelinesPage() {
 								examples.
 							</li>
 							<li>
-								Don't plagiarize – credit original sources and
+								Don't plagiarize - credit original sources and
 								inspiration.
 							</li>
 							<li>
@@ -211,6 +211,22 @@ export default function PublishingGuidelinesPage() {
 								community.
 							</li>
 						</ul>
+					</section>
+					<section>
+						<h2 className="text-2xl font-bold mb-3">
+							9. Need Help?
+						</h2>
+						<p className="text-[#CCCCCC]">
+							If you're unsure about formatting or need feedback,
+							feel free to reach out at{' '}
+							<a
+								href="mailto:help@ohmmade.ca"
+								className="text-[#27BBFF] underline"
+							>
+								help@ohmmade.ca
+							</a>
+							.
+						</p>
 					</section>
 				</LayoutContainer>
 			</section>

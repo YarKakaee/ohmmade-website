@@ -219,6 +219,22 @@ export default function WattsGuidePage() {
 							everyone.
 						</p>
 					</section>
+					<section>
+						<h2 className="text-2xl font-bold mb-3">
+							10. Need Help?
+						</h2>
+						<p className="text-[#CCCCCC]">
+							If you have questions about Watts, leveling, or
+							badges, reach out to us at{' '}
+							<a
+								href="mailto:help@ohmmade.ca"
+								className="text-[#27BBFF] underline"
+							>
+								help@ohmmade.ca
+							</a>
+							.
+						</p>
+					</section>
 				</LayoutContainer>
 			</section>
 		</div>

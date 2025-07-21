@@ -1,11 +1,12 @@
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
+import { AuthModalProvider, SupabaseProvider } from '@ohmmade/providers';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
-import Nav from './components/layout/Nav';
 import Footer from './components/layout/Footer';
+import Nav from './components/layout/Nav';
 import './globals.css';
-import { SupabaseProvider, AuthModalProvider } from '@ohmmade/providers';
+
 config.autoAddCss = false;
 
 const inter = Inter({
