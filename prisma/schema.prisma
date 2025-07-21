@@ -34,6 +34,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
   activities UserActivity[]
+  discussionViews DiscussionView[]
   
   // Follow relationships
   followers Follow[] @relation("UserFollowers")
@@ -47,6 +48,10 @@ model User {
   
   // Watts tracking
   wattsLogs WattsLog[]
+  
+  // Discussion relationships
+  discussions Discussion[]
+  discussionAnswers DiscussionAnswer[]
 }
 
 model Project {
@@ -159,4 +164,56 @@ model WattsLog {
   user        User @relation(fields: [userId], references: [id])
 
   @@index([userId, createdAt])
+}
+
+enum DiscussionStatus {
+  open
+  answered
+  closed
+}
+
+model Discussion {
+  id          String            @id @default(cuid())
+  title       String
+  content     Json
+  status      DiscussionStatus  @default(open)
+  tags        String[]
+  authorId    String
+  author      User              @relation(fields: [authorId], references: [id])
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  views       Int               @default(0)
+  answers     DiscussionAnswer[]
+  discussionViews DiscussionView[]
+  
+  @@index([authorId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model DiscussionAnswer {
+  id            String      @id @default(cuid())
+  content       Json
+  authorId      String
+  author        User        @relation(fields: [authorId], references: [id])
+  discussionId  String
+  discussion    Discussion  @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  isAccepted    Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  @@index([discussionId])
+  @@index([authorId])
+}
+
+model DiscussionView {
+  id           String   @id @default(cuid())
+  userId       String
+  discussionId String
+  createdAt    DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id])
+  discussion  Discussion  @relation(fields: [discussionId], references: [id])
+
+  @@unique([userId, discussionId]) // Prevent multiple views per user
 }
