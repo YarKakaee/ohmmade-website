@@ -248,7 +248,7 @@ export default function Nav() {
 
 								{/* Help */}
 								<Link
-									href="/forum"
+									href="https://support.ohmmade.ca"
 									className="transition relative z-10 px-2 py-2"
 									onMouseEnter={handleLinkHover}
 								>
