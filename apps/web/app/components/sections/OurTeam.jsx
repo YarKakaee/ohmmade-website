@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Inter_Tight } from 'next/font/google';
 import TeamMemberCard from '../common/TeamMemberCard';
+import LayoutContainer from '@ohmmade/ui/layout-container';
 
 const interTight = Inter_Tight({
 	subsets: ['latin'],
@@ -53,37 +54,39 @@ const teamMembers = [
 
 export default function OurTeam() {
 	return (
-		<section className="relative w-full py-20 px-8 sm:px-16 lg:px-24">
-			<div className="mx-auto max-w-[1700px] px-8 sm:px-16">
-				<motion.h2
-					initial={{ opacity: 0, y: 50 }}
-					whileInView={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.7, ease: 'easeOut' }}
-					viewport={{ once: true }}
-					className={`text-white text-4xl font-extrabold mb-16 ${interTight.className} text-center md:text-start`}
-				>
-					Meet Our Team
-				</motion.h2>
+		<section className="relative w-full py-20">
+			<LayoutContainer>
+				<div className="mx-auto max-w-[1700px]">
+					<motion.h2
+						initial={{ opacity: 0, y: 50 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.7, ease: 'easeOut' }}
+						viewport={{ once: true }}
+						className={`text-white text-4xl font-extrabold mb-16 ${interTight.className} text-center md:text-start`}
+					>
+						Meet Our Team
+					</motion.h2>
 
-				{/* Team Members Grid with staggered animations */}
-				<div className="grid grid-cols-1 gap-20">
-					{teamMembers.map((member, index) => (
-						<motion.div
-							key={index}
-							initial={{ opacity: 0, scale: 0.9 }}
-							whileInView={{ opacity: 1, scale: 1 }}
-							transition={{
-								duration: 0.5,
-								delay: index * 0.2,
-								ease: 'easeOut',
-							}}
-							viewport={{ once: true }}
-						>
-							<TeamMemberCard {...member} />
-						</motion.div>
-					))}
+					{/* Team Members Grid with staggered animations */}
+					<div className="grid grid-cols-1 gap-20">
+						{teamMembers.map((member, index) => (
+							<motion.div
+								key={index}
+								initial={{ opacity: 0, scale: 0.9 }}
+								whileInView={{ opacity: 1, scale: 1 }}
+								transition={{
+									duration: 0.5,
+									delay: index * 0.2,
+									ease: 'easeOut',
+								}}
+								viewport={{ once: true }}
+							>
+								<TeamMemberCard {...member} />
+							</motion.div>
+						))}
+					</div>
 				</div>
-			</div>
+			</LayoutContainer>
 		</section>
 	);
 }
