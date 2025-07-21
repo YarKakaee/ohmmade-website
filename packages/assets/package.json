@@ -1,0 +1,16 @@
+{
+	"name": "@ohmmade/assets",
+	"version": "0.0.0",
+	"private": true,
+	"exports": {
+		"./OMLogoBanner.png": "./OMLogoBanner.png"
+	},
+	"files": [
+		"*.png",
+		"*.jpg",
+		"*.jpeg",
+		"*.svg",
+		"*.gif",
+		"*.webp"
+	]
+}

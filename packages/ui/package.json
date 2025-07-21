@@ -3,6 +3,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"exports": {
+		".": "./src/index.js",
 		"./layout-container": "./src/LayoutContainer.jsx",
 		"./styles.css": "./styles.css"
 	},
@@ -18,5 +19,12 @@
 	},
 	"peerDependencies": {
 		"react": "^18.3.1"
+	},
+	"dependencies": {
+		"@editorjs/code": "^2.9.3",
+		"@editorjs/editorjs": "^2.30.8",
+		"@editorjs/header": "^2.8.8",
+		"@editorjs/image": "^2.10.2",
+		"@editorjs/list": "^2.0.6"
 	}
 }
