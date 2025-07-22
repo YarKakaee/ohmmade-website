@@ -7,7 +7,11 @@ import {
 	faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useAuthModal, useCustomSession } from '@ohmmade/providers';
+import {
+	useAuthModal,
+	useCustomSession,
+	useSearchModal,
+} from '@ohmmade/providers';
 import LayoutContainer from '@ohmmade/ui/layout-container';
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -145,6 +149,7 @@ export default function Nav() {
 	};
 
 	const { openAuthModal } = useAuthModal();
+	const { openSearchModal } = useSearchModal();
 
 	return (
 		<header className="fixed top-0 left-0 w-full z-50 flex justify-center pointer-events-none">
@@ -265,7 +270,10 @@ export default function Nav() {
 								</Link>
 
 								<div className="relative z-10">
-									<button className="text-white/80 hover:text-white transition cursor-pointer">
+									<button
+										className="text-white/80 hover:text-white transition cursor-pointer"
+										onClick={() => openSearchModal()}
+									>
 										<FontAwesomeIcon
 											icon={faMagnifyingGlass}
 											size="md"

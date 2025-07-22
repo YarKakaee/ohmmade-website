@@ -1,6 +1,10 @@
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import { AuthModalProvider, SupabaseProvider } from '@ohmmade/providers';
+import {
+	AuthModalProvider,
+	SupabaseProvider,
+	SearchModalProvider,
+} from '@ohmmade/providers';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import Footer from './components/layout/Footer';
@@ -64,16 +68,18 @@ export default function RootLayout({ children }) {
 			<body className={`${inter.className} antialiased`}>
 				<SupabaseProvider>
 					<AuthModalProvider>
-						<Nav />
-						{children}
-						<Toaster
-							position="top-center"
-							reverseOrder={false}
-							containerStyle={{
-								top: '100px',
-							}}
-						/>
-						<Footer />
+						<SearchModalProvider>
+							<Nav />
+							{children}
+							<Toaster
+								position="top-center"
+								reverseOrder={false}
+								containerStyle={{
+									top: '100px',
+								}}
+							/>
+							<Footer />
+						</SearchModalProvider>
 					</AuthModalProvider>
 				</SupabaseProvider>
 			</body>

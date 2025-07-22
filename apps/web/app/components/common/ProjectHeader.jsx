@@ -30,7 +30,7 @@ export default function ProjectsHeader() {
 						visible: { opacity: 1, y: 0 },
 					}}
 					transition={{ duration: 0.6 }}
-					className={`text-[40px] font-extrabold text-white leading-tight ${interTight.className}`}
+					className={`text-3xl md:text-[38px] font-extrabold text-white mb-4 ${interTight.className}`}
 				>
 					What’s Hot Right Now
 				</motion.h2>
