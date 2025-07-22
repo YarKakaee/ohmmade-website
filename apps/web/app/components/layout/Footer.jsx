@@ -32,6 +32,13 @@ export default function Footer() {
 		},
 	];
 
+	const educationLinks = [
+		{ name: 'For Universities', href: '/education' },
+		{ name: 'For Instructors', href: '/education' },
+		{ name: 'Partner With Us', href: '/education' },
+		{ name: 'Student Onboarding', href: '/education' },
+	];
+
 	const communityLinks = [
 		{ name: 'Help Center', href: 'https://support.ohmmade.ca' },
 		{ name: 'Contact Us', href: 'mailto:help@ohmmade.ca' },
@@ -151,7 +158,7 @@ export default function Footer() {
 						</motion.div>
 
 						{/* Right: Navigation Columns */}
-						<div className="grid grid-cols-1 md:grid-cols-3 gap-24">
+						<div className="grid grid-cols-1 md:[grid-template-columns:auto_auto_auto_auto] gap-20">
 							{/* Platform */}
 							<motion.div
 								initial={{ opacity: 0, y: 20 }}
@@ -171,6 +178,38 @@ export default function Footer() {
 											transition={{
 												duration: 0.3,
 												delay: 0.2 + index * 0.05,
+											}}
+										>
+											<Link
+												href={link.href}
+												className="text-white/60 hover:text-white transition-colors duration-200 text-sm"
+											>
+												{link.name}
+											</Link>
+										</motion.li>
+									))}
+								</ul>
+							</motion.div>
+
+							{/* Education */}
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ duration: 0.5, delay: 0.2 }}
+								className="space-y-3"
+							>
+								<h3 className="text-white/90 font-semibold text-sm uppercase tracking-wider">
+									Education
+								</h3>
+								<ul className="space-y-2">
+									{educationLinks.map((link, index) => (
+										<motion.li
+											key={link.name}
+											initial={{ opacity: 0, x: -10 }}
+											animate={{ opacity: 1, x: 0 }}
+											transition={{
+												duration: 0.3,
+												delay: 0.3 + index * 0.05,
 											}}
 										>
 											<Link
