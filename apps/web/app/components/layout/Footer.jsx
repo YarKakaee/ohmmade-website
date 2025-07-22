@@ -23,8 +23,12 @@ export default function Footer() {
 		{ name: 'Explore Projects', href: '/projects' },
 		{ name: 'Submit a Project', href: '/projects/publish' },
 		{
-			name: 'Publishing Rules',
+			name: 'Publishing Guidelines',
 			href: 'https://support.ohmmade.ca/articles/publishing-guidelines',
+		},
+		{
+			name: 'Manifesto',
+			href: '/manifesto',
 		},
 	];
 
@@ -147,7 +151,7 @@ export default function Footer() {
 						</motion.div>
 
 						{/* Right: Navigation Columns */}
-						<div className="grid grid-cols-1 md:grid-cols-3 gap-32">
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-24">
 							{/* Platform */}
 							<motion.div
 								initial={{ opacity: 0, y: 20 }}
