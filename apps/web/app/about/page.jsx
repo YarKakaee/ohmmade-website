@@ -1,594 +1,328 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
-import {
-	motion,
-	useScroll,
-	useTransform,
-	AnimatePresence,
-	useMotionValue,
-	useSpring,
-} from 'framer-motion';
-import Image from 'next/image';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	faGithub,
 	faLinkedin,
 	faInstagram,
 } from '@fortawesome/free-brands-svg-icons';
+import Image from 'next/image';
 
-// --- Slides Data ---
-const slides = [
+// Team data
+const team = [
 	{
-		key: 'origin',
-		type: 'story',
-		heading: 'It Started With a Problem',
-		description:
-			'Too many great electronics projects were going unseen. We built OhmMade to give them the spotlight they deserve.',
-		color: '#27BBFF',
-		textColor: '#ffffff',
-		particleColor: 'rgba(39,187,255,0.7)',
-		bgGlow: 'from-[#27BBFF]/60 via-[#101014]/80 to-[#101014]/90',
-	},
-	{
-		key: 'manifesto',
-		type: 'manifesto',
-		heading: 'We Wanted Something Better',
-		description:
-			'So we made something real - a space to build, share, and actually be seen.',
-		color: '#FFD600',
-		textColor: '#ffffff',
-		particleColor: 'rgba(255,214,0,0.7)',
-		bgGlow: 'from-[#FFD600]/60 via-[#101014]/80 to-[#101014]/90',
-	},
-	// Team slides...
-	{
-		key: 'yar',
-		type: 'team',
 		name: 'Yar',
-		title: 'Founder, Head of Engineering',
-		bio: '2nd year Software Engineering student at Western who lives for building cool stuff - both hardware and software. Built OhmMade from the ground up and leads all things design and dev.',
+		title: 'Founder & Head of Engineering',
+		bio: '2nd year Software Engineering student at Western who lives for building cool stuff — both hardware and software. Built OhmMade from the ground up and leads all design and dev.',
 		img: '/assets/Yar.jpeg',
 		socials: {
-			github: 'https://github.com/YarKakaee',
-			linkedin: 'https://linkedin.com/in/yar-kakaee',
-			instagram: 'https://instagram.com/yar.kakaee',
+			github: 'https://github.com/YarUsername',
+			linkedin: 'https://linkedin.com/in/YarUsername',
+			instagram: 'https://instagram.com/YarUsername',
 		},
-		color: '#27BBFF',
-		textColor: '#ffffff',
-		particleColor: 'rgba(39,187,255,0.7)',
-		bgGlow: 'from-[#27BBFF]/60 via-[#101014]/80 to-[#101014]/90',
 	},
 	{
-		key: 'tristan',
-		type: 'team',
 		name: 'Tristan',
-		title: 'Co-Founder, Head of Finance & Strategy',
-		bio: "Electrical engineering and business at Western + Ivey. He's the strategy guy, making sure OhmMade scales smart and stays sharp.",
+		title: 'Co-Founder & Head of Finance & Strategy',
+		bio: "Electrical engineering and business at Western + Ivey. He's the strategy brain and money guy, making sure OhmMade scales smart and stays sharp.",
 		img: '/assets/Tristan.png',
 		socials: {
-			linkedin: 'https://linkedin.com/in/tristan-biley-81928526a/',
-			instagram: 'https://instagram.com/tristan_biley_/',
-			github: 'https://github.com/TristanBiley',
+			linkedin: 'https://linkedin.com/in/TristanUsername',
 		},
-		color: '#FFD600',
-		textColor: '#ffffff',
-		particleColor: 'rgba(255,214,0,0.7)',
-		bgGlow: 'from-[#FFD600]/60 via-[#101014]/80 to-[#101014]/90',
 	},
 	{
-		key: 'serkan',
-		type: 'team',
 		name: 'Serkan',
-		title: 'Co-Founder, Head of Hardware & Systems',
-		bio: 'Loves turning ideas into working tech. He handles the hardware side - from circuit design to system builds. If it lights up or moves, Serkan is probably behind it.',
+		title: 'Co-Founder & Head of Hardware & Systems',
+		bio: "Loves turning ideas into working tech. He handles the hardware side — from circuit design to system builds. If it lights up, moves, or runs on volts, he's probably behind it.",
 		img: '/assets/Serkan.jpeg',
 		socials: {
-			github: 'https://github.com/serkannur',
-			linkedin: 'https://linkedin.com/in/serkan-nur-32710424a/',
-			instagram: 'https://instagram.com/_serkannur_/',
+			github: 'https://github.com/SerkanUsername',
+			linkedin: 'https://linkedin.com/in/SerkanUsername',
 		},
-		color: '#00C896',
-		textColor: '#ffffff',
-		particleColor: 'rgba(0,200,150,0.7)',
-		bgGlow: 'from-[#00C896]/60 via-[#101014]/80 to-[#101014]/90',
 	},
 	{
-		key: 'andres',
-		type: 'team',
 		name: 'Andres',
 		title: 'Head of Marketing & Outreach',
-		bio: "Andres studies finance but thinks like a brand builder. He's the reason more people hear about OhmMade - shaping how we show up, look, and connect. Outreach, vibes, and everything in between.",
+		bio: "Studies finance but thinks like a brand builder. He's the reason more people hear about OhmMade — shaping how we show up, look, and connect.",
 		img: '/assets/Andres.jpeg',
 		socials: {
-			instagram: 'https://instagram.com/ig.andres',
-			linkedin: 'https://linkedin.com/in/andresholmes/',
+			instagram: 'https://instagram.com/AndresUsername',
+			linkedin: 'https://linkedin.com/in/AndresUsername',
 		},
-		color: '#FFD600',
-		textColor: '#ffffff',
-		particleColor: 'rgba(255,214,0,0.7)',
-		bgGlow: 'from-[#FFD600]/60 via-[#101014]/80 to-[#101014]/90',
-	},
-	// CTA
-	{
-		key: 'cta',
-		type: 'cta',
-		heading: 'Join Us and Build Something Cool',
-		button: { text: 'Start Sharing', link: '/projects/publish' },
-		color: '#27BBFF',
-		textColor: '#ffffff',
-		particleColor: 'rgba(39,187,255,0.7)',
-		bgGlow: 'from-[#27BBFF]/60 via-[#101014]/80 to-[#101014]/90',
 	},
 ];
 
-const socialIconMap = {
-	github: faGithub,
-	linkedin: faLinkedin,
-	instagram: faInstagram,
+// Animated heading component
+const AnimatedHeading = ({ children, className = '' }) => {
+	const ref = useRef(null);
+	const isInView = useInView(ref, { once: true, margin: '-100px' });
+
+	return (
+		<motion.h2
+			ref={ref}
+			className={className}
+			initial={{ opacity: 0, y: 30 }}
+			animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+			transition={{ duration: 0.6, ease: 'easeOut' }}
+		>
+			{children}
+		</motion.h2>
+	);
 };
 
-function Particles({ color, parallaxY }) {
-	const [particles, setParticles] = useState([]);
-	useEffect(() => {
-		const generated = [...Array(18)].map(() => {
-			const size = Math.random() * 4 + 2;
-			const left = Math.random() * 100;
-			const top = Math.random() * 100;
-			const opacity = 0.18 + Math.random() * 0.22;
-			const duration = 2.5 + Math.random() * 1.5;
-			const delay = Math.random();
-			const animateY = Math.random() * 40 - 20;
-			const animateX = Math.random() * 40 - 20;
-			return {
-				size,
-				left,
-				top,
-				opacity,
-				duration,
-				delay,
-				animateY,
-				animateX,
-			};
-		});
-		setParticles(generated);
-	}, [color]);
+// Animated text component
+const AnimatedText = ({ children, className = '', delay = 0.2 }) => {
+	const ref = useRef(null);
+	const isInView = useInView(ref, { once: true, margin: '-50px' });
+
 	return (
-		<div className="absolute inset-0 z-0 pointer-events-none">
-			{particles.map((p, i) => (
+		<motion.p
+			ref={ref}
+			className={className}
+			initial={{ opacity: 0, y: 20 }}
+			animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+			transition={{ duration: 0.6, delay, ease: 'easeOut' }}
+		>
+			{children}
+		</motion.p>
+	);
+};
+
+// Particles background component
+const ParticlesBackground = () => {
+	return (
+		<div className="absolute inset-0 overflow-hidden pointer-events-none">
+			{Array.from({ length: 20 }).map((_, i) => (
 				<motion.div
 					key={i}
-					className="absolute rounded-full"
+					className="absolute w-1 h-1 bg-white/10 rounded-full"
 					style={{
-						width: `${p.size}px`,
-						height: `${p.size}px`,
-						background: color,
-						left: `${p.left}%`,
-						top: `${p.top}%`,
-						opacity: p.opacity,
-						filter: 'blur(1.5px)',
+						left: `${Math.random() * 100}%`,
+						top: `${Math.random() * 100}%`,
 					}}
 					animate={{
-						y: [0, p.animateY + (parallaxY || 0), 0],
-						x: [0, p.animateX, 0],
-						opacity: [p.opacity, p.opacity + 0.1, p.opacity],
+						y: [0, -100, 0],
+						opacity: [0, 0.5, 0],
+						scale: [0, 1, 0],
 					}}
 					transition={{
-						duration: p.duration,
+						duration: 4 + Math.random() * 2,
 						repeat: Infinity,
-						repeatType: 'loop',
-						delay: p.delay,
+						delay: Math.random() * 2,
 					}}
 				/>
 			))}
 		</div>
 	);
-}
+};
 
-// Per-letter heading animation
-function AnimatedHeading({ text, progress, className }) {
+// Section wrapper component
+const Section = ({
+	children,
+	className = '',
+	bgGradient = 'from-blue-900/20 to-purple-900/20',
+}) => {
 	return (
-		<span className={className + ' inline-block'}>
-			{[...text].map((char, i) => (
-				<motion.span
-					key={i}
-					className="inline-block"
-					initial={{ opacity: 0, y: 40 }}
-					animate={{
-						opacity: progress > i / text.length ? 1 : 0,
-						y: progress > i / text.length ? 0 : 40,
-						rotate: progress > i / text.length ? 0 : 8,
-						scale: progress > i / text.length ? 1 : 0.95,
-					}}
-					transition={{
-						delay: i * 0.03,
-						duration: 0.5,
-						type: 'spring',
-						stiffness: 200,
-					}}
-				>
-					{char === ' ' ? '\u00A0' : char}
-				</motion.span>
-			))}
-		</span>
-	);
-}
-
-// Typewriter effect for manifesto
-function Typewriter({ text, className }) {
-	const [displayed, setDisplayed] = useState('');
-	useEffect(() => {
-		setDisplayed('');
-		let i = 0;
-		const interval = setInterval(() => {
-			setDisplayed((prev) => text.slice(0, i + 1));
-			i++;
-			if (i >= text.length) clearInterval(interval);
-		}, 18);
-		return () => clearInterval(interval);
-	}, [text]);
-	return <span className={className}>{displayed}</span>;
-}
-
-export default function AboutPage() {
-	const containerRef = useRef(null);
-	const { scrollYProgress } = useScroll({ target: containerRef });
-	const slideCount = slides.length;
-
-	// For background color transition
-	const bg = useTransform(
-		scrollYProgress,
-		slides.map((_, i) => i / (slideCount - 1)),
-		slides.map(
-			(slide) =>
-				`radial-gradient(ellipse at center, ${slide.color}33 0%, #101014 55%)`
-		)
-	);
-
-	// Parallax for particles and images
-	const parallaxY = useTransform(scrollYProgress, [0, 1], [-60, 60]);
-
-	// Calculate current slide index
-	const [currentSlide, setCurrentSlide] = useState(0);
-	useEffect(() => {
-		const unsub = scrollYProgress.on('change', (v) => {
-			const idx = Math.min(
-				slideCount - 1,
-				Math.max(0, Math.floor(v * slideCount))
-			);
-			setCurrentSlide(idx);
-		});
-		return () => unsub();
-	}, [scrollYProgress, slideCount]);
-
-	const slide = slides[currentSlide];
-
-	// Calculate local progress for the current slide
-	const slideStart = currentSlide / slideCount;
-	const slideEnd = (currentSlide + 1) / slideCount;
-	const rawProgress = useTransform(
-		scrollYProgress,
-		[slideStart, slideEnd],
-		[0, 1]
-	);
-	const [clampedProgress, setClampedProgress] = useState(0);
-	useEffect(() => {
-		const unsub = rawProgress.on('change', (v) => {
-			if (v < 0.2)
-				setClampedProgress(Math.max(0, v * 5)); // Animate in
-			else if (v > 0.8)
-				setClampedProgress(Math.max(0, (1 - v) * 5)); // Animate out
-			else setClampedProgress(1); // Fully visible
-		});
-		return () => unsub();
-	}, [rawProgress]);
-
-	return (
-		<div
-			ref={containerRef}
-			className="relative w-full bg-[#101014]"
-			style={{ height: `${slideCount * 100}vh` }}
+		<section
+			className={`min-h-screen flex items-center justify-center relative overflow-hidden ${className}`}
 		>
-			{/* Sticky viewport container */}
-			<div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
-				{/* Background that transitions between colors */}
-				<motion.div
-					className="absolute inset-0 z-0"
-					style={{
-						background: bg,
-						filter: 'blur(60px)',
-						opacity: 1,
-					}}
-				/>
-				{/* Parallax Particles background for all slides */}
-				<div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-					<Particles
-						color={slide.particleColor}
-						parallaxY={parallaxY}
+			{/* Background gradient */}
+			<div
+				className={`absolute inset-0 bg-gradient-to-br ${bgGradient}`}
+			/>
+
+			{/* Particles */}
+			<ParticlesBackground />
+
+			{/* Content */}
+			<div className="relative z-10 w-full max-w-6xl mx-auto px-6">
+				{children}
+			</div>
+		</section>
+	);
+};
+
+// Team member card component
+const TeamCard = ({ member }) => {
+	const ref = useRef(null);
+	const isInView = useInView(ref, { once: true, margin: '-50px' });
+
+	return (
+		<motion.div
+			ref={ref}
+			className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10"
+			initial={{ opacity: 0, y: 30 }}
+			animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+			transition={{ duration: 0.6, ease: 'easeOut' }}
+			whileHover={{ y: -5, scale: 1.02 }}
+		>
+			<div className="flex flex-col items-center text-center">
+				{/* Image */}
+				<div className="relative w-24 h-24 mb-4">
+					<Image
+						src={member.img}
+						alt={member.name}
+						fill
+						className="object-cover rounded-full"
 					/>
 				</div>
-				{/* Content container */}
-				<div className="relative z-50 w-full h-full flex items-center justify-center">
-					<AnimatePresence mode="wait">
-						{slide.type === 'story' && (
-							<motion.div
-								key={slide.key}
-								initial={{
-									opacity: 0,
-									y: 40,
-									scale: 0.98,
-									rotateY: 20,
-								}}
-								animate={{
-									opacity: 1,
-									y: 0,
-									scale: 1,
-									rotateY: 0,
-								}}
-								exit={{
-									opacity: 0,
-									y: -40,
-									scale: 0.98,
-									rotateY: -20,
-								}}
-								transition={{
-									duration: 0.9,
-									ease: 'anticipate',
-								}}
-								className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl flex flex-col items-center justify-center text-center px-4"
-								style={{
-									pointerEvents: 'auto',
-									color: slide.textColor,
-								}}
+
+				{/* Info */}
+				<h3 className="text-xl font-bold text-white mb-1">
+					{member.name}
+				</h3>
+				<p className="text-sm text-blue-300 mb-3">{member.title}</p>
+				<p className="text-sm text-white/80 mb-4 leading-relaxed">
+					{member.bio}
+				</p>
+
+				{/* Social links */}
+				<div className="flex gap-3">
+					{Object.entries(member.socials).map(([key, url]) => {
+						const iconMap = {
+							github: faGithub,
+							linkedin: faLinkedin,
+							instagram: faInstagram,
+						};
+						const icon = iconMap[key];
+						return (
+							<motion.a
+								key={key}
+								href={url}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-blue-400 transition-colors"
+								whileHover={{ scale: 1.1 }}
+								whileTap={{ scale: 0.95 }}
 							>
-								<motion.h2
-									className="text-4xl sm:text-5xl font-extrabold drop-shadow-lg leading-tight text-white mb-6"
-									initial={{ opacity: 0, y: 40 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{
-										delay: 0.15,
-										duration: 0.7,
-										ease: 'anticipate',
-									}}
-								>
-									{slide.heading}
-								</motion.h2>
-								<motion.p
-									className="text-lg md:text-xl mb-10 max-w-xl text-white/90"
-									initial={{ opacity: 0, y: 20 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{
-										delay: 0.3,
-										duration: 0.7,
-										ease: 'anticipate',
-									}}
-								>
-									{slide.description}
-								</motion.p>
-							</motion.div>
-						)}
-						{slide.type === 'manifesto' && (
-							<motion.div
-								key={slide.key}
-								initial={{
-									opacity: 0,
-									y: 40,
-									scale: 0.98,
-									rotateY: 20,
-								}}
-								animate={{
-									opacity: 1,
-									y: 0,
-									scale: 1,
-									rotateY: 0,
-								}}
-								exit={{
-									opacity: 0,
-									y: -40,
-									scale: 0.98,
-									rotateY: -20,
-								}}
-								transition={{
-									duration: 0.9,
-									ease: 'anticipate',
-								}}
-								className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl flex flex-col items-center justify-center text-center px-4"
-								style={{
-									pointerEvents: 'auto',
-									color: slide.textColor,
-								}}
-							>
-								<motion.h2
-									className="text-4xl sm:text-5xl font-extrabold drop-shadow-lg leading-tight text-white mb-6"
-									initial={{ opacity: 0, y: 40 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{
-										delay: 0.15,
-										duration: 0.7,
-										ease: 'anticipate',
-									}}
-								>
-									{slide.heading}
-								</motion.h2>
-								<Typewriter
-									text={slide.description}
-									className="text-lg md:text-xl mb-10 max-w-xl block"
+								<FontAwesomeIcon
+									icon={icon}
+									className="text-sm"
 								/>
-							</motion.div>
-						)}
-						{slide.type === 'team' && (
-							<motion.div
-								key={slide.key}
-								initial={{
-									opacity: 0,
-									y: 40,
-									scale: 0.98,
-									rotateY: 20,
-								}}
-								animate={{
-									opacity: 1,
-									y: 0,
-									scale: 1,
-									rotateY: 0,
-								}}
-								exit={{
-									opacity: 0,
-									y: -40,
-									scale: 0.98,
-									rotateY: -20,
-								}}
-								transition={{
-									duration: 0.9,
-									ease: 'anticipate',
-								}}
-								className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl flex flex-col md:flex-row items-center justify-center px-4"
-								style={{
-									pointerEvents: 'auto',
-									color: slide.textColor,
-								}}
-							>
-								{/* Left: Image with blurred glow */}
-								<motion.div
-									className="relative w-full md:w-1/2 flex justify-center items-center mb-10 md:mb-0"
-									style={{ perspective: 900 }}
-								>
-									<motion.div
-										transition={{
-											duration: 1.2,
-											ease: 'easeInOut',
-											repeat: Infinity,
-											repeatType: 'reverse',
-										}}
-										className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 w-64 h-64 md:w-96 md:h-96 overflow-hidden blur-2xl opacity-60"
-										style={{
-											filter: 'brightness(1.4) blur(100px)',
-										}}
-									>
-										<Image
-											src={slide.img}
-											alt={slide.name + ' blurred'}
-											fill
-											className="object-cover"
-										/>
-									</motion.div>
-									<motion.div
-										initial={{
-											opacity: 1,
-											scale: 1,
-											rotateY: 15,
-										}}
-										transition={{
-											duration: 0.7,
-											ease: 'anticipate',
-										}}
-										whileHover={{
-											scale: 1.08,
-											rotateY: 10,
-										}}
-										className="relative z-10 w-40 h-40 md:w-90 md:h-90 rounded-2xl overflow-hidden shadow-2xl"
-									>
-										<Image
-											src={slide.img}
-											alt={slide.name}
-											fill
-											className="object-cover"
-										/>
-									</motion.div>
-								</motion.div>
-								{/* Right: Text */}
-								<motion.div
-									initial={{ opacity: 0, x: 60 }}
-									animate={{ opacity: 1, x: 0 }}
-									transition={{
-										duration: 0.7,
-										ease: 'anticipate',
-									}}
-									className="w-full md:w-1/2 px-8 md:px-16 flex flex-col items-center md:items-start text-center md:text-left"
-								>
-									<h2 className="text-3xl md:text-4xl font-extrabold mb-3 drop-shadow-lg">
-										{slide.name}
-									</h2>
-									<h3 className="text-lg md:text-xl font-semibold mb-4">
-										{slide.title}
-									</h3>
-									<p className="text-white/80 text-base mb-6 max-w-xl">
-										{slide.bio}
-									</p>
-									<div className="flex gap-5 mt-2">
-										{Object.entries(slide.socials).map(
-											([key, url]) => {
-												const icon = socialIconMap[key];
-												return (
-													<motion.a
-														key={key}
-														href={url}
-														target="_blank"
-														rel="noopener noreferrer"
-														whileHover={{
-															scale: 1.18,
-															color: '#27BBFF',
-															filter: 'drop-shadow(0 0 8px #27BBFF)',
-														}}
-														whileTap={{
-															scale: 0.95,
-														}}
-														className="text-white/70 hover:text-[#27BBFF] text-2xl transition-colors"
-													>
-														<FontAwesomeIcon
-															icon={icon}
-														/>
-													</motion.a>
-												);
-											}
-										)}
-									</div>
-								</motion.div>
-							</motion.div>
-						)}
-						{slide.type === 'cta' && (
-							<motion.div
-								key={slide.key}
-								initial={{ opacity: 0, scale: 0.95 }}
-								animate={{ opacity: 1, scale: 1 }}
-								exit={{ opacity: 0, scale: 0.95 }}
-								transition={{
-									duration: 0.7,
-									ease: 'anticipate',
-								}}
-								className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl flex flex-col items-center justify-center text-center px-4"
-								style={{
-									pointerEvents: 'auto',
-									color: slide.textColor,
-								}}
-							>
-								<motion.h2
-									className="text-4xl sm:text-5xl font-extrabold mb-8 drop-shadow-lg leading-tight"
-									initial={{ opacity: 0, y: 40 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{
-										delay: 0.15,
-										duration: 0.7,
-										ease: 'anticipate',
-									}}
-								>
-									{slide.heading}
-								</motion.h2>
-								<motion.a
-									href={slide.button.link}
-									whileHover={{
-										scale: 1.08,
-										boxShadow: '0 0 32px #27BBFF',
-									}}
-									whileTap={{ scale: 0.97 }}
-									className="inline-block px-8 py-4 rounded-2xl font-bold text-md bg-[#27BBFF] text-[#101014] shadow-lg transition-all mb-8"
-								>
-									{slide.button.text}
-								</motion.a>
-							</motion.div>
-						)}
-					</AnimatePresence>
+							</motion.a>
+						);
+					})}
 				</div>
 			</div>
+		</motion.div>
+	);
+};
+
+export default function AboutPage() {
+	return (
+		<div className="bg-black text-white">
+			{/* The Problem */}
+			<Section bgGradient="from-red-900/20 to-orange-900/20">
+				<div className="text-center max-w-4xl mx-auto">
+					<AnimatedHeading className="text-3xl md:text-4xl font-bold text-white mb-6">
+						We were tired of school projects going nowhere.
+					</AnimatedHeading>
+					<AnimatedText className="text-lg md:text-xl text-white/80 leading-relaxed">
+						Every year, thousands of students spend months building
+						something real. Circuits. Sensors. Code. Guts. Grit. All
+						of it.
+					</AnimatedText>
+				</div>
+			</Section>
+
+			{/* The Cycle */}
+			<Section bgGradient="from-yellow-900/20 to-orange-900/20">
+				<div className="text-center max-w-4xl mx-auto">
+					<AnimatedHeading className="text-3xl md:text-4xl font-bold text-white mb-6">
+						Build → Present → Vanish
+					</AnimatedHeading>
+					<AnimatedText className="text-lg md:text-xl text-white/80 leading-relaxed mb-4">
+						They stay up late, debug, redesign, test again. They
+						present it. Maybe post it. Then it disappears.
+					</AnimatedText>
+					<AnimatedText
+						className="text-lg md:text-xl text-white/80 leading-relaxed"
+						delay={0.4}
+					>
+						The prototype gets boxed. The files get lost. And the
+						work? Forgotten.
+					</AnimatedText>
+				</div>
+			</Section>
+
+			{/* Breaking That Cycle */}
+			<Section bgGradient="from-green-900/20 to-blue-900/20">
+				<div className="text-center max-w-4xl mx-auto">
+					<AnimatedHeading className="text-3xl md:text-4xl font-bold text-white mb-6">
+						We made OhmMade to break that cycle.
+					</AnimatedHeading>
+					<AnimatedText className="text-lg md:text-xl text-white/80 leading-relaxed">
+						That's how it's always been. Build → Present → Vanish.
+						Next year, the cycle starts over.
+					</AnimatedText>
+				</div>
+			</Section>
+
+			{/* The Manifesto */}
+			<Section bgGradient="from-blue-900/20 to-purple-900/20">
+				<div className="text-center max-w-5xl mx-auto">
+					<AnimatedHeading className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8">
+						Because student projects deserve more than a slide deck.
+					</AnimatedHeading>
+					<div className="grid md:grid-cols-2 gap-8 text-left">
+						<AnimatedText
+							className="text-lg text-white/90 leading-relaxed"
+							delay={0.3}
+						>
+							This platform is for the builders — the ones who
+							spent 4 months wiring a solution that no one else
+							saw. It's for that first-year team who built a laser
+							tripwire and had nowhere to actually share how it
+							worked.
+						</AnimatedText>
+						<AnimatedText
+							className="text-lg text-white/90 leading-relaxed"
+							delay={0.5}
+						>
+							It's for the engineering labs, the class
+							competitions, the ideas that only exist on a PDF
+							now. We're here to give those projects a proper
+							home. To let students publish, showcase, and inspire
+							— not just present and forget.
+						</AnimatedText>
+					</div>
+				</div>
+			</Section>
+
+			{/* Meet the Team */}
+			<Section bgGradient="from-purple-900/20 to-pink-900/20">
+				<div className="text-center">
+					<AnimatedHeading className="text-3xl md:text-4xl font-bold text-white mb-12">
+						Meet the Team
+					</AnimatedHeading>
+					<div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+						{team.map((member, index) => (
+							<TeamCard key={member.name} member={member} />
+						))}
+					</div>
+				</div>
+			</Section>
+
+			{/* CTA */}
+			<Section bgGradient="from-blue-900/20 to-cyan-900/20">
+				<div className="text-center max-w-4xl mx-auto">
+					<AnimatedHeading className="text-3xl md:text-4xl font-bold text-white mb-6">
+						Welcome to OhmMade
+					</AnimatedHeading>
+					<AnimatedText className="text-lg md:text-xl text-white/80 mb-8">
+						Where student projects finally live on.
+					</AnimatedText>
+					<motion.button
+						className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+						whileHover={{ scale: 1.05 }}
+						whileTap={{ scale: 0.95 }}
+					>
+						Start Building
+					</motion.button>
+				</div>
+			</Section>
 		</div>
 	);
 }

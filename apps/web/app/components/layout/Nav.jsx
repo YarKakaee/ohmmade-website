@@ -257,11 +257,11 @@ export default function Nav() {
 
 								{/* About */}
 								<Link
-									href="/about"
+									href="/manifesto"
 									className="transition relative z-10 px-2 py-2"
 									onMouseEnter={handleLinkHover}
 								>
-									About
+									Manifesto
 								</Link>
 
 								<div className="relative z-10">
