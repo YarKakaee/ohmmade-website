@@ -1,0 +1,36 @@
+{
+	"name": "admin",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --turbopack",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^6.7.2",
+		"@fortawesome/free-solid-svg-icons": "^6.7.2",
+		"@fortawesome/react-fontawesome": "^0.2.2",
+		"@ohmmade/providers": "workspace:*",
+		"@ohmmade/tailwind-config": "workspace:*",
+		"@ohmmade/ui": "workspace:*",
+		"@prisma/client": "^6.12.0",
+		"@radix-ui/react-dialog": "^1.1.7",
+		"@supabase/auth-helpers-nextjs": "^0.10.0",
+		"@supabase/auth-helpers-react": "^0.5.0",
+		"@supabase/ssr": "^0.6.1",
+		"@supabase/supabase-js": "^2.49.4",
+		"framer-motion": "^12.6.2",
+		"next": "15.2.4",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"react-hot-toast": "^2.5.2"
+	},
+	"devDependencies": {
+		"@tailwindcss/postcss": "^4",
+		"autoprefixer": "^10.4.21",
+		"postcss": "^8.5.6",
+		"tailwindcss": "^4.1.11"
+	}
+}
