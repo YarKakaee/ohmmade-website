@@ -12,6 +12,7 @@ import {
 	faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+
 import Image from 'next/image';
 
 const AdminAuthModal = ({ isOpen, onClose, onSuccess }) => {
@@ -73,32 +74,27 @@ const AdminAuthModal = ({ isOpen, onClose, onSuccess }) => {
 		setError(null);
 
 		try {
-			const { data, error } = await supabase.auth.signInWithPassword({
-				email,
-				password,
+			const response = await fetch('/api/auth/admin-login-prisma', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email, password }),
 			});
 
-			if (error) {
-				setError(error.message);
+			const result = await response.json();
+
+			if (!response.ok) {
+				setError(result.error || 'Authentication failed');
 				setLoading(false);
 				return;
 			}
 
-			// Check if user is admin
-			if (
-				data.user?.email === 'info@ohmmade.ca' ||
-				data.user?.email === 'admin@ohmmade.ca'
-			) {
-				onSuccess(data.user);
-				onClose();
-			} else {
-				setError(
-					'Access denied. Only admin users can access this area.'
-				);
-				// Sign out the non-admin user
-				await supabase.auth.signOut();
-			}
+			// Pass admin data to parent component
+			onSuccess(result);
+			onClose();
 		} catch (err) {
+			console.error('Login error:', err);
 			setError('An unexpected error occurred');
 		} finally {
 			setLoading(false);
@@ -259,7 +255,7 @@ const AdminAuthModal = ({ isOpen, onClose, onSuccess }) => {
 											disabled={loading}
 											whileHover={{ scale: 1.02 }}
 											whileTap={{ scale: 0.98 }}
-											className="mt-1 cursor-pointer w-full bg-[#27BBFF] text-[#101014] font-semibold py-2 px-4 rounded-lg hover:bg-[#1ea8e6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#27BBFF]/20"
+											className="mb-2 mt-1 cursor-pointer w-full bg-[#27BBFF] text-[#101014] font-semibold py-2 px-4 rounded-lg hover:bg-[#1ea8e6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#27BBFF]/20"
 										>
 											{loading
 												? 'Signing In...'

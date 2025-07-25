@@ -217,3 +217,114 @@ model DiscussionView {
 
   @@unique([userId, discussionId]) // Prevent multiple views per user
 }
+
+// Admin System Models
+enum AdminRole {
+  SUPER_ADMIN    // Full access to everything
+  ADMIN          // Can manage projects, users, content
+  MODERATOR      // Can moderate discussions, approve projects
+  SUPPORT        // Can view and respond to support requests
+}
+
+enum AdminAction {
+  // Project Management
+  PROJECT_APPROVED
+  PROJECT_REJECTED
+  PROJECT_FEATURED
+  PROJECT_UNFEATURED
+  PROJECT_ARCHIVED
+  PROJECT_RESTORED
+  
+  // User Management
+  USER_SUSPENDED
+  USER_UNSUSPENDED
+  USER_DELETED
+  USER_ROLE_CHANGED
+  WATTS_AWARDED
+  WATTS_REMOVED
+  
+  // Content Management
+  CONTENT_CREATED
+  CONTENT_EDITED
+  CONTENT_DELETED
+  CONTENT_PUBLISHED
+  CONTENT_UNPUBLISHED
+  
+  // Discussion Management
+  DISCUSSION_APPROVED
+  DISCUSSION_REJECTED
+  DISCUSSION_CLOSED
+  DISCUSSION_REOPENED
+  ANSWER_APPROVED
+  ANSWER_REJECTED
+  
+  // System Management
+  SETTINGS_CHANGED
+  BACKUP_CREATED
+  MAINTENANCE_MODE_TOGGLED
+  
+  // Admin Management
+  ADMIN_ADDED
+  ADMIN_REMOVED
+  ADMIN_ROLE_CHANGED
+}
+
+model Admin {
+  id          String    @id @default(uuid())
+  email       String    @unique
+  name        String
+  role        AdminRole @default(SUPPORT)
+  isActive    Boolean   @default(true)
+  lastLoginAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Audit trail
+  actions     AdminActionLog[]
+  
+  // Profile info
+  avatar      String?
+  bio         String?
+  phone       String?
+  
+  // Permissions (for future granular control)
+  permissions AdminPermission[]
+  
+  @@index([email])
+  @@index([role])
+  @@index([isActive])
+}
+
+model AdminPermission {
+  id        String   @id @default(cuid())
+  adminId   String
+  resource  String   // e.g., "projects", "users", "discussions"
+  action    String   // e.g., "read", "write", "delete", "approve"
+  granted   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  
+  @@unique([adminId, resource, action])
+  @@index([adminId])
+}
+
+model AdminActionLog {
+  id          String      @id @default(cuid())
+  adminId     String
+  action      AdminAction
+  resourceType String     // e.g., "Project", "User", "Discussion"
+  resourceId  String?     // ID of the affected resource
+  details     Json?       // Additional details about the action
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime    @default(now())
+  
+  admin       Admin       @relation(fields: [adminId], references: [id])
+  
+  @@index([adminId])
+  @@index([action])
+  @@index([resourceType])
+  @@index([createdAt])
+  @@index([adminId, createdAt])
+}
