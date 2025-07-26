@@ -124,12 +124,12 @@ const ProjectsList = ({ currentAdmin, onBack }) => {
 				initial="hidden"
 				animate="visible"
 				variants={containerVariants}
-				className="min-h-screen bg-[#101014] py-10"
+				className="min-h-screen bg-[#101014] py-6 md:py-10"
 			>
 				{/* Header */}
-				<motion.div variants={itemVariants} className="mb-8">
-					<div className="flex items-center justify-between mb-6">
-						<div className="flex items-center gap-4">
+				<motion.div variants={itemVariants} className="mb-6 md:mb-8">
+					<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 md:mb-6">
+						<div className="flex items-center gap-3 md:gap-4">
 							<button
 								onClick={onBack}
 								className="p-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white hover:bg-gray-700/50 hover:border-gray-600/50 transition-all duration-300"
@@ -137,21 +137,21 @@ const ProjectsList = ({ currentAdmin, onBack }) => {
 								<FontAwesomeIcon icon={faArrowLeft} />
 							</button>
 							<div>
-								<h1 className="text-3xl font-bold text-white">
+								<h1 className="text-2xl md:text-3xl font-bold text-white">
 									Projects Management
 								</h1>
-								<p className="text-gray-400">
+								<p className="text-sm md:text-base text-gray-400">
 									Manage and view all projects in the system
 								</p>
 							</div>
 						</div>
-						<div className="flex items-center gap-4">
+						<div className="flex items-center justify-center md:justify-end">
 							<Image
 								src="/assets/OMAdminLogoBanner.png"
 								alt="OhmMade Admin"
 								width={200}
 								height={40}
-								className="h-10 w-auto"
+								className="h-8 md:h-10 w-auto"
 							/>
 						</div>
 					</div>
@@ -159,7 +159,7 @@ const ProjectsList = ({ currentAdmin, onBack }) => {
 
 				{/* Search and Filter */}
 				<motion.div variants={itemVariants} className="mb-6">
-					<div className="flex items-center gap-4">
+					<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
 						<div className="relative flex-1">
 							<FontAwesomeIcon
 								icon={faSearch}
@@ -173,13 +173,13 @@ const ProjectsList = ({ currentAdmin, onBack }) => {
 								className="w-full pl-10 pr-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white text-sm focus:outline-none focus:border-[#27BBFF]/50 focus:ring-1 focus:ring-[#27BBFF]/20 transition-all"
 							/>
 						</div>
-						<div className="relative">
+						<div className="relative flex-1 sm:flex-none">
 							<select
 								value={filterCategory}
 								onChange={(e) =>
 									setFilterCategory(e.target.value)
 								}
-								className="px-4 py-3 pr-10 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white text-sm focus:outline-none focus:border-[#27BBFF]/50 focus:ring-1 focus:ring-[#27BBFF]/20 transition-all appearance-none w-full"
+								className="w-full px-4 py-3 pr-10 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white text-sm focus:outline-none focus:border-[#27BBFF]/50 focus:ring-1 focus:ring-[#27BBFF]/20 transition-all appearance-none"
 								style={{ backgroundImage: 'none' }}
 							>
 								<option value="all">All Categories</option>
@@ -198,13 +198,13 @@ const ProjectsList = ({ currentAdmin, onBack }) => {
 								/>
 							</div>
 						</div>
-						<div className="relative">
+						<div className="relative flex-1 sm:flex-none">
 							<select
 								value={filterStatus}
 								onChange={(e) =>
 									setFilterStatus(e.target.value)
 								}
-								className="px-4 py-3 pr-10 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white text-sm focus:outline-none focus:border-[#27BBFF]/50 focus:ring-1 focus:ring-[#27BBFF]/20 transition-all appearance-none w-full"
+								className="w-full px-4 py-3 pr-10 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white text-sm focus:outline-none focus:border-[#27BBFF]/50 focus:ring-1 focus:ring-[#27BBFF]/20 transition-all appearance-none"
 								style={{ backgroundImage: 'none' }}
 							>
 								<option value="all">All Status</option>
@@ -273,7 +273,7 @@ const ProjectsList = ({ currentAdmin, onBack }) => {
 											initial="hidden"
 											animate="visible"
 											transition={{ delay: index * 0.05 }}
-											className="group flex items-center gap-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700/20 hover:border-gray-600/40 hover:bg-gray-800/50 transition-all duration-200"
+											className="group flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700/20 hover:border-gray-600/40 hover:bg-gray-800/50 transition-all duration-200"
 										>
 											<div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-700/50 flex-shrink-0">
 												{project.thumbnailUrl ? (

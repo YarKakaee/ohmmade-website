@@ -261,26 +261,29 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 					className="py-10"
 				>
 					{/* Header with Logo */}
-					<motion.div variants={itemVariants} className="mb-8">
-						<div className="flex items-center justify-between mb-4">
-							<div className="flex items-center gap-4">
+					<motion.div
+						variants={itemVariants}
+						className="mb-6 md:mb-8"
+					>
+						<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+							<div className="flex items-center gap-3 md:gap-4">
 								<Image
 									src="/assets/OMAdminLogoBanner.png"
 									alt="OhmMade Admin"
 									width={1301}
 									height={177}
-									className="h-8 w-auto"
+									className="h-6 md:h-8 w-auto"
 								/>
-								<div className="h-8 w-px bg-gradient-to-b from-transparent via-gray-600 to-transparent"></div>
+								<div className="hidden md:block h-8 w-px bg-gradient-to-b from-transparent via-gray-600 to-transparent"></div>
 
-								<p className="text-gray-400 text-lg mt-1.5">
+								<p className="text-gray-400 text-base md:text-lg mt-1.5">
 									Welcome back, {currentAdmin?.name}
 								</p>
 							</div>
 
-							<div className="flex items-center gap-4">
+							<div className="flex items-center gap-3 md:gap-4">
 								<div
-									className={`px-3 py-1 rounded-full text-sm font-medium border ${getRoleBgColor(currentAdmin?.role)} ${getRoleColor(currentAdmin?.role)}`}
+									className={`px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium border ${getRoleBgColor(currentAdmin?.role)} ${getRoleColor(currentAdmin?.role)}`}
 								>
 									{currentAdmin?.role.replace('_', ' ')}
 								</div>
@@ -308,11 +311,11 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 					{/* Stats Cards */}
 					<motion.div
 						variants={itemVariants}
-						className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+						className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8"
 					>
 						<motion.div
 							variants={cardVariants}
-							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-6 hover:border-[#27BBFF]/30 transition-all duration-300 cursor-pointer"
+							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-4 md:p-6 hover:border-[#27BBFF]/30 transition-all duration-300 cursor-pointer"
 							onClick={() => setView('users')}
 						>
 							<div className="absolute inset-0 bg-gradient-to-r from-[#27BBFF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -321,7 +324,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 									<p className="text-gray-400 text-sm font-medium mb-1">
 										Total Users
 									</p>
-									<p className="text-3xl font-bold text-white">
+									<p className="text-2xl md:text-3xl font-bold text-white">
 										{adminStats?.totalUsers || 0}
 									</p>
 									<p className="text-xs text-gray-400 mt-1">
@@ -339,7 +342,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 
 						<motion.div
 							variants={cardVariants}
-							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-6 hover:border-green-400/30 transition-all duration-300 cursor-pointer"
+							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-4 md:p-6 hover:border-green-400/30 transition-all duration-300 cursor-pointer"
 							onClick={() => setView('projects')}
 						>
 							<div className="absolute inset-0 bg-gradient-to-r from-green-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -348,7 +351,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 									<p className="text-gray-400 text-sm font-medium mb-1">
 										Total Projects
 									</p>
-									<p className="text-3xl font-bold text-white">
+									<p className="text-2xl md:text-3xl font-bold text-white">
 										{adminStats?.totalProjects || 0}
 									</p>
 									<p className="text-xs text-gray-400 mt-1">
@@ -366,7 +369,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 
 						<motion.div
 							variants={cardVariants}
-							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-6 hover:border-purple-400/30 transition-all duration-300 cursor-pointer"
+							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-4 md:p-6 hover:border-purple-400/30 transition-all duration-300 cursor-pointer"
 							onClick={() => setView('admins')}
 						>
 							<div className="absolute inset-0 bg-gradient-to-r from-purple-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -375,7 +378,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 									<p className="text-gray-400 text-sm font-medium mb-1">
 										Active Admins
 									</p>
-									<p className="text-3xl font-bold text-white">
+									<p className="text-2xl md:text-3xl font-bold text-white">
 										{adminStats?.activeAdminsCount || 0}
 									</p>
 									<p className="text-xs text-gray-400 mt-1">
@@ -393,7 +396,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 
 						<motion.div
 							variants={cardVariants}
-							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-6 hover:border-blue-400/30 transition-all duration-300"
+							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-4 md:p-6 hover:border-blue-400/30 transition-all duration-300"
 						>
 							<div className="absolute inset-0 bg-gradient-to-r from-blue-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 							<div className="relative flex items-center justify-between">
@@ -401,7 +404,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 									<p className="text-gray-400 text-sm font-medium mb-1">
 										Admin Activities This Week
 									</p>
-									<p className="text-3xl font-bold text-white">
+									<p className="text-2xl md:text-3xl font-bold text-white">
 										{adminStats?.actionsThisWeek || 0}
 									</p>
 								</div>
@@ -420,9 +423,9 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 						variants={itemVariants}
 						className="bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 overflow-hidden"
 					>
-						<div className="p-6 border-b border-gray-700/30">
-							<div className="flex items-center justify-between mb-4">
-								<h2 className="text-xl font-semibold text-white flex items-center gap-3">
+						<div className="p-4 md:p-6 border-b border-gray-700/30">
+							<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+								<h2 className="text-lg md:text-xl font-semibold text-white flex items-center gap-3">
 									<div className="p-2 bg-[#27BBFF]/10 rounded-lg">
 										<FontAwesomeIcon
 											icon={faHistory}
@@ -433,8 +436,8 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 								</h2>
 
 								{/* Search and Filter */}
-								<div className="flex items-center gap-3">
-									<div className="relative">
+								<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+									<div className="relative flex-1">
 										<FontAwesomeIcon
 											icon={faSearch}
 											className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"
@@ -446,17 +449,17 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 											onChange={(e) =>
 												setSearchTerm(e.target.value)
 											}
-											className="pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white text-sm focus:outline-none focus:border-[#27BBFF]/50 focus:ring-1 focus:ring-[#27BBFF]/20 transition-all"
+											className="w-full pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white text-sm focus:outline-none focus:border-[#27BBFF]/50 focus:ring-1 focus:ring-[#27BBFF]/20 transition-all"
 										/>
 									</div>
 
-									<div className="relative">
+									<div className="relative flex-1 sm:flex-none">
 										<select
 											value={filterRole}
 											onChange={(e) =>
 												setFilterRole(e.target.value)
 											}
-											className="px-4 py-2 pr-10 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white text-sm focus:outline-none focus:border-[#27BBFF]/50 focus:ring-1 focus:ring-[#27BBFF]/20 transition-all appearance-none w-full"
+											className="w-full px-4 py-2 pr-10 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white text-sm focus:outline-none focus:border-[#27BBFF]/50 focus:ring-1 focus:ring-[#27BBFF]/20 transition-all appearance-none"
 											style={{ backgroundImage: 'none' }}
 										>
 											<option value="all">
@@ -484,7 +487,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 							</div>
 						</div>
 
-						<div className="p-6">
+						<div className="p-4 md:p-6">
 							<AnimatePresence mode="wait">
 								{filteredActivities.length === 0 ? (
 									<motion.div
@@ -527,7 +530,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 													transition={{
 														delay: index * 0.05,
 													}}
-													className="group flex items-center gap-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700/20 hover:border-gray-600/40 hover:bg-gray-800/50 transition-all duration-200"
+													className="group flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700/20 hover:border-gray-600/40 hover:bg-gray-800/50 transition-all duration-200"
 												>
 													<div
 														className={`p-3 rounded-lg ${getActionBgColor(activity.action, activity.details)} ${getActionColor(activity.action, activity.details)}`}
@@ -594,9 +597,9 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 					{currentAdmin?.role === 'SUPER_ADMIN' && (
 						<motion.div
 							variants={itemVariants}
-							className="mt-8 bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-6"
+							className="mt-6 md:mt-8 bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-4 md:p-6"
 						>
-							<h2 className="text-xl font-semibold mb-6 text-white flex items-center gap-3">
+							<h2 className="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-white flex items-center gap-3">
 								<div className="p-2 bg-[#27BBFF]/10 rounded-lg">
 									<FontAwesomeIcon
 										icon={faCog}
@@ -605,20 +608,20 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 								</div>
 								Quick Actions
 							</h2>
-							<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
 								<button
 									onClick={() => setShowAddModal(true)}
-									className="group p-4 bg-gradient-to-r from-[#27BBFF] to-[#1ea8e6] text-[#101014] rounded-lg font-medium hover:from-[#1ea8e6] hover:to-[#27BBFF] transition-all duration-300 transform hover:scale-105"
+									className="group p-3 bg-gradient-to-r from-[#27BBFF] to-[#1ea8e6] text-[#101014] rounded-lg font-medium hover:from-[#1ea8e6] hover:to-[#27BBFF] transition-all duration-300 transform hover:scale-105 cursor-pointer"
 								>
 									Add New Admin
 								</button>
 								<button
 									onClick={onViewAdmins}
-									className="group p-4 bg-gray-800/50 border border-gray-700/50 rounded-lg font-medium text-white hover:bg-gray-700/50 hover:border-gray-600/50 transition-all duration-300 transform hover:scale-105"
+									className="group p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg font-medium text-white hover:bg-gray-700/50 hover:border-gray-600/50 transition-all duration-300 transform hover:scale-105 cursor-pointer"
 								>
 									View All Admins
 								</button>
-								<button className="group p-4 bg-gray-800/50 border border-gray-700/50 rounded-lg font-medium text-white hover:bg-gray-700/50 hover:border-gray-600/50 transition-all duration-300 transform hover:scale-105">
+								<button className="group p-3 bg-gray-800/50 border border-gray-700/50 rounded-lg font-medium text-white hover:bg-gray-700/50 hover:border-gray-600/50 transition-all duration-300 transform hover:scale-105 cursor-pointer">
 									System Settings
 								</button>
 							</div>
