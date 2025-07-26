@@ -34,6 +34,7 @@ import LayoutContainer from '@ohmmade/ui/layout-container';
 import AddAdminModal from './AddAdminModal';
 import UsersList from './UsersList';
 import ProjectsList from './ProjectsList';
+import AdminList from './AdminList';
 
 // Animation variants
 const containerVariants = {
@@ -240,6 +241,16 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 		);
 	}
 
+	// Render AdminList if view is 'admins'
+	if (view === 'admins') {
+		return (
+			<AdminList
+				currentAdmin={currentAdmin}
+				onBack={() => setView('dashboard')}
+			/>
+		);
+	}
+
 	return (
 		<div className="min-h-screen bg-[#101014]">
 			<LayoutContainer>
@@ -355,7 +366,8 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 
 						<motion.div
 							variants={cardVariants}
-							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-6 hover:border-purple-400/30 transition-all duration-300"
+							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-6 hover:border-purple-400/30 transition-all duration-300 cursor-pointer"
+							onClick={() => setView('admins')}
 						>
 							<div className="absolute inset-0 bg-gradient-to-r from-purple-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 							<div className="relative flex items-center justify-between">
@@ -365,6 +377,9 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 									</p>
 									<p className="text-3xl font-bold text-white">
 										{adminStats?.activeAdminsCount || 0}
+									</p>
+									<p className="text-xs text-gray-400 mt-1">
+										Click to view all admins
 									</p>
 								</div>
 								<div className="p-3 bg-purple-400/10 rounded-lg">
