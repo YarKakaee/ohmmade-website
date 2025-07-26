@@ -146,6 +146,29 @@ export const getAdminStats = async () => {
 	}
 };
 
+// Get recent activities count
+export const getRecentActivitiesCount = async (days = 7) => {
+	try {
+		const response = await fetch(
+			`/api/admin/recent-activities-count?days=${days}`
+		);
+		const result = await response.json();
+
+		if (result.success) {
+			return result.count;
+		} else {
+			console.error(
+				'Failed to fetch recent activities count:',
+				result.error
+			);
+			return 0;
+		}
+	} catch (error) {
+		console.error('Error fetching recent activities count:', error);
+		return 0;
+	}
+};
+
 // Format admin action for display
 export const formatAdminAction = (action, resourceType, details = {}) => {
 	const actionMap = {

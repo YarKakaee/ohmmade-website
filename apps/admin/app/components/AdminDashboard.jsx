@@ -26,6 +26,7 @@ import {
 import {
 	getRecentAdminActivities,
 	getAdminStats,
+	getRecentActivitiesCount,
 	formatAdminAction,
 	getRolePermissions,
 } from '../../lib/adminUtils';
@@ -35,6 +36,7 @@ import AddAdminModal from './AddAdminModal';
 import UsersList from './UsersList';
 import ProjectsList from './ProjectsList';
 import AdminList from './AdminList';
+import UserActivitiesList from './UserActivitiesList';
 
 // Animation variants
 const containerVariants = {
@@ -63,19 +65,24 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filterRole, setFilterRole] = useState('all');
 	const [showAddModal, setShowAddModal] = useState(false);
-	const [view, setView] = useState('dashboard'); // 'dashboard', 'users', 'projects', 'admins'
+	const [view, setView] = useState('dashboard'); // 'dashboard', 'users', 'projects', 'admins', 'activities'
 
 	useEffect(() => {
 		const fetchDashboardData = async () => {
 			setLoading(true);
 			try {
-				const [activities, stats] = await Promise.all([
-					getRecentAdminActivities(20),
-					getAdminStats(),
-				]);
+				const [activities, stats, recentActivitiesCount] =
+					await Promise.all([
+						getRecentAdminActivities(20),
+						getAdminStats(),
+						getRecentActivitiesCount(7),
+					]);
 
 				setRecentActivities(activities);
-				setAdminStats(stats);
+				setAdminStats({
+					...stats,
+					recentActivitiesCount,
+				});
 			} catch (error) {
 				console.error('Error fetching dashboard data:', error);
 			} finally {
@@ -251,6 +258,16 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 		);
 	}
 
+	// Render UserActivitiesList if view is 'activities'
+	if (view === 'activities') {
+		return (
+			<UserActivitiesList
+				currentAdmin={currentAdmin}
+				onBack={() => setView('dashboard')}
+			/>
+		);
+	}
+
 	return (
 		<div className="min-h-screen bg-[#101014]">
 			<LayoutContainer>
@@ -396,16 +413,20 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 
 						<motion.div
 							variants={cardVariants}
-							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-4 md:p-6 hover:border-blue-400/30 transition-all duration-300"
+							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-4 md:p-6 hover:border-blue-400/30 transition-all duration-300 cursor-pointer"
+							onClick={() => setView('activities')}
 						>
 							<div className="absolute inset-0 bg-gradient-to-r from-blue-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 							<div className="relative flex items-center justify-between">
 								<div>
 									<p className="text-gray-400 text-sm font-medium mb-1">
-										Admin Activities This Week
+										Recent Activities
 									</p>
 									<p className="text-2xl md:text-3xl font-bold text-white">
-										{adminStats?.actionsThisWeek || 0}
+										{adminStats?.recentActivitiesCount || 0}
+									</p>
+									<p className="text-xs text-gray-400 mt-1">
+										Click to view all activities
 									</p>
 								</div>
 								<div className="p-3 bg-blue-400/10 rounded-lg">
