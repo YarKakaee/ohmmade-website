@@ -30,6 +30,7 @@ import {
 } from '../../lib/adminUtils';
 import Image from 'next/image';
 import LayoutContainer from '@ohmmade/ui/layout-container';
+import AddAdminModal from './AddAdminModal';
 
 // Animation variants
 const containerVariants = {
@@ -50,13 +51,14 @@ const cardVariants = {
 	visible: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
 };
 
-const AdminDashboard = ({ currentAdmin, onSignOut }) => {
+const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 	const [recentActivities, setRecentActivities] = useState([]);
 	const [adminStats, setAdminStats] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [selectedTimeframe, setSelectedTimeframe] = useState('week');
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filterRole, setFilterRole] = useState('all');
+	const [showAddModal, setShowAddModal] = useState(false);
 
 	useEffect(() => {
 		const fetchDashboardData = async () => {
@@ -190,7 +192,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut }) => {
 		return (
 			<div className="min-h-screen bg-gradient-to-br from-[#101014] via-[#1a1a1e] to-[#101014]">
 				<LayoutContainer>
-					<div className="animate-pulse">
+					<div className="animate-pulse mt-10">
 						<div className="h-8 bg-gray-700/20 rounded-lg w-1/4 mb-8"></div>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 							{[...Array(4)].map((_, i) => (
@@ -542,10 +544,16 @@ const AdminDashboard = ({ currentAdmin, onSignOut }) => {
 								Quick Actions
 							</h2>
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-								<button className="group p-4 bg-gradient-to-r from-[#27BBFF] to-[#1ea8e6] text-[#101014] rounded-lg font-medium hover:from-[#1ea8e6] hover:to-[#27BBFF] transition-all duration-300 transform hover:scale-105">
+								<button
+									onClick={() => setShowAddModal(true)}
+									className="group p-4 bg-gradient-to-r from-[#27BBFF] to-[#1ea8e6] text-[#101014] rounded-lg font-medium hover:from-[#1ea8e6] hover:to-[#27BBFF] transition-all duration-300 transform hover:scale-105"
+								>
 									Add New Admin
 								</button>
-								<button className="group p-4 bg-gray-800/50 border border-gray-700/50 rounded-lg font-medium text-white hover:bg-gray-700/50 hover:border-gray-600/50 transition-all duration-300 transform hover:scale-105">
+								<button
+									onClick={onViewAdmins}
+									className="group p-4 bg-gray-800/50 border border-gray-700/50 rounded-lg font-medium text-white hover:bg-gray-700/50 hover:border-gray-600/50 transition-all duration-300 transform hover:scale-105"
+								>
 									View All Admins
 								</button>
 								<button className="group p-4 bg-gray-800/50 border border-gray-700/50 rounded-lg font-medium text-white hover:bg-gray-700/50 hover:border-gray-600/50 transition-all duration-300 transform hover:scale-105">
@@ -556,6 +564,16 @@ const AdminDashboard = ({ currentAdmin, onSignOut }) => {
 					)}
 				</motion.div>
 			</LayoutContainer>
+
+			{/* Add Admin Modal */}
+			<AddAdminModal
+				isOpen={showAddModal}
+				onClose={() => setShowAddModal(false)}
+				onSuccess={() => {
+					// Refresh the dashboard data to show new admin in stats
+					window.location.reload();
+				}}
+			/>
 		</div>
 	);
 };

@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import AdminAuthModal from './components/AdminAuthModal';
 import AdminDashboard from './components/AdminDashboard';
+import AdminList from './components/AdminList';
 
 export default function AdminPage() {
 	const [user, setUser] = useState(null);
 	const [currentAdmin, setCurrentAdmin] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [showAuthModal, setShowAuthModal] = useState(false);
+	const [view, setView] = useState('dashboard'); // 'dashboard' or 'admin-list'
 	const supabase = createClientComponentClient();
 
 	useEffect(() => {
@@ -105,6 +107,7 @@ export default function AdminPage() {
 		setUser(userData);
 		setCurrentAdmin(userData.admin);
 		setShowAuthModal(false);
+		setView('dashboard');
 	};
 
 	const handleSignOut = async () => {
@@ -127,10 +130,18 @@ export default function AdminPage() {
 	if (user && currentAdmin) {
 		return (
 			<div className="min-h-screen bg-[#101014]">
-				<AdminDashboard
-					currentAdmin={currentAdmin}
-					onSignOut={handleSignOut}
-				/>
+				{view === 'dashboard' ? (
+					<AdminDashboard
+						currentAdmin={currentAdmin}
+						onSignOut={handleSignOut}
+						onViewAdmins={() => setView('admin-list')}
+					/>
+				) : (
+					<AdminList
+						currentAdmin={currentAdmin}
+						onBack={() => setView('dashboard')}
+					/>
+				)}
 			</div>
 		);
 	}
