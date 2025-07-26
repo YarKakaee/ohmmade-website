@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Inter_Tight } from 'next/font/google';
 import { useEffect, useState } from 'react';
 import LayoutContainer from '@ohmmade/ui/layout-container';
@@ -76,10 +77,10 @@ const ctaButtonUp1 = {
 		scale: 1,
 		transition: {
 			type: 'spring',
-			stiffness: 700,
-			damping: 22,
-			delay: 0.18,
-			mass: 1.2,
+			stiffness: 400,
+			damping: 60,
+			delay: 0.44,
+			mass: 0.7,
 		},
 	},
 };
@@ -102,8 +103,11 @@ const ctaButtonUp2 = {
 
 export default function Hero() {
 	const [particles, setParticles] = useState([]);
+	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {
+		setIsClient(true);
+
 		const createParticle = () => {
 			const size = Math.random() * 3 + 1;
 			const x = Math.random() * window.innerWidth;
@@ -143,20 +147,40 @@ export default function Hero() {
 	return (
 		<section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-hidden">
 			{/* Star/Particle Background */}
-			{particles.map((particle, index) => (
-				<div
-					key={index}
-					className="absolute rounded-full bg-white pointer-events-none z-0"
-					style={{
-						left: `${particle.x}px`,
-						top: `${particle.y}px`,
-						width: `${particle.size}px`,
-						height: `${particle.size}px`,
-						opacity: particle.opacity,
-						transform: 'translate(-50%, -50%)',
-					}}
-				/>
-			))}
+			{isClient &&
+				particles.map((particle, index) => (
+					<div
+						key={index}
+						className="absolute rounded-full bg-white pointer-events-none z-0"
+						style={{
+							left: `${particle.x}px`,
+							top: `${particle.y}px`,
+							width: `${particle.size}px`,
+							height: `${particle.size}px`,
+							opacity: particle.opacity,
+							transform: 'translate(-50%, -50%)',
+						}}
+					/>
+				))}
+
+			{/* Gradient Background Image */}
+			<motion.div
+				initial={{ opacity: 0, scale: 0.8 }}
+				animate={{ opacity: 1, scale: 1 }}
+				transition={{ duration: 1, ease: 'easeOut' }}
+				className="absolute inset-0 pointer-events-none z-0"
+			>
+				<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1100px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 blur-[125px] opacity-70 transform-gpu">
+					<Image
+						src="https://ujaylejhopvncyjvduvj.supabase.co/storage/v1/object/public/ohmmade-assets//heroimageohmmade.webp"
+						alt="Abstract light pattern"
+						width={1200}
+						height={1200}
+						className="w-full h-auto"
+						priority
+					/>
+				</div>
+			</motion.div>
 
 			<LayoutContainer>
 				<motion.div
