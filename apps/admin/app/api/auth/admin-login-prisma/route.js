@@ -53,11 +53,12 @@ export async function POST(request) {
 			await prisma.adminActionLog.create({
 				data: {
 					adminId: adminData.id,
-					action: 'ADMIN_LOGIN',
+					action: 'ADMIN_ADDED', // Using existing action for now
 					resourceType: 'System',
 					details: {
 						loginMethod: 'email',
 						timestamp: new Date().toISOString(),
+						actionType: 'login',
 					},
 				},
 			});

@@ -159,7 +159,10 @@ export const formatAdminAction = (action, resourceType, details = {}) => {
 		DISCUSSION_REJECTED: 'rejected discussion',
 		CONTENT_PUBLISHED: 'published content',
 		CONTENT_UNPUBLISHED: 'unpublished content',
-		ADMIN_LOGIN: 'logged in',
+		ADMIN_ADDED:
+			details?.actionType === 'login'
+				? 'logged in'
+				: 'created admin account',
 		SETTINGS_CHANGED: 'changed settings',
 	};
 

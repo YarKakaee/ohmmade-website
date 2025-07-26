@@ -21,6 +21,7 @@ import {
 	faSearch,
 	faFilter,
 	faChevronDown,
+	faUserPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import {
 	getRecentAdminActivities,
@@ -103,7 +104,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 		return colors[role] || 'bg-gray-500/10 border-gray-500/20';
 	};
 
-	const getActionIcon = (action) => {
+	const getActionIcon = (action, details = {}) => {
 		const iconMap = {
 			PROJECT_APPROVED: faCheckCircle,
 			PROJECT_REJECTED: faTimesCircle,
@@ -113,12 +114,13 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 			WATTS_AWARDED: faStar,
 			DISCUSSION_APPROVED: faCheckCircle,
 			CONTENT_PUBLISHED: faCheckCircle,
-			ADMIN_LOGIN: faUserShield,
+			ADMIN_ADDED:
+				details?.actionType === 'login' ? faUserShield : faUserPlus,
 		};
 		return iconMap[action] || faHistory;
 	};
 
-	const getActionColor = (action) => {
+	const getActionColor = (action, details = {}) => {
 		const colorMap = {
 			PROJECT_APPROVED: 'text-green-400',
 			PROJECT_REJECTED: 'text-red-400',
@@ -128,12 +130,15 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 			WATTS_AWARDED: 'text-yellow-400',
 			DISCUSSION_APPROVED: 'text-green-400',
 			CONTENT_PUBLISHED: 'text-green-400',
-			ADMIN_LOGIN: 'text-blue-400',
+			ADMIN_ADDED:
+				details?.actionType === 'login'
+					? 'text-blue-400'
+					: 'text-purple-400',
 		};
 		return colorMap[action] || 'text-gray-400';
 	};
 
-	const getActionBgColor = (action) => {
+	const getActionBgColor = (action, details = {}) => {
 		const colorMap = {
 			PROJECT_APPROVED: 'bg-green-500/10',
 			PROJECT_REJECTED: 'bg-red-500/10',
@@ -143,7 +148,10 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 			WATTS_AWARDED: 'bg-yellow-500/10',
 			DISCUSSION_APPROVED: 'bg-green-500/10',
 			CONTENT_PUBLISHED: 'bg-green-500/10',
-			ADMIN_LOGIN: 'bg-blue-500/10',
+			ADMIN_ADDED:
+				details?.actionType === 'login'
+					? 'bg-blue-500/10'
+					: 'bg-purple-500/10',
 		};
 		return colorMap[action] || 'bg-gray-500/10';
 	};
@@ -476,11 +484,12 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 													className="group flex items-center gap-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700/20 hover:border-gray-600/40 hover:bg-gray-800/50 transition-all duration-200"
 												>
 													<div
-														className={`p-3 rounded-lg ${getActionBgColor(activity.action)} ${getActionColor(activity.action)}`}
+														className={`p-3 rounded-lg ${getActionBgColor(activity.action, activity.details)} ${getActionColor(activity.action, activity.details)}`}
 													>
 														<FontAwesomeIcon
 															icon={getActionIcon(
-																activity.action
+																activity.action,
+																activity.details
 															)}
 														/>
 													</div>
@@ -492,7 +501,14 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 																	activity
 																		.admin
 																		?.name
+																}{' '}
+																(
+																{
+																	activity
+																		.admin
+																		?.email
 																}
+																)
 															</span>
 															<span
 																className={`text-xs px-2 py-1 rounded-full border ${getRoleBgColor(activity.admin?.role)} ${getRoleColor(activity.admin?.role)}`}

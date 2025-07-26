@@ -61,6 +61,26 @@ export async function POST(request) {
 			},
 		});
 
+		// Log the admin creation action
+		try {
+			await prisma.adminActionLog.create({
+				data: {
+					adminId: newAdmin.id, // This will be the newly created admin
+					action: 'ADMIN_ADDED',
+					resourceType: 'Admin',
+					resourceId: newAdmin.id,
+					details: {
+						adminName: newAdmin.name,
+						adminEmail: newAdmin.email,
+						adminRole: newAdmin.role,
+						timestamp: new Date().toISOString(),
+					},
+				},
+			});
+		} catch (logError) {
+			console.warn('Failed to log admin creation action:', logError);
+		}
+
 		return NextResponse.json({
 			success: true,
 			admin: newAdmin,
