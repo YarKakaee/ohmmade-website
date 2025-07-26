@@ -32,6 +32,7 @@ import {
 import Image from 'next/image';
 import LayoutContainer from '@ohmmade/ui/layout-container';
 import AddAdminModal from './AddAdminModal';
+import UsersList from './UsersList';
 
 // Animation variants
 const containerVariants = {
@@ -60,6 +61,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filterRole, setFilterRole] = useState('all');
 	const [showAddModal, setShowAddModal] = useState(false);
+	const [view, setView] = useState('dashboard'); // 'dashboard', 'users', 'admins'
 
 	useEffect(() => {
 		const fetchDashboardData = async () => {
@@ -67,7 +69,7 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 			try {
 				const [activities, stats] = await Promise.all([
 					getRecentAdminActivities(20),
-					getAdminStats(currentAdmin.id),
+					getAdminStats(),
 				]);
 
 				setRecentActivities(activities);
@@ -217,8 +219,18 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 		);
 	}
 
+	// Render UsersList if view is 'users'
+	if (view === 'users') {
+		return (
+			<UsersList
+				currentAdmin={currentAdmin}
+				onBack={() => setView('dashboard')}
+			/>
+		);
+	}
+
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-[#101014] via-[#1a1a1e] to-[#101014]">
+		<div className="min-h-screen bg-[#101014]">
 			<LayoutContainer>
 				<motion.div
 					variants={containerVariants}
@@ -278,21 +290,25 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 					>
 						<motion.div
 							variants={cardVariants}
-							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-6 hover:border-[#27BBFF]/30 transition-all duration-300"
+							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-6 hover:border-[#27BBFF]/30 transition-all duration-300 cursor-pointer"
+							onClick={() => setView('users')}
 						>
 							<div className="absolute inset-0 bg-gradient-to-r from-[#27BBFF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 							<div className="relative flex items-center justify-between">
 								<div>
 									<p className="text-gray-400 text-sm font-medium mb-1">
-										Total Actions
+										Total Users
 									</p>
 									<p className="text-3xl font-bold text-white">
-										{adminStats?.totalActions || 0}
+										{adminStats?.totalUsers || 0}
+									</p>
+									<p className="text-xs text-gray-400 mt-1">
+										Click to view all users
 									</p>
 								</div>
 								<div className="p-3 bg-[#27BBFF]/10 rounded-lg">
 									<FontAwesomeIcon
-										icon={faChartLine}
+										icon={faUsers}
 										className="text-[#27BBFF] text-xl"
 									/>
 								</div>
@@ -307,39 +323,16 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 							<div className="relative flex items-center justify-between">
 								<div>
 									<p className="text-gray-400 text-sm font-medium mb-1">
-										This Week
+										Total Projects
 									</p>
 									<p className="text-3xl font-bold text-white">
-										{adminStats?.actionsThisWeek || 0}
+										{adminStats?.totalProjects || 0}
 									</p>
 								</div>
 								<div className="p-3 bg-green-400/10 rounded-lg">
 									<FontAwesomeIcon
-										icon={faClock}
+										icon={faProjectDiagram}
 										className="text-green-400 text-xl"
-									/>
-								</div>
-							</div>
-						</motion.div>
-
-						<motion.div
-							variants={cardVariants}
-							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-6 hover:border-blue-400/30 transition-all duration-300"
-						>
-							<div className="absolute inset-0 bg-gradient-to-r from-blue-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-							<div className="relative flex items-center justify-between">
-								<div>
-									<p className="text-gray-400 text-sm font-medium mb-1">
-										This Month
-									</p>
-									<p className="text-3xl font-bold text-white">
-										{adminStats?.actionsThisMonth || 0}
-									</p>
-								</div>
-								<div className="p-3 bg-blue-400/10 rounded-lg">
-									<FontAwesomeIcon
-										icon={faUsers}
-										className="text-blue-400 text-xl"
 									/>
 								</div>
 							</div>
@@ -356,13 +349,36 @@ const AdminDashboard = ({ currentAdmin, onSignOut, onViewAdmins }) => {
 										Active Admins
 									</p>
 									<p className="text-3xl font-bold text-white">
-										-
+										{adminStats?.activeAdminsCount || 0}
 									</p>
 								</div>
 								<div className="p-3 bg-purple-400/10 rounded-lg">
 									<FontAwesomeIcon
 										icon={faUserShield}
 										className="text-purple-400 text-xl"
+									/>
+								</div>
+							</div>
+						</motion.div>
+
+						<motion.div
+							variants={cardVariants}
+							className="group relative overflow-hidden bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] rounded-xl border border-gray-700/30 p-6 hover:border-blue-400/30 transition-all duration-300"
+						>
+							<div className="absolute inset-0 bg-gradient-to-r from-blue-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+							<div className="relative flex items-center justify-between">
+								<div>
+									<p className="text-gray-400 text-sm font-medium mb-1">
+										Admin Activities This Week
+									</p>
+									<p className="text-3xl font-bold text-white">
+										{adminStats?.actionsThisWeek || 0}
+									</p>
+								</div>
+								<div className="p-3 bg-blue-400/10 rounded-lg">
+									<FontAwesomeIcon
+										icon={faClock}
+										className="text-blue-400 text-xl"
 									/>
 								</div>
 							</div>

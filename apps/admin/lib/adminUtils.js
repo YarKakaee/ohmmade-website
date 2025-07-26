@@ -117,9 +117,9 @@ export const getRecentAdminActivities = async (limit = 50) => {
 };
 
 // Get admin statistics using API route
-export const getAdminStats = async (adminId) => {
+export const getAdminStats = async () => {
 	try {
-		const response = await fetch(`/api/admin/stats?adminId=${adminId}`);
+		const response = await fetch('/api/admin/stats');
 		const result = await response.json();
 
 		if (result.success) {
@@ -127,18 +127,20 @@ export const getAdminStats = async (adminId) => {
 		} else {
 			console.error('Failed to fetch admin stats:', result.error);
 			return {
-				totalActions: 0,
+				totalUsers: 0,
+				totalProjects: 0,
 				actionsThisWeek: 0,
-				actionsThisMonth: 0,
+				activeAdminsCount: 0,
 				actionBreakdown: {},
 			};
 		}
 	} catch (error) {
 		console.error('Error fetching admin stats:', error);
 		return {
-			totalActions: 0,
+			totalUsers: 0,
+			totalProjects: 0,
 			actionsThisWeek: 0,
-			actionsThisMonth: 0,
+			activeAdminsCount: 0,
 			actionBreakdown: {},
 		};
 	}

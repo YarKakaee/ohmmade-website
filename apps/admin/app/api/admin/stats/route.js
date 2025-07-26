@@ -3,32 +3,43 @@ import prisma from '../../../../prisma/client';
 
 export async function GET(request) {
 	try {
-		const { searchParams } = new URL(request.url);
-		const adminId = searchParams.get('adminId');
-
-		if (!adminId) {
-			return NextResponse.json(
-				{ error: 'Admin ID is required' },
-				{ status: 400 }
-			);
-		}
-
-		// Get all actions by this admin
+		// Get all admin actions for system-wide stats
 		const allActions = await prisma.adminActionLog.findMany({
-			where: { adminId },
+			include: {
+				admin: {
+					select: {
+						id: true,
+						name: true,
+						email: true,
+						role: true,
+					},
+				},
+			},
+			orderBy: {
+				createdAt: 'desc',
+			},
 		});
+
+		// Get count of active admins
+		const activeAdminsCount = await prisma.admin.count({
+			where: {
+				isActive: true,
+			},
+		});
+
+		// Get total users count
+		const totalUsersCount = await prisma.user.count();
+
+		// Get total projects count
+		const totalProjectsCount = await prisma.project.count();
 
 		// Calculate time periods
 		const now = new Date();
 		const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-		const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
 		// Filter actions by time period
 		const actionsThisWeek = allActions.filter(
 			(action) => action.createdAt > weekAgo
-		);
-		const actionsThisMonth = allActions.filter(
-			(action) => action.createdAt > monthAgo
 		);
 
 		// Calculate action breakdown
@@ -38,9 +49,10 @@ export async function GET(request) {
 		}, {});
 
 		const stats = {
-			totalActions: allActions.length,
+			totalUsers: totalUsersCount,
+			totalProjects: totalProjectsCount,
 			actionsThisWeek: actionsThisWeek.length,
-			actionsThisMonth: actionsThisMonth.length,
+			activeAdminsCount,
 			actionBreakdown,
 		};
 
