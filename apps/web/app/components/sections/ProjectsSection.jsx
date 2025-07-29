@@ -3,6 +3,9 @@ import prisma from '@/prisma/client'; // Adjust this path if needed
 import ProjectCard from '../common/ProjectCard';
 import ProjectsHeader from '../common/ProjectHeader';
 import LayoutContainer from '@ohmmade/ui/layout-container';
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 export default async function ProjectsSection() {
 	const featuredProjects = await prisma.project.findMany({
@@ -21,12 +24,12 @@ export default async function ProjectsSection() {
 	});
 
 	return (
-		<section className="relative w-full py-20 px-8 sm:px-16 lg:px-24">
+		<section className="relative w-full py-12 sm:py-16 md:py-20 px-2 sm:px-8 md:px-16 lg:px-24">
 			<LayoutContainer>
 				<ProjectsHeader />
 
 				{/* Grid */}
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
 					{featuredProjects.map((project) => (
 						<ProjectCard
 							key={project.id}
@@ -45,6 +48,20 @@ export default async function ProjectsSection() {
 							slug={project.slug}
 						/>
 					))}
+				</div>
+
+				{/* Mobile More Projects Button */}
+				<div className="mt-8 sm:hidden w-full">
+					<Link href="/projects" className="block w-full">
+						<button className="text-[13px] border border-[#444] hover:border-white text-white px-4 py-2 rounded-md transition cursor-pointer w-full">
+							More Projects
+							<FontAwesomeIcon
+								icon={faArrowRight}
+								size="sm"
+								className="ml-1.5 transform transition-transform duration-200"
+							/>
+						</button>
+					</Link>
 				</div>
 			</LayoutContainer>
 		</section>

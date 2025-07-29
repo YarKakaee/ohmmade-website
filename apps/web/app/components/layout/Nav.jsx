@@ -221,7 +221,7 @@ export default function Nav() {
 					>
 						<div
 							className={`relative flex items-center h-14 w-full transition-all duration-700 ease-in-out ${
-								atTop ? '' : 'px-12'
+								atTop ? '' : 'px-6 sm:px-12'
 							}`}
 						>
 							{/* Left: Logo */}

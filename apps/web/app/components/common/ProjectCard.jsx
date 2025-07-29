@@ -24,14 +24,15 @@ export default function ProjectCard({
 }) {
 	const isVerified = authorEmail === 'info@ohmmade.ca';
 
-	const cardHeight = 'h-[380px]';
-	const imageHeight = 'h-40 sm:h-44 md:h-48';
+	const cardHeight = 'h-[320px] sm:h-[360px] md:h-[380px]';
+	const imageHeight = 'h-38 sm:h-40 md:h-44 lg:h-48';
 	const titleTextSize = 'text-[13px]';
-	const descTextSize = 'text-[11.5px]';
-	const padding = 'p-4';
+	const descTextSize = 'text-[12px] sm:text-[11.5px]';
+	const padding = 'p-3 sm:p-4';
 	const avatarSize = 24;
-	const divHeight = 'h-[calc(100%-190px)]';
-	const categoryTextSize = 'text-[10.5px]';
+	const divHeight =
+		'h-[calc(100%-150px)] sm:h-[calc(100%-180px)] md:h-[calc(100%-190px)]';
+	const categoryTextSize = 'text-[10px] sm:text-[10.5px]';
 
 	return (
 		<Link href={`/projects/${slug}`}>
@@ -59,10 +60,12 @@ export default function ProjectCard({
 					className={`${padding} space-y-3 ${divHeight} flex flex-col`}
 				>
 					<div className="flex justify-between">
-						<h3 className={`text-white font-bold ${titleTextSize}`}>
+						<h3
+							className={`text-white font-bold ${titleTextSize} leading-tight`}
+						>
 							{title}
 						</h3>
-						<div className="flex items-center gap-3 text-[11px] text-white/60">
+						<div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] text-white/60">
 							<div className="flex items-center gap-1">
 								<FontAwesomeIcon
 									icon={faEye}
@@ -81,30 +84,30 @@ export default function ProjectCard({
 					</div>
 
 					<p
-						className={`text-[#FFFFFF]/60 ${descTextSize} leading-relaxed`}
+						className={`text-[#FFFFFF]/60 ${descTextSize} leading-relaxed line-clamp-4`}
 					>
 						{description}
 					</p>
 
-					<div className="border-t border-[#2E2E30] pt-3 mt-auto flex items-center justify-between text-[#FFFFFF]/60 text-xs">
-						<div className="flex items-center gap-2">
+					<div className="border-t border-[#2E2E30] pt-2 sm:pt-3 mt-auto flex items-center justify-between text-[#FFFFFF]/60 text-xs">
+						<div className="flex items-center gap-1.5 sm:gap-2">
 							{authorImage ? (
 								<Image
 									src={authorImage}
 									alt={authorName || 'Author'}
 									width={avatarSize}
 									height={avatarSize}
-									className={`rounded-full object-cover h-[24px] w-[24px] overflow-hidden`}
+									className={`rounded-full object-cover h-[20px] w-[20px] sm:h-[24px] sm:w-[24px] overflow-hidden`}
 								/>
 							) : (
 								<div
-									className={`w-[24px] h-[24px] rounded-full bg-[#343437] flex items-center justify-center text-white text-[11px] font-bold`}
+									className={`w-[20px] h-[20px] sm:w-[24px] sm:h-[24px] rounded-full bg-[#343437] flex items-center justify-center text-white text-[10px] sm:text-[11px] font-bold`}
 								>
 									{authorName?.[0]?.toUpperCase() || 'U'}
 								</div>
 							)}
 							<span
-								className={`text-white/60 ${categoryTextSize} flex items-center gap-1`}
+								className={`text-white/60 ${categoryTextSize} flex items-center gap-1 truncate`}
 							>
 								{authorName || 'Unknown'}
 								{isVerified && (
@@ -116,7 +119,7 @@ export default function ProjectCard({
 							</span>
 						</div>
 						<span
-							className={`${categoryTextSize} font-medium px-3 py-1 rounded-full text-white w-fit`}
+							className={`${categoryTextSize} font-medium px-2 sm:px-3 py-1 rounded-full text-white w-fit`}
 							style={{ backgroundColor: categoryColor }}
 						>
 							{category}

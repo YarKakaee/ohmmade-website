@@ -204,7 +204,7 @@ export default function Features() {
 				{/* Title Section */}
 				<LayoutContainer>
 					<motion.div
-						className="mb-6 sm:mb-8 md:mb-10 px-4 sm:px-0"
+						className="mb-6 sm:mb-8 md:mb-10 px-2 sm:px-0"
 						initial={{ opacity: 0, y: 20 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.6 }}
@@ -297,8 +297,8 @@ export default function Features() {
 						ref={scrollRef}
 						className="flex h-full overflow-x-auto overflow-y-hidden scrollbar-hide w-full px-4 sm:px-0"
 						style={{
-							paddingLeft: !isMobile ? sideMargin : 32,
-							paddingRight: !isMobile ? sideMargin : 32,
+							paddingLeft: !isMobile ? sideMargin : 24,
+							paddingRight: !isMobile ? sideMargin : 24,
 							gap: isMobile ? MOBILE_CARD_GAP : CARD_GAP,
 							scrollbarWidth: 'none',
 							msOverflowStyle: 'none',

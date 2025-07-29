@@ -145,7 +145,9 @@ export default function Hero() {
 	}, []);
 
 	return (
-		<section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-visible sm:overflow-hidden px-4 sm:px-0">
+		<section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-visible sm:overflow-hidden px-2 sm:px-0">
+			{/* Mobile max-width constraint matching floating navbar */}
+
 			{/* Star/Particle Background */}
 			{isClient &&
 				particles.map((particle, index) => (
@@ -192,13 +194,13 @@ export default function Hero() {
 					<div className="text-white space-y-3 sm:space-y-5 max-w-xl w-full flex flex-col items-center -mt-16 sm:-mt-0">
 						<motion.h1
 							variants={fadeInUp}
-							className={`text-2xl sm:text-4xl md:text-[44px] font-[850] leading-tight bg-gradient-to-b from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(39,187,255,0.10)] ${interTight.className}`}
+							className={`text-[26px] sm:text-[32px] md:text-[44px] font-[850] leading-tight bg-gradient-to-b from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(39,187,255,0.10)] ${interTight.className}`}
 						>
 							Turning One-Time Projects
 						</motion.h1>
 
 						<motion.h1
-							className="text-3xl sm:text-4xl md:text-[54px] font-[900] leading-tight relative -mt-2 sm:-mt-4 flex flex-wrap justify-center"
+							className="text-[32px] sm:text-4xl md:text-[54px] font-[900] leading-tight relative -mt-2 sm:-mt-4 flex flex-wrap justify-center"
 							initial="hidden"
 							animate="visible"
 						>

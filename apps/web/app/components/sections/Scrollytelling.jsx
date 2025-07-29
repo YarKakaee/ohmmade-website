@@ -69,15 +69,21 @@ function Particles({ color }) {
 	const [particles, setParticles] = useState([]);
 
 	useEffect(() => {
-		const generated = [...Array(18)].map(() => {
-			const size = Math.random() * 4 + 2;
+		const isMobile = window.innerWidth < 768;
+		const particleCount = isMobile ? 6 : 12; // Reduced particle count
+
+		const generated = [...Array(particleCount)].map(() => {
+			const size =
+				Math.random() * (isMobile ? 2 : 3) + (isMobile ? 1 : 1.5);
 			const left = Math.random() * 100;
 			const top = Math.random() * 100;
-			const opacity = 0.18 + Math.random() * 0.22;
-			const duration = 2.5 + Math.random() * 1.5;
+			const opacity = 0.15 + Math.random() * 0.15; // Reduced opacity
+			const duration = 3 + Math.random() * 2; // Slower animation
 			const delay = Math.random();
-			const animateY = Math.random() * 40 - 20;
-			const animateX = Math.random() * 40 - 20;
+			const animateY =
+				Math.random() * (isMobile ? 20 : 30) - (isMobile ? 10 : 15);
+			const animateX =
+				Math.random() * (isMobile ? 20 : 30) - (isMobile ? 10 : 15);
 			return {
 				size,
 				left,
@@ -105,18 +111,20 @@ function Particles({ color }) {
 						left: `${p.left}%`,
 						top: `${p.top}%`,
 						opacity: p.opacity,
-						filter: 'blur(1.5px)',
+						filter: 'blur(1px)',
+						willChange: 'transform',
 					}}
 					animate={{
 						y: [0, p.animateY, 0],
 						x: [0, p.animateX, 0],
-						opacity: [p.opacity, p.opacity + 0.1, p.opacity],
+						opacity: [p.opacity, p.opacity + 0.05, p.opacity],
 					}}
 					transition={{
 						duration: p.duration,
 						repeat: Infinity,
 						repeatType: 'loop',
 						delay: p.delay,
+						ease: 'easeInOut',
 					}}
 				/>
 			))}
@@ -167,8 +175,8 @@ export default function Scrollytelling() {
 					className="absolute inset-0 z-0"
 					style={{
 						background: bg,
-						filter: 'blur(60px)',
-						opacity: 1,
+						filter: 'blur(40px)',
+						opacity: 0.8,
 					}}
 				/>
 				{/* Particles background for all slides */}
@@ -184,23 +192,24 @@ export default function Scrollytelling() {
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -40 }}
 							transition={{ duration: 0.5, ease: 'easeOut' }}
-							className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl flex flex-col items-center justify-center text-center px-4"
+							className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl flex flex-col items-center justify-center text-center px-4 sm:px-6"
 							style={{ pointerEvents: 'auto' }}
 						>
-							<motion.h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-white drop-shadow-lg leading-tight">
+							<motion.h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-3 sm:mb-4 text-white drop-shadow-lg leading-tight">
 								{slide.heading}
 							</motion.h2>
-							<motion.p className="text-base sm:text-lg md:text-lg mb-10 text-gray-300 max-w-xl">
+							<motion.p className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8 md:mb-10 text-gray-300 max-w-xl leading-relaxed">
 								{slide.description}
 							</motion.p>
 							<motion.div
 								whileHover={{ scale: 1.05 }}
 								whileTap={{ scale: 0.96 }}
-								className="px-8 py-4 rounded-full font-bold text-[16px] backdrop-blur transition shadow-lg cursor-pointer"
+								className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-[14px] sm:text-[16px] backdrop-blur-sm sm:backdrop-blur transition cursor-pointer w-full sm:w-auto max-w-xs sm:max-w-none"
 								style={{
 									background: slide.color,
 									color: slide.textColor,
-									boxShadow: `0 0 24px 6px ${slide.color}66, 0 0 0 0 ${slide.color}00`,
+									boxShadow: `0 0 40px 3px ${slide.color}66, 0 0 0 0 ${slide.color}00`,
+									willChange: 'transform',
 								}}
 							>
 								<Link
@@ -209,7 +218,7 @@ export default function Scrollytelling() {
 									passHref
 								>
 									<a
-										className="block w-full h-full text-center"
+										className="block w-full h-full text-center font-bold"
 										tabIndex={0}
 									>
 										{slide.button.text}
