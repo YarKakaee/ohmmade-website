@@ -297,8 +297,8 @@ export default function Features() {
 						ref={scrollRef}
 						className="flex h-full overflow-x-auto overflow-y-hidden scrollbar-hide w-full px-4 sm:px-0"
 						style={{
-							paddingLeft: !isMobile ? sideMargin : 0,
-							paddingRight: !isMobile ? sideMargin : 0,
+							paddingLeft: !isMobile ? sideMargin : 32,
+							paddingRight: !isMobile ? sideMargin : 32,
 							gap: isMobile ? MOBILE_CARD_GAP : CARD_GAP,
 							scrollbarWidth: 'none',
 							msOverflowStyle: 'none',
@@ -339,7 +339,7 @@ export default function Features() {
 											'0 2px 8px rgba(0,0,0,0.45)',
 									}}
 								>
-									<h3 className="text-lg sm:text-xl md:text-base text-white mb-2 font-semibold leading-tight">
+									<h3 className="text-base sm:text-xl md:text-base text-white mb-2 font-semibold leading-tight">
 										{feature.heading}
 									</h3>
 									<p className="text-sm sm:text-base md:text-sm text-white/80 font-light leading-relaxed">
