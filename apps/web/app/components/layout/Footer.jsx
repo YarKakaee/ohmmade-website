@@ -98,9 +98,9 @@ export default function Footer() {
 	return (
 		<footer className="bg-[#101014] border-t border-white/10">
 			<LayoutContainer>
-				<div className="py-12">
+				<div className="py-8 sm:py-12 px-2 sm:px-0">
 					{/* Main Footer Content */}
-					<div className="flex flex-col lg:flex-row justify-between gap-8 mb-8">
+					<div className="flex flex-col lg:flex-row justify-between gap-6 sm:gap-8 mb-6 sm:mb-8">
 						{/* Left: Logo and Company Info */}
 						<motion.div
 							initial={{ opacity: 0, y: 20 }}
@@ -115,18 +115,18 @@ export default function Footer() {
 									alt="OhmMade Logo"
 									width={762}
 									height={160}
-									className="h-8 w-auto"
+									className="h-6 sm:h-8 w-auto"
 								/>
 							</div>
 
 							{/* Tagline */}
-							<p className="text-white/70 text-sm max-w-xs">
+							<p className="text-white/70 text-xs sm:text-sm max-w-xs">
 								A community-powered platform for building,
 								publishing, and exploring electronics projects.
 							</p>
 
 							{/* Social Media Links */}
-							<div className="flex gap-3 mb-10">
+							<div className="flex gap-3 mb-6 sm:mb-10">
 								{socialLinks.map((item, idx) => (
 									<motion.a
 										key={idx}
@@ -146,19 +146,19 @@ export default function Footer() {
 							</div>
 
 							{/* System Status */}
-							<div className="flex bg-[#1C1C20] items-center gap-2 border border-white/5 rounded-full px-3 py-1.5 w-fit">
+							<div className="flex bg-[#1C1C20] items-center gap-2 border border-white/5 rounded-full px-2 sm:px-3 py-1 sm:py-1.5 w-fit">
 								<div className="relative">
-									<div className="w-2 h-2 bg-[#35AC47] rounded-full animate-ping absolute"></div>
-									<div className="w-2 h-2 bg-[#35AC47] rounded-full relative"></div>
+									<div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-[#35AC47] rounded-full animate-ping absolute"></div>
+									<div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-[#35AC47] rounded-full relative"></div>
 								</div>
-								<span className="text-white/60 text-xs font-medium">
+								<span className="text-white/60 text-[10px] sm:text-xs font-medium">
 									All systems online
 								</span>
 							</div>
 						</motion.div>
 
 						{/* Right: Navigation Columns */}
-						<div className="grid grid-cols-1 md:[grid-template-columns:auto_auto_auto_auto] gap-20">
+						<div className="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12 md:[grid-template-columns:auto_auto_auto_auto] md:gap-16 lg:gap-20">
 							{/* Platform */}
 							<motion.div
 								initial={{ opacity: 0, y: 20 }}
@@ -166,10 +166,10 @@ export default function Footer() {
 								transition={{ duration: 0.5, delay: 0.1 }}
 								className="space-y-3"
 							>
-								<h3 className="text-white/90 font-semibold text-sm uppercase tracking-wider">
+								<h3 className="text-white/90 font-semibold text-xs sm:text-sm uppercase tracking-wider">
 									Platform
 								</h3>
-								<ul className="space-y-2">
+								<ul className="space-y-1.5 sm:space-y-2">
 									{platformLinks.map((link, index) => (
 										<motion.li
 											key={link.name}
@@ -198,10 +198,10 @@ export default function Footer() {
 								transition={{ duration: 0.5, delay: 0.2 }}
 								className="space-y-3"
 							>
-								<h3 className="text-white/90 font-semibold text-sm uppercase tracking-wider">
+								<h3 className="text-white/90 font-semibold text-xs sm:text-sm uppercase tracking-wider">
 									Education
 								</h3>
-								<ul className="space-y-2">
+								<ul className="space-y-1.5 sm:space-y-2">
 									{educationLinks.map((link, index) => (
 										<motion.li
 											key={link.name}
@@ -230,10 +230,10 @@ export default function Footer() {
 								transition={{ duration: 0.5, delay: 0.2 }}
 								className="space-y-3"
 							>
-								<h3 className="text-white/90 font-semibold text-sm uppercase tracking-wider">
+								<h3 className="text-white/90 font-semibold text-xs sm:text-sm uppercase tracking-wider">
 									Community
 								</h3>
-								<ul className="space-y-2">
+								<ul className="space-y-1.5 sm:space-y-2">
 									{communityLinks.map((link, index) => (
 										<motion.li
 											key={link.name}
@@ -262,10 +262,10 @@ export default function Footer() {
 								transition={{ duration: 0.5, delay: 0.3 }}
 								className="space-y-3"
 							>
-								<h3 className="text-white/90 font-semibold text-sm uppercase tracking-wider">
+								<h3 className="text-white/90 font-semibold text-xs sm:text-sm uppercase tracking-wider">
 									Legal
 								</h3>
-								<ul className="space-y-2">
+								<ul className="space-y-1.5 sm:space-y-2">
 									{legalLinks.map((link, index) => (
 										<motion.li
 											key={link.name}
@@ -290,24 +290,24 @@ export default function Footer() {
 					</div>
 
 					{/* Divider */}
-					<div className="border-t border-white/10 mb-6" />
+					<div className="border-t border-white/10 mb-4 sm:mb-6" />
 
 					{/* Bottom Section */}
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.5, delay: 0.4 }}
-						className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0"
+						className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0"
 					>
 						{/* Copyright */}
-						<p className="text-white/50 text-sm">
+						<p className="text-white/50 text-xs sm:text-sm">
 							© {currentYear} OhmMade. All rights reserved.
 						</p>
 
 						{/* Brand Assets Download */}
 						<a
 							href="/brand-assets.zip"
-							className="flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-200 text-sm"
+							className="flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-200 text-xs sm:text-sm"
 						>
 							<FontAwesomeIcon
 								icon={faArrowDown}
@@ -319,7 +319,7 @@ export default function Footer() {
 						{/* Contact Email */}
 						<a
 							href="mailto:help@ohmmade.ca"
-							className="flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-200 text-sm"
+							className="flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-200 text-xs sm:text-sm"
 						>
 							<FontAwesomeIcon
 								icon={faEnvelope}
