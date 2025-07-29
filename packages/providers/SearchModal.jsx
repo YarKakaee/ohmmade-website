@@ -125,7 +125,7 @@ export default function SearchModal({ isOpen, onClose, mode = 'projects' }) {
 						</Dialog.Overlay>
 						<Dialog.Content asChild>
 							<motion.div
-								className="fixed left-1/2 top-1/2 z-[10000] w-full max-w-md translate-x-[-50%] translate-y-[-50%] p-0"
+								className="fixed left-1/2 top-1/8 sm:top-1/2 z-[10000] w-full max-w-sm sm:max-w-md translate-x-[-50%] translate-y-[-50%] p-0"
 								initial={{ opacity: 0, scale: 0.98, y: 0 }}
 								animate={{ opacity: 1, scale: 1, y: 0 }}
 								exit={{ opacity: 0, scale: 0.98, y: 0 }}
@@ -140,7 +140,7 @@ export default function SearchModal({ isOpen, onClose, mode = 'projects' }) {
 								</Dialog.Title>
 								<div
 									ref={containerRef}
-									className="flex items-center bg-[#18181C]/95 border border-[#23232A] shadow-xl rounded-full px-3 py-2 w-full max-w-md mx-auto relative gap-2"
+									className="flex items-center bg-[#18181C]/95 border border-[#23232A] shadow-xl rounded-full px-3 py-2 w-full max-w-md mx-auto relative gap-2 mx-4 sm:mx-auto"
 								>
 									<div className="relative flex items-center gap-1 w-auto">
 										<button
@@ -233,6 +233,7 @@ export default function SearchModal({ isOpen, onClose, mode = 'projects' }) {
 											onFocus={() =>
 												setShowTypeMenu(false)
 											}
+											style={{ fontSize: '16px' }}
 										/>
 										<button
 											type="submit"
