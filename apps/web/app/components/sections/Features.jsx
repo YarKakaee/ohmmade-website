@@ -36,8 +36,10 @@ const containerVariants = {
 };
 
 const CARD_HEIGHT = 500;
+const MOBILE_CARD_HEIGHT = 400;
 const MAX_W_7XL = 1280; // px for Tailwind's max-w-7xl
 const CARD_GAP = 32;
+const MOBILE_CARD_GAP = 16;
 
 // CSS for hover zone functionality
 const hoverStyles = `
@@ -85,6 +87,17 @@ export default function Features() {
 	const [canScrollRight, setCanScrollRight] = useState(true);
 	const [sideMargin, setSideMargin] = useState(0);
 	const [maxScroll, setMaxScroll] = useState(0);
+	const [isMobile, setIsMobile] = useState(false);
+
+	// Check if mobile on mount and resize
+	useEffect(() => {
+		const checkMobile = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+		return () => window.removeEventListener('resize', checkMobile);
+	}, []);
 
 	// Calculate side margin for virtual max-w-7xl
 	useEffect(() => {
@@ -104,9 +117,11 @@ export default function Features() {
 		// Calculate total width of all cards (including gaps)
 		const cardEls = container.querySelectorAll('.feature-card');
 		let totalCardsWidth = 0;
+		const gap = isMobile ? MOBILE_CARD_GAP : CARD_GAP;
+
 		cardEls.forEach((el, i) => {
 			totalCardsWidth += el.offsetWidth;
-			if (i < cardEls.length - 1) totalCardsWidth += CARD_GAP;
+			if (i < cardEls.length - 1) totalCardsWidth += gap;
 		});
 		// The visible area is document.documentElement.clientWidth (accounts for scrollbar)
 		// The max scroll is when the last card's left edge is at the right virtual margin
@@ -117,7 +132,7 @@ export default function Features() {
 				document.documentElement.clientWidth
 		);
 		setMaxScroll(maxScrollValue);
-	}, [sideMargin, features.length]);
+	}, [sideMargin, features.length, isMobile]);
 
 	// Helper to update scroll button state
 	const updateScrollButtons = () => {
@@ -134,7 +149,8 @@ export default function Features() {
 		if (!container) return;
 		const card = container.querySelector('.feature-card');
 		if (!card) return;
-		const cardWidth = card.offsetWidth + CARD_GAP;
+		const gap = isMobile ? MOBILE_CARD_GAP : CARD_GAP;
+		const cardWidth = card.offsetWidth + gap;
 		const currentScroll = container.scrollLeft;
 		let newScroll = currentScroll + direction * cardWidth;
 		// Clamp so first card can go under left mask, last card can go under right mask but not past virtual margin
@@ -157,14 +173,14 @@ export default function Features() {
 	}, [maxScroll]);
 
 	return (
-		<section className="relative py-24">
+		<section className="relative py-12 sm:py-16 md:py-24">
 			<style dangerouslySetInnerHTML={{ __html: hoverStyles }} />
-			{/* Masks - stretch to max-w-7xl boundary */}
+			{/* Masks - stretch to max-w-7xl boundary (hidden on mobile) */}
 			{sideMargin > 0 && (
 				<>
 					{/* Left mask */}
 					<div
-						className="pointer-events-none absolute top-0 left-0 h-full z-20"
+						className="pointer-events-none absolute top-0 left-0 h-full z-20 hidden md:block"
 						style={{
 							width: sideMargin,
 							height: '100%',
@@ -174,7 +190,7 @@ export default function Features() {
 					/>
 					{/* Right mask */}
 					<div
-						className="pointer-events-none absolute top-0 right-0 h-full z-20"
+						className="pointer-events-none absolute top-0 right-0 h-full z-20 hidden md:block"
 						style={{
 							width: sideMargin,
 							height: '100%',
@@ -188,14 +204,14 @@ export default function Features() {
 				{/* Title Section */}
 				<LayoutContainer>
 					<motion.div
-						className="mb-10"
+						className="mb-6 sm:mb-8 md:mb-10 px-4 sm:px-0"
 						initial={{ opacity: 0, y: 20 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.6 }}
 						viewport={{ once: true }}
 					>
 						<motion.h2
-							className={`${interTight.className} text-3xl md:text-[38px] font-extrabold text-white mb-4`}
+							className={`${interTight.className} text-2xl sm:text-3xl md:text-[38px] font-extrabold text-white mb-3 sm:mb-4`}
 							initial={{ opacity: 0, y: 20 }}
 							whileInView={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.6, delay: 0.2 }}
@@ -204,7 +220,7 @@ export default function Features() {
 							Our Core Features
 						</motion.h2>
 						<motion.p
-							className="text-gray-400 max-w-2xl text-[15px]"
+							className="text-gray-400 max-w-2xl text-[14px] sm:text-[15px] leading-relaxed"
 							initial={{ opacity: 0, y: 20 }}
 							whileInView={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.6, delay: 0.4 }}
@@ -220,13 +236,15 @@ export default function Features() {
 				{/* Features Row with Scroll Buttons and Cards */}
 				<div
 					className="relative w-full"
-					style={{ height: `${CARD_HEIGHT}px` }}
+					style={{
+						height: `${isMobile ? MOBILE_CARD_HEIGHT : CARD_HEIGHT}px`,
+					}}
 				>
-					{/* Left Hover Zone */}
-					<div className="absolute left-0 top-0 w-32 lg:w-96 h-full z-20 pointer-events-auto hover-zone-left"></div>
+					{/* Left Hover Zone (hidden on mobile) */}
+					<div className="absolute left-0 top-0 w-32 lg:w-96 h-full z-20 pointer-events-auto hover-zone-left hidden md:block"></div>
 
-					{/* Right Hover Zone */}
-					<div className="absolute right-0 top-0 w-32 lg:w-96 h-full z-20 pointer-events-auto hover-zone-right"></div>
+					{/* Right Hover Zone (hidden on mobile) */}
+					<div className="absolute right-0 top-0 w-32 lg:w-96 h-full z-20 pointer-events-auto hover-zone-right hidden md:block"></div>
 
 					{/* Left Scroll Button (hover only) */}
 					<motion.button
@@ -277,10 +295,11 @@ export default function Features() {
 					{/* Cards container, dynamic left/right padding for virtual max-w-7xl */}
 					<motion.div
 						ref={scrollRef}
-						className="flex gap-8 h-full overflow-x-auto overflow-y-hidden scrollbar-hide w-full"
+						className="flex h-full overflow-x-auto overflow-y-hidden scrollbar-hide w-full px-4 sm:px-0"
 						style={{
-							paddingLeft: sideMargin,
-							paddingRight: sideMargin,
+							paddingLeft: !isMobile ? sideMargin : 0,
+							paddingRight: !isMobile ? sideMargin : 0,
+							gap: isMobile ? MOBILE_CARD_GAP : CARD_GAP,
 							scrollbarWidth: 'none',
 							msOverflowStyle: 'none',
 						}}
@@ -295,10 +314,12 @@ export default function Features() {
 								variants={cardVariants}
 								className="feature-card relative rounded-2xl border border-[#2C2F36] shadow-2xl overflow-hidden flex-shrink-0 flex flex-col justify-end"
 								style={{
-									height: `${CARD_HEIGHT}px`,
-									width: `${CARD_HEIGHT * feature.aspect}px`,
+									height: `${isMobile ? MOBILE_CARD_HEIGHT : CARD_HEIGHT}px`,
+									width: `${(isMobile ? MOBILE_CARD_HEIGHT : CARD_HEIGHT) * feature.aspect}px`,
 									minWidth: `${
-										CARD_HEIGHT * feature.aspect
+										(isMobile
+											? MOBILE_CARD_HEIGHT
+											: CARD_HEIGHT) * feature.aspect
 									}px`,
 								}}
 							>
@@ -312,16 +333,16 @@ export default function Features() {
 									/>
 								</div>
 								<div
-									className="relative z-10 p-6 md:px-8 md:py-8 flex flex-col items-start justify-end"
+									className="relative z-10 p-4 sm:p-6 md:px-8 md:py-8 flex flex-col items-start justify-end"
 									style={{
 										textShadow:
 											'0 2px 8px rgba(0,0,0,0.45)',
 									}}
 								>
-									<h3 className="text-xl md:text-base text-white mb-2 font-semibold">
+									<h3 className="text-lg sm:text-xl md:text-base text-white mb-2 font-semibold leading-tight">
 										{feature.heading}
 									</h3>
-									<p className="text-base md:text-sm text-white/80 font-light">
+									<p className="text-sm sm:text-base md:text-sm text-white/80 font-light leading-relaxed">
 										{feature.description}
 									</p>
 								</div>

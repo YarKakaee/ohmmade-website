@@ -145,7 +145,7 @@ export default function Hero() {
 	}, []);
 
 	return (
-		<section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-hidden px-4 sm:px-0">
+		<section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-visible sm:overflow-hidden px-4 sm:px-0">
 			{/* Star/Particle Background */}
 			{isClient &&
 				particles.map((particle, index) => (
@@ -170,7 +170,7 @@ export default function Hero() {
 				transition={{ duration: 1, ease: 'easeOut' }}
 				className="absolute inset-0 pointer-events-none z-0"
 			>
-				<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1100px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 sm:blur-[125px] blur-[80px] opacity-70 transform-gpu mt-56 sm:mt-0">
+				<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1100px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 sm:blur-[125px] blur-[80px] opacity-70 transform-gpu mt-38 sm:mt-0">
 					<Image
 						src="https://ujaylejhopvncyjvduvj.supabase.co/storage/v1/object/public/ohmmade-assets//heroimageohmmade.webp"
 						alt="Abstract light pattern"
@@ -189,10 +189,10 @@ export default function Hero() {
 					animate="visible"
 					className="flex flex-col items-center justify-center w-full relative z-10 text-center"
 				>
-					<div className="text-white space-y-3 sm:space-y-5 max-w-xl w-full flex flex-col items-center">
+					<div className="text-white space-y-3 sm:space-y-5 max-w-xl w-full flex flex-col items-center -mt-16 sm:-mt-0">
 						<motion.h1
 							variants={fadeInUp}
-							className={`text-3xl sm:text-4xl md:text-[44px] font-[850] leading-tight bg-gradient-to-b from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(39,187,255,0.10)] ${interTight.className}`}
+							className={`text-2xl sm:text-4xl md:text-[44px] font-[850] leading-tight bg-gradient-to-b from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(39,187,255,0.10)] ${interTight.className}`}
 						>
 							Turning One-Time Projects
 						</motion.h1>
@@ -214,7 +214,7 @@ export default function Hero() {
 								style={{ position: 'relative' }}
 							>
 								<span
-									className="absolute inset-x-1 sm:inset-x-2 inset-y-0.5 sm:inset-y-1 bg-gradient-to-r from-purple-400 to-pink-600 blur-xl sm:blur-2xl opacity-50 pointer-events-none"
+									className="absolute inset-x-1 sm:inset-x-2 inset-y-0.5 sm:inset-y-1 bg-gradient-to-r from-purple-400 to-pink-600 blur-xl sm:blur-2xl opacity-50 pointer-events-none -z-10"
 									aria-hidden="true"
 								/>
 								Lifelong Impact.
