@@ -145,7 +145,7 @@ export default function Hero() {
 	}, []);
 
 	return (
-		<section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-hidden">
+		<section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-hidden px-4 sm:px-0">
 			{/* Star/Particle Background */}
 			{isClient &&
 				particles.map((particle, index) => (
@@ -170,7 +170,7 @@ export default function Hero() {
 				transition={{ duration: 1, ease: 'easeOut' }}
 				className="absolute inset-0 pointer-events-none z-0"
 			>
-				<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1100px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 blur-[125px] opacity-70 transform-gpu">
+				<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1100px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 sm:blur-[125px] blur-[80px] opacity-70 transform-gpu mt-56 sm:mt-0">
 					<Image
 						src="https://ujaylejhopvncyjvduvj.supabase.co/storage/v1/object/public/ohmmade-assets//heroimageohmmade.webp"
 						alt="Abstract light pattern"
@@ -189,22 +189,22 @@ export default function Hero() {
 					animate="visible"
 					className="flex flex-col items-center justify-center w-full relative z-10 text-center"
 				>
-					<div className="text-white space-y-5 max-w-xl w-full flex flex-col items-center">
+					<div className="text-white space-y-3 sm:space-y-5 max-w-xl w-full flex flex-col items-center">
 						<motion.h1
 							variants={fadeInUp}
-							className={`text-4xl sm:text-[44px] font-[850] leading-tight bg-gradient-to-b from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(39,187,255,0.10)] ${interTight.className}`}
+							className={`text-3xl sm:text-4xl md:text-[44px] font-[850] leading-tight bg-gradient-to-b from-white via-blue-100 to-white bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(39,187,255,0.10)] ${interTight.className}`}
 						>
 							Turning One-Time Projects
 						</motion.h1>
 
 						<motion.h1
-							className="text-4xl sm:text-[54px] font-[900] leading-tight relative -mt-4 flex flex-wrap justify-center"
+							className="text-3xl sm:text-4xl md:text-[54px] font-[900] leading-tight relative -mt-2 sm:-mt-4 flex flex-wrap justify-center"
 							initial="hidden"
 							animate="visible"
 						>
 							<motion.span
 								variants={intoVariant}
-								className="text-white font-bold mr-2"
+								className="text-white font-bold mr-1 sm:mr-2"
 							>
 								Into
 							</motion.span>
@@ -214,7 +214,7 @@ export default function Hero() {
 								style={{ position: 'relative' }}
 							>
 								<span
-									className="absolute inset-x-2 inset-y-1 bg-gradient-to-r from-purple-400 to-pink-600 blur-2xl opacity-50 pointer-events-none"
+									className="absolute inset-x-1 sm:inset-x-2 inset-y-0.5 sm:inset-y-1 bg-gradient-to-r from-purple-400 to-pink-600 blur-xl sm:blur-2xl opacity-50 pointer-events-none"
 									aria-hidden="true"
 								/>
 								Lifelong Impact.
@@ -222,7 +222,7 @@ export default function Hero() {
 						</motion.h1>
 
 						<motion.p
-							className="text-[#FFFFFF]/65 max-w-xl font-normal text-[15px] mx-auto flex flex-wrap justify-center"
+							className="text-[#FFFFFF]/65 max-w-sm md:max-w-xl font-normal text-[13px] sm:text-[15px] mx-auto flex flex-wrap justify-center px-2 sm:px-0"
 							initial="hidden"
 							animate="visible"
 						>
@@ -266,7 +266,7 @@ export default function Hero() {
 										delay: 0.05 * i,
 										ease: 'easeOut',
 									}}
-									className="mr-1 inline-block"
+									className="mr-0.5 sm:mr-1 inline-block"
 								>
 									{word}
 								</motion.span>
@@ -274,17 +274,18 @@ export default function Hero() {
 						</motion.p>
 
 						{/* CTA Buttons with Staggered Animation */}
-						<div className="flex flex-col sm:flex-row gap-4 mt-6 justify-center items-center">
+						<div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6 justify-center items-center w-full max-w-sm sm:max-w-none">
 							<motion.div
 								variants={ctaButtonUp1}
 								initial="hidden"
 								animate="visible"
 								whileHover={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
+								className="w-full sm:w-auto"
 							>
 								<Link
 									href="/learn"
-									className="relative inline-flex items-center justify-center bg-[#27BBFF] text-[#101014] px-5 py-3 rounded-md text-sm font-semibold shadow-[0_4px_24px_0_rgba(39,187,255,0.25)] transition-all duration-300  before:absolute before:inset-0 before:rounded-md before:blur before:opacity-50 before:bg-gradient-to-r before:from-[#27BBFF] before:to-[#6EE7FF] before:z-[-1] overflow-hidden"
+									className="relative inline-flex items-center justify-center bg-[#27BBFF] text-[#101014] px-4 sm:px-5 py-3 rounded-md text-sm font-semibold shadow-[0_4px_24px_0_rgba(39,187,255,0.25)] transition-all duration-300 before:absolute before:inset-0 before:rounded-md before:blur before:opacity-50 before:bg-gradient-to-r before:from-[#27BBFF] before:to-[#6EE7FF] before:z-[-1] overflow-hidden w-full sm:w-auto"
 								>
 									Start Your First Project
 								</Link>
@@ -295,10 +296,11 @@ export default function Hero() {
 								animate="visible"
 								whileHover={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
+								className="w-full sm:w-auto"
 							>
 								<Link
 									href="/projects"
-									className="bg-[#101014]/0 text-[#FFFFFF]/65 px-5 py-3 border-[#5C5C5E] border-1 rounded-md text-sm font-medium"
+									className="bg-[#101014]/0 text-[#FFFFFF]/65 px-4 sm:px-5 py-3 border-[#5C5C5E] border-1 rounded-md text-sm font-medium w-full sm:w-auto inline-flex items-center justify-center"
 								>
 									Explore Community
 								</Link>
