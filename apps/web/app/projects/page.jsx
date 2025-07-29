@@ -246,20 +246,20 @@ export default function ExploreProjectsPage() {
 					}}
 				/>
 
-				<LayoutContainer className="py-20 relative z-10">
+				<LayoutContainer className="pt-8 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-20 relative z-10">
 					<h2
-						className={`text-[44px] font-black mb-4 text-white leading-tight ${interTight.className}`}
+						className={`text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-black mb-3 sm:mb-4 text-white leading-tight ${interTight.className}`}
 					>
 						Explore Projects
 					</h2>
-					<p className="text-white/60 mb-10">
+					<p className="text-white/60 mb-6 sm:mb-8 md:mb-10 text-sm sm:text-base">
 						Discover a wide range of beginner-friendly electronics
 						and coding projects shared by the OhmMade community.
 						Learn, build, and get inspired!
 					</p>
 
 					{/* Controls */}
-					<div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-8">
+					<div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-6 sm:mb-8">
 						<div className="relative flex-1">
 							<FontAwesomeIcon
 								icon={faSearch}
@@ -271,11 +271,12 @@ export default function ExploreProjectsPage() {
 								onChange={handleSearchChange}
 								placeholder="Filter by keyword..."
 								className="bg-[#1E2025] text-white text-sm px-4 py-2 pl-12 rounded-md border border-[#6B6B6D] placeholder:text-white/50 focus:outline-none w-full lg:w-[220px]"
+								style={{ fontSize: '16px' }}
 							/>
 						</div>
 
-						<div className="flex flex-wrap gap-4 items-center justify-end">
-							<span className="text-white/60 text-sm hidden lg:block">
+						<div className="flex flex-wrap gap-2 sm:gap-4 items-center justify-end">
+							<span className="text-white/60 text-xs sm:text-sm hidden lg:block">
 								{totalItems} results
 							</span>
 
@@ -286,19 +287,19 @@ export default function ExploreProjectsPage() {
 								sortBy !== 'trending') && (
 								<button
 									onClick={handleClearFilters}
-									className="cursor-pointer text-sm font-medium px-4 py-2 rounded-md transition flex items-center gap-2 bg-[#34343B] text-[#FFFFFF] hover:brightness-150"
+									className="cursor-pointer text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 rounded-md transition flex items-center gap-2 bg-[#34343B] text-[#FFFFFF] hover:brightness-150"
 								>
 									<span>Clear Filters</span>
 									<FontAwesomeIcon
 										icon={faFilter}
-										className="text-sm"
+										className="text-xs sm:text-sm"
 									/>
 								</button>
 							)}
 
 							<button
 								onClick={() => setFiltersOpen(!filtersOpen)}
-								className={`cursor-pointer text-sm font-medium px-4 py-2 rounded-md transition flex items-center gap-2 ${
+								className={`cursor-pointer text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 rounded-md transition flex items-center gap-2 ${
 									filtersOpen
 										? 'bg-[#27BBFF] text-[#101014]'
 										: 'bg-[#34343B] text-[#FFFFFF] hover:brightness-150'
@@ -307,7 +308,7 @@ export default function ExploreProjectsPage() {
 								<span>Filters</span>
 								<FontAwesomeIcon
 									icon={faFilter}
-									className="text-sm"
+									className="text-xs sm:text-sm"
 								/>
 							</button>
 
@@ -315,7 +316,7 @@ export default function ExploreProjectsPage() {
 								<select
 									value={sortBy}
 									onChange={handleSortChange}
-									className="cursor-pointer w-full bg-[#1C1C20] border border-[#3A3A3C]/60 rounded-md px-3 py-2 pr-8 text-white/60 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] font-medium text-[14px]"
+									className="cursor-pointer w-full bg-[#1C1C20] border border-[#3A3A3C]/60 rounded-md px-3 py-2 pr-8 text-white/60 appearance-none focus:outline-none focus:ring-2 focus:ring-[#27BBFF] font-medium text-[12px] sm:text-[14px]"
 								>
 									<option value="trending">Trending</option>
 									<option value="newest">Newest</option>
@@ -336,11 +337,11 @@ export default function ExploreProjectsPage() {
 
 							<Link
 								href="/projects/publish"
-								className="cursor-pointer bg-[#27BBFF] text-[#101014] text-sm font-medium px-4 py-2 rounded-md hover:brightness-110 transition flex items-center gap-2"
+								className="cursor-pointer bg-[#27BBFF] text-[#101014] text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 rounded-md hover:brightness-110 transition flex items-center gap-2"
 							>
 								<FontAwesomeIcon
 									icon={faCirclePlus}
-									className="text-sm"
+									className="text-xs sm:text-sm"
 								/>
 								Publish
 							</Link>
@@ -348,7 +349,7 @@ export default function ExploreProjectsPage() {
 					</div>
 
 					{/* Main Content */}
-					<div className="flex flex-col lg:flex-row gap-12">
+					<div className="flex flex-col lg:flex-row gap-8 sm:gap-12">
 						<div
 							className={`grid w-full ${
 								filtersOpen ? 'lg:w-[78%]' : 'lg:w-full'
@@ -356,7 +357,7 @@ export default function ExploreProjectsPage() {
 								filtersOpen
 									? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
 									: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-							} gap-6`}
+							} gap-4 sm:gap-6`}
 						>
 							<AnimatePresence mode="wait">
 								{error ? (
@@ -417,7 +418,72 @@ export default function ExploreProjectsPage() {
 							</AnimatePresence>
 						</div>
 
-						{/* Filters Sidebar */}
+						{/* Mobile Filters */}
+						{filtersOpen && (
+							<div className="lg:hidden w-full mb-6 sm:mb-8">
+								<div className="bg-[#1C1C20] border border-[#2C2F36] rounded-lg p-4 sm:p-6">
+									<h3 className="text-white text-lg sm:text-[20px] font-bold mb-4 sm:mb-6">
+										Filters
+									</h3>
+									<div className="space-y-4 sm:space-y-6 text-sm">
+										{/* Author Filter */}
+										<div>
+											<p className="mb-3 font-medium text-white">
+												Author
+											</p>
+											<div className="space-y-2">
+												<label className="flex items-center gap-2 cursor-pointer text-white/60 text-sm">
+													<input
+														type="checkbox"
+														checked={filters.author.includes(
+															'ohmmade'
+														)}
+														onChange={() =>
+															handleFilterChange(
+																'author',
+																'ohmmade'
+															)
+														}
+														className="hidden peer"
+													/>
+													<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+														<FontAwesomeIcon
+															icon={faCheck}
+															className="text-[#101014] text-[11px] hidden peer-checked:block"
+														/>
+													</span>
+													OhmMade
+												</label>
+												<label className="flex items-center gap-2 cursor-pointer text-white/60 text-sm">
+													<input
+														type="checkbox"
+														checked={filters.author.includes(
+															'community'
+														)}
+														onChange={() =>
+															handleFilterChange(
+																'author',
+																'community'
+															)
+														}
+														className="hidden peer"
+													/>
+													<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+														<FontAwesomeIcon
+															icon={faCheck}
+															className="text-[#101014] text-[11px] hidden peer-checked:block"
+														/>
+													</span>
+													Community
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						)}
+
+						{/* Desktop Filters Sidebar */}
 						{filtersOpen && (
 							<div className="hidden lg:block w-full max-w-[270px] space-y-6 text-sm">
 								<h3 className="text-white text-[20px] font-bold">
@@ -623,8 +689,8 @@ export default function ExploreProjectsPage() {
 
 					{/* Pagination */}
 					{totalPages > 1 && (
-						<div className="flex flex-col items-center gap-4 mt-12">
-							<div className="flex items-center gap-2">
+						<div className="flex flex-col items-center gap-3 sm:gap-4 mt-8 sm:mt-12">
+							<div className="flex items-center gap-1 sm:gap-2">
 								<button
 									onClick={() =>
 										handlePageChange(currentPage - 1)
@@ -690,7 +756,7 @@ export default function ExploreProjectsPage() {
 									<FontAwesomeIcon icon={faChevronRight} />
 								</button>
 							</div>
-							<p className="text-sm text-white/60">
+							<p className="text-xs sm:text-sm text-white/60">
 								Showing{' '}
 								{Math.min(
 									(currentPage - 1) * pageSize + 1,

@@ -159,9 +159,9 @@ export default function PublishProjectPage() {
 	return (
 		<div className="relative min-h-screen bg-[#101014] overflow-hidden">
 			<section className="relative w-full pt-16">
-				<LayoutContainer className="py-20">
+				<LayoutContainer className="py-12 sm:py-16 md:py-20">
 					<h2
-						className={`text-[40px] font-black mb-4 text-white leading-tight relative z-10 ${interTight.className}`}
+						className={`text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black mb-3 sm:mb-4 text-white leading-tight relative z-10 ${interTight.className}`}
 					>
 						Publish Your Project
 					</h2>
@@ -174,7 +174,7 @@ export default function PublishProjectPage() {
 						}}
 					/>
 
-					<div className="w-full h-20 flex items-center justify-between px-8 border-b border-white/60">
+					<div className="w-full h-16 sm:h-20 flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-8 border-b border-white/60 gap-3 sm:gap-0">
 						<input
 							type="text"
 							value={title}
@@ -184,17 +184,18 @@ export default function PublishProjectPage() {
 								)
 							}
 							placeholder="Enter title here..."
-							className="bg-transparent text-white text-[15px] placeholder-white/50 focus:outline-none w-2/3 font-medium mt-4"
+							className="bg-transparent text-white text-sm sm:text-[15px] placeholder-white/50 focus:outline-none w-full sm:w-2/3 font-medium mt-4 sm:mt-0"
+							style={{ fontSize: '16px' }}
 						/>
 
-						<div className="space-x-2">
+						<div className="hidden sm:flex gap-2 sm:space-x-2">
 							{/* <button className="bg-[#343437] disabled cursor-pointer text-white px-5 py-2 font-medium rounded-md text-sm hover:bg-[#3A3A3A] transition">
 								Save draft (coming soon)
 							</button> */}
 							<button
 								onClick={handlePublish}
 								disabled={isPublishing}
-								className={`px-5 py-2 text-sm font-medium rounded-md transition ${
+								className={`px-4 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-md transition ${
 									isPublishing
 										? 'bg-[#27BBFF] opacity-50 cursor-not-allowed'
 										: 'bg-[#27BBFF] text-[#101014] cursor-pointer hover:brightness-110'
@@ -219,16 +220,16 @@ export default function PublishProjectPage() {
 					</div>
 
 					{/* Main Content Area */}
-					<div className="flex">
+					<div className="flex flex-col lg:flex-row">
 						{/* Left: Editor */}
-						<div className="w-4/6 border-r border-white/60 min-h-[600px] p-8 text-white/50">
+						<div className="w-full lg:w-4/6 lg:border-r lg:border-white/60 min-h-[500px] sm:min-h-[600px] p-4 sm:p-6 lg:p-8 text-white/50 relative z-50">
 							<CodexEditorWrapper ref={editorRef} />
 						</div>
 
 						{/* Right: Sidebar */}
-						<div className="w-2/6 space-y-6">
-							<div className="px-8 pt-5 text-sm text-white">
-								<h3 className="text-white font-extrabold text-[20px] mb-2">
+						<div className="w-full lg:w-2/6 space-y-4 sm:space-y-6">
+							<div className="px-4 sm:px-6 lg:px-8 pt-4 sm:pt-5 text-xs sm:text-sm text-white">
+								<h3 className="text-white font-extrabold text-lg sm:text-[20px] mb-2">
 									Thank you for sharing your knowledge!
 								</h3>
 								<p className="text-[#FFFFFF]/60 mb-3">
@@ -269,7 +270,7 @@ export default function PublishProjectPage() {
 
 								<a
 									href="https://support.ohmmade.ca/articles/publishing-guidelines"
-									className="inline-flex items-center mt-4 text-sm bg-[#343437] rounded-md px-3 py-2 text-white hover:bg-[#2F2F31] transition"
+									className="inline-flex items-center mt-4 text-xs sm:text-sm bg-[#343437] rounded-md px-3 py-2 text-white hover:bg-[#2F2F31] transition"
 								>
 									Publishing Guidelines{' '}
 									<FontAwesomeIcon
@@ -279,11 +280,11 @@ export default function PublishProjectPage() {
 								</a>
 							</div>
 
-							<div className="mx-8 border-b border-white/60 mb-6" />
+							<div className="mx-4 sm:mx-6 lg:mx-8 border-b border-white/60 mb-4 sm:mb-6" />
 
 							{/* Form Fields */}
-							<div className="px-8 space-y-4 text-[12.5px] text-white">
-								<div>
+							<div className="px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-5 text-[11px] sm:text-[12.5px] text-white relative z-30">
+								<div className="mb-2 sm:mb-0">
 									<label className="block mb-1.5 text-white/60">
 										Category / Microcontroller{' '}
 										<span className="text-[#FFC008]">
@@ -297,6 +298,7 @@ export default function PublishProjectPage() {
 											onChange={(e) =>
 												setCategory(e.target.value)
 											}
+											style={{ fontSize: '16px' }}
 										>
 											<option value="" disabled>
 												Select...
@@ -353,20 +355,20 @@ export default function PublishProjectPage() {
 										</span>
 									</label>
 
-									<div className="flex gap-4 items-center">
+									<div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
 										<label
 											htmlFor="thumbnail-upload"
-											className="border border-dashed border-[#6B6B6D] rounded-md px-4 py-6 text-center cursor-pointer hover:bg-[#1F1F24] transition w-full"
+											className="border border-dashed border-[#6B6B6D] rounded-md px-3 sm:px-4 py-4 sm:py-6 text-center cursor-pointer hover:bg-[#1F1F24] transition w-full"
 										>
 											<FontAwesomeIcon
 												icon={faUpload}
 												className="text-white/50 text-xl mb-2"
 											/>
-											<p className="text-white/50 text-sm">
+											<p className="text-white/50 text-xs sm:text-sm">
 												Click to upload or drag & drop
 												file
 											</p>
-											<p className="text-white/25 text-xs mt-1">
+											<p className="text-white/25 text-[10px] sm:text-xs mt-1">
 												Recommended size: 1580x1060
 											</p>
 										</label>
@@ -376,7 +378,7 @@ export default function PublishProjectPage() {
 											<img
 												src={thumbnailUrl}
 												alt="Thumbnail Preview"
-												className="w-[125px] h-[100px] rounded-md object-cover border border-[#6B6B6D]"
+												className="w-[100px] sm:w-[125px] h-[80px] sm:h-[100px] rounded-md object-cover border border-[#6B6B6D] self-center sm:self-start"
 											/>
 										)}
 									</div>
@@ -426,7 +428,7 @@ export default function PublishProjectPage() {
 									/>
 								</div>
 
-								<div>
+								<div className="mb-2 sm:mb-0">
 									<label className="block mb-1.5 text-white/60">
 										Difficulty Level{' '}
 										<span className="text-[#FFC008]">
@@ -442,6 +444,7 @@ export default function PublishProjectPage() {
 													e.target.value
 												)
 											}
+											style={{ fontSize: '16px' }}
 										>
 											<option value="">Select...</option>
 											<option>Beginner</option>
@@ -463,7 +466,7 @@ export default function PublishProjectPage() {
 										Components Used
 									</label>
 
-									<div className="flex gap-2 mb-2">
+									<div className="flex flex-col sm:flex-row gap-2 mb-2">
 										<input
 											ref={inputRef}
 											type="text"
@@ -473,6 +476,7 @@ export default function PublishProjectPage() {
 												setNewComponent(e.target.value)
 											}
 											className="flex-1 bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 text-white/50 text-sm"
+											style={{ fontSize: '16px' }}
 										/>
 
 										{/* Insert Ω button */}
@@ -568,7 +572,7 @@ export default function PublishProjectPage() {
 											(max 6)
 										</span>
 									</label>
-									<div className="flex gap-2 mb-2">
+									<div className="flex flex-col sm:flex-row gap-2 mb-2">
 										<input
 											ref={tagInputRef}
 											type="text"
@@ -578,6 +582,7 @@ export default function PublishProjectPage() {
 												setNewTag(e.target.value)
 											}
 											className="flex-1 bg-[#1C1C20] border border-[#6B6B6D] rounded-md px-3 py-2 text-white/50 text-sm"
+											style={{ fontSize: '16px' }}
 										/>
 
 										{/* Add Button */}
@@ -622,6 +627,32 @@ export default function PublishProjectPage() {
 						</div>
 					</div>
 					{/* End main row */}
+
+					{/* Mobile Publish Button */}
+					<div className="sm:hidden px-4 sm:px-6 lg:px-8 pt-6">
+						<button
+							onClick={handlePublish}
+							disabled={isPublishing}
+							className={`w-full px-4 py-3 text-sm font-medium rounded-md transition ${
+								isPublishing
+									? 'bg-[#27BBFF] opacity-50 cursor-not-allowed'
+									: 'bg-[#27BBFF] text-[#101014] cursor-pointer hover:brightness-110'
+							}`}
+						>
+							{isPublishing ? (
+								<>
+									<FontAwesomeIcon
+										icon={faSpinner}
+										spin
+										className="text-sm"
+									/>
+									<span className="ml-2">Publishing...</span>
+								</>
+							) : (
+								<span>Publish Project</span>
+							)}
+						</button>
+					</div>
 				</LayoutContainer>
 			</section>
 		</div>
