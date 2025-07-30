@@ -277,25 +277,34 @@ export default function SettingsPage() {
 	return (
 		<div className="min-h-screen bg-[#101014] flex flex-col">
 			<div className="flex-1">
-				<LayoutContainer className="py-16">
-					<div className="flex">
-						{/* Fixed Sidebar */}
-						<DashboardSidebar
-							user={user}
-							currentPath="/dashboard/settings"
-						/>
+				<LayoutContainer className="py-8 sm:py-12 md:py-16">
+					<div className="flex flex-col lg:flex-row">
+						{/* Sidebar */}
+						<div className="lg:hidden mb-6">
+							<DashboardSidebar
+								user={user}
+								currentPath="/dashboard/settings"
+							/>
+						</div>
+
+						<div className="hidden lg:block">
+							<DashboardSidebar
+								user={user}
+								currentPath="/dashboard/settings"
+							/>
+						</div>
 
 						{/* Main Content */}
-						<div className="flex-1 pt-24 pl-16">
+						<div className="flex-1 lg:pt-24 lg:pl-16">
 							<div>
-								<div className="mb-8">
-									<h1 className="text-[32px] font-black text-white">
+								<div className="mb-6 sm:mb-8">
+									<h1 className="text-2xl sm:text-3xl md:text-[32px] font-black text-white">
 										Settings
 									</h1>
 								</div>
 
-								{/* Settings Navigation */}
-								<div className="flex gap-3 mb-8 overflow-x-auto pb-2">
+								{/* Settings Navigation - Hidden for now */}
+								{/* <div className="flex gap-2 sm:gap-3 mb-6 sm:mb-8 overflow-x-auto pb-2">
 									{[
 										{
 											id: 'profile',
@@ -316,7 +325,7 @@ export default function SettingsPage() {
 										<button
 											key={tab.id}
 											onClick={() => setActiveTab(tab.id)}
-											className={`cursor-pointer flex items-center gap-2 px-6 py-2 rounded-xl whitespace-nowrap transition-all font-semibold shadow-sm border-2 ${
+											className={`cursor-pointer flex items-center gap-2 px-4 sm:px-6 py-2 rounded-xl whitespace-nowrap transition-all font-semibold shadow-sm border-2 text-sm sm:text-base ${
 												activeTab === tab.id
 													? ' bg-[#27BBFF]  text-[#101014] border-[#27BBFF]'
 													: 'bg-[#13151A] text-white/60 border-[#3A3A3C]/60 hover:bg-[#23242A] hover:text-white/80'
@@ -326,12 +335,12 @@ export default function SettingsPage() {
 											{tab.label}
 										</button>
 									))}
-								</div>
+								</div> */}
 
 								{/* Settings Content */}
 								{activeTab === 'profile' && (
 									<form onSubmit={handleSubmit}>
-										<div className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-8 shadow-2xl flex flex-col w-full">
+										<div className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl flex flex-col w-full">
 											<h2 className="text-xl font-bold text-white mb-4">
 												Profile
 											</h2>
@@ -341,9 +350,9 @@ export default function SettingsPage() {
 												These will be visible on your
 												public profile.
 											</p>
-											<div className="flex items-stretch gap-5">
+											<div className="flex flex-col lg:flex-row lg:items-stretch gap-5">
 												{/* Profile Picture - Centered */}
-												<div className="flex flex-col justify-center items-center w-56 min-w-[180px]">
+												<div className="flex flex-col justify-center items-center w-full lg:w-56 lg:min-w-[180px]">
 													<div className="relative w-28 h-28 group flex items-center justify-center cursor-pointer">
 														<label
 															htmlFor="avatar-upload"
@@ -396,7 +405,7 @@ export default function SettingsPage() {
 													</div>
 												</div>
 												{/* Fields */}
-												<div className="flex-1 flex flex-col gap-8 justify-center">
+												<div className="flex-1 flex flex-col gap-6 sm:gap-8 justify-center">
 													{/* Display Name Field */}
 													<div>
 														<label
@@ -457,7 +466,7 @@ export default function SettingsPage() {
 										</div>
 
 										{/* Public Info Section */}
-										<div className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-8 shadow-2xl flex flex-col w-full mt-8">
+										<div className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl flex flex-col w-full mt-6 sm:mt-8">
 											<h2 className="text-xl font-bold text-white mb-4">
 												Public Info
 											</h2>
@@ -490,7 +499,7 @@ export default function SettingsPage() {
 											</div>
 
 											{/* Social Links */}
-											<div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
+											<div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-6 sm:gap-y-8">
 												{/* Github */}
 												<SocialInput
 													id="github"
@@ -543,15 +552,15 @@ export default function SettingsPage() {
 										</div>
 
 										{/* Divider and Save Row */}
-										<div className="border-t border-[#23242A] mt-10 pt-6 flex items-center justify-between gap-2">
-											<span className="text-white/60 text-sm font-medium flex items-center">
+										<div className="border-t border-[#23242A] mt-8 sm:mt-10 pt-4 sm:pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-2">
+											<span className="text-white/60 text-xs sm:text-sm font-medium flex items-center">
 												Learn more about{' '}
 												<span className="relative inline-block group align-middle ml-1">
 													<a
 														href="https://support.ohmmade.ca/articles/profile-guidelines"
 														target="_blank"
 														rel="noopener noreferrer"
-														className="text-[#27BBFF] text-sm font-medium flex items-center"
+														className="text-[#27BBFF] text-xs sm:text-sm font-medium flex items-center"
 													>
 														<span className="ml-0.5">
 															Profile Guidelines
@@ -571,7 +580,7 @@ export default function SettingsPage() {
 												disabled={
 													!hasChanges || isUpdating
 												}
-												className={`px-6 py-2 rounded-lg font-semibold transition-all text-xs shadow-sm
+												className={`px-4 sm:px-6 py-2 rounded-lg font-semibold transition-all text-xs shadow-sm
 													${
 														hasChanges &&
 														!isUpdating

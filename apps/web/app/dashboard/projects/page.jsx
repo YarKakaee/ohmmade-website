@@ -142,24 +142,32 @@ export default function MyProjectsPage() {
 	return (
 		<div className="min-h-screen bg-[#101014] flex flex-col">
 			<div className="flex-1">
-				<LayoutContainer className="py-16">
-					<div className="flex">
-						{/* Fixed Sidebar */}
+				<LayoutContainer className="py-8 sm:py-12 md:py-16">
+					<div className="flex flex-col lg:flex-row">
+						{/* Sidebar */}
+						<div className="lg:hidden mb-6">
+							<DashboardSidebar
+								user={user}
+								currentPath="/dashboard/projects"
+							/>
+						</div>
 
-						<DashboardSidebar
-							user={user}
-							currentPath="/dashboard/projects"
-						/>
+						<div className="hidden lg:block">
+							<DashboardSidebar
+								user={user}
+								currentPath="/dashboard/projects"
+							/>
+						</div>
 
 						{/* Scrollable Main Content */}
-						<div className="flex-1 pt-24 pl-16 min-h-[calc(100vh-8rem)]">
-							<div className="flex items-center justify-between mb-8">
-								<h1 className="text-[32px] font-black text-white">
+						<div className="flex-1 lg:pt-24 lg:pl-16 min-h-[calc(100vh-8rem)]">
+							<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0 mb-6 sm:mb-8">
+								<h1 className="text-2xl sm:text-3xl md:text-[32px] font-black text-white">
 									My Projects
 								</h1>
 								<Link
 									href="/projects/publish"
-									className="flex items-center gap-2 px-4 py-2 bg-[#27BBFF] text-[#101014] rounded-lg font-medium hover:bg-[#27BBFF]/90 transition-colors"
+									className="flex items-center gap-2 px-4 py-2 bg-[#27BBFF] text-[#101014] rounded-lg font-medium hover:bg-[#27BBFF]/90 transition-colors text-sm sm:text-base"
 								>
 									<FontAwesomeIcon icon={faPlus} />
 									New Project
@@ -167,7 +175,7 @@ export default function MyProjectsPage() {
 							</div>
 
 							{/* Projects Grid */}
-							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 								{projects.map((project) => (
 									<ProjectCard
 										key={project.id}
@@ -188,14 +196,14 @@ export default function MyProjectsPage() {
 									/>
 								))}
 								{projects.length === 0 && (
-									<div className="col-span-full text-center py-12">
-										<p className="text-white/60 mb-4">
+									<div className="col-span-full text-center py-8 sm:py-12">
+										<p className="text-white/60 mb-4 text-sm sm:text-base">
 											You haven't created any projects
 											yet.
 										</p>
 										<Link
 											href="/projects/publish"
-											className="inline-flex items-center gap-2 px-4 py-2 bg-[#27BBFF] text-[#101014] rounded-lg font-medium hover:bg-[#27BBFF]/90 transition-colors"
+											className="inline-flex items-center gap-2 px-4 py-2 bg-[#27BBFF] text-[#101014] rounded-lg font-medium hover:bg-[#27BBFF]/90 transition-colors text-sm sm:text-base"
 										>
 											<FontAwesomeIcon icon={faPlus} />
 											Create Your First Project
@@ -206,8 +214,8 @@ export default function MyProjectsPage() {
 
 							{/* Pagination */}
 							{totalPages > 1 && (
-								<div className="flex flex-col items-center gap-4 mt-12">
-									<div className="flex items-center gap-2">
+								<div className="flex flex-col items-center gap-3 sm:gap-4 mt-8 sm:mt-12">
+									<div className="flex items-center gap-1 sm:gap-2">
 										<button
 											onClick={() =>
 												handlePageChange(
@@ -215,10 +223,11 @@ export default function MyProjectsPage() {
 												)
 											}
 											disabled={currentPage === 1}
-											className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
+											className="p-1.5 sm:p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
 										>
 											<FontAwesomeIcon
 												icon={faChevronLeft}
+												className="text-sm sm:text-base"
 											/>
 										</button>
 										<div className="flex items-center gap-1">
@@ -249,7 +258,7 @@ export default function MyProjectsPage() {
 																		page
 																	)
 																}
-																className={`px-4 py-2 rounded-lg transition-colors cursor-pointer ${
+																className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors cursor-pointer text-xs sm:text-sm ${
 																	isCurrentPage
 																		? 'bg-[#27BBFF] text-[#101014]'
 																		: 'bg-[#13151A] border border-[#2C2F36] text-gray-400 hover:bg-[#1E2025]'
@@ -266,7 +275,7 @@ export default function MyProjectsPage() {
 														return (
 															<span
 																key={i}
-																className="px-4 py-2 text-gray-400"
+																className="px-3 sm:px-4 py-1.5 sm:py-2 text-gray-400 text-xs sm:text-sm"
 															>
 																...
 															</span>
@@ -285,14 +294,15 @@ export default function MyProjectsPage() {
 											disabled={
 												currentPage === totalPages
 											}
-											className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
+											className="p-1.5 sm:p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
 										>
 											<FontAwesomeIcon
 												icon={faChevronRight}
+												className="text-sm sm:text-base"
 											/>
 										</button>
 									</div>
-									<p className="text-sm text-white/60">
+									<p className="text-xs sm:text-sm text-white/60">
 										Showing{' '}
 										{Math.min(
 											(currentPage - 1) * pageSize + 1,

@@ -176,28 +176,36 @@ export default function UserDashboardPage() {
 	return (
 		<div className="min-h-screen bg-[#101014] flex flex-col">
 			<div className="flex-1">
-				<LayoutContainer className="py-16">
-					<div className="flex">
+				<LayoutContainer className="py-8 sm:py-12 md:py-16">
+					<div className="flex flex-col lg:flex-row">
 						{/* Sidebar */}
+						<div className="lg:hidden mb-6">
+							<DashboardSidebar
+								user={user}
+								currentPath="/dashboard"
+							/>
+						</div>
 
-						<DashboardSidebar
-							user={user}
-							currentPath="/dashboard"
-						/>
+						<div className="hidden lg:block">
+							<DashboardSidebar
+								user={user}
+								currentPath="/dashboard"
+							/>
+						</div>
 
 						{/* Main scrollable Content */}
-						<div className="flex-1 pt-24 pl-16">
-							<div className="mb-5">
-								<h1 className="text-[32px] font-black text-white">
+						<div className="flex-1 lg:pt-24 lg:pl-16 min-h-[calc(100vh-8rem)]">
+							<div className="mb-4 sm:mb-5">
+								<h1 className="text-2xl sm:text-3xl md:text-[32px] font-black text-white">
 									Account Dashboard
 								</h1>
 							</div>
 
 							{/* Welcome Section */}
-							<div className="rounded-2xl mb-8 ">
-								<div className="flex items-start justify-between">
+							<div className="rounded-2xl mb-6 sm:mb-8">
+								<div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-0">
 									<div>
-										<h2 className="text-xl font-bold text-white mb-2">
+										<h2 className="text-lg sm:text-xl font-bold text-white mb-2">
 											Welcome back, {user.name} 👋
 										</h2>
 										<p className="text-white/60 text-sm">
@@ -205,11 +213,11 @@ export default function UserDashboardPage() {
 											people!
 										</p>
 									</div>
-									<div className="text-right">
+									<div className="text-left sm:text-right">
 										<p className="text-sm text-white/60">
 											Member since
 										</p>
-										<p className="text-lg font-semibold text-white">
+										<p className="text-base sm:text-lg font-semibold text-white">
 											{getMemberDuration(user.created_at)}
 										</p>
 									</div>
@@ -217,21 +225,21 @@ export default function UserDashboardPage() {
 							</div>
 
 							{/* Recent Activity */}
-							<div className="bg-[#13151A] rounded-2xl p-6 border border-[#3A3A3C]/60">
+							<div className="bg-[#13151A] rounded-2xl p-4 sm:p-6 border border-[#3A3A3C]/60">
 								<h2 className="text-lg font-bold text-white mb-4">
 									Recent Activity
 								</h2>
 								<div className="overflow-x-auto">
-									<table className="w-full text-sm">
+									<table className="w-full text-xs sm:text-sm">
 										<thead>
 											<tr className="text-left border-b border-[#3A3A3C]/60">
-												<th className="pb-4 text-white/60 font-medium">
+												<th className="pb-3 sm:pb-4 text-white/60 font-medium">
 													Action
 												</th>
-												<th className="pb-4 text-white/60 font-medium">
+												<th className="pb-3 sm:pb-4 text-white/60 font-medium">
 													Project
 												</th>
-												<th className="pb-4 text-white/60 font-medium">
+												<th className="pb-3 sm:pb-4 text-white/60 font-medium">
 													When
 												</th>
 											</tr>
@@ -249,12 +257,12 @@ export default function UserDashboardPage() {
 																: ''
 														}`}
 													>
-														<td className="py-4">
+														<td className="py-3 sm:py-4">
 															{formatActivityMessage(
 																activity
 															)}
 														</td>
-														<td className="py-4">
+														<td className="py-3 sm:py-4">
 															{activity.project && (
 																<Link
 																	href={`/projects/${activity.project.slug}`}
@@ -268,7 +276,7 @@ export default function UserDashboardPage() {
 																</Link>
 															)}
 														</td>
-														<td className="py-4 text-white/60">
+														<td className="py-3 sm:py-4 text-white/60">
 															{formatActivityTime(
 																activity.createdAt
 															)}
@@ -280,7 +288,7 @@ export default function UserDashboardPage() {
 												<tr>
 													<td
 														colSpan={3}
-														className="py-8 text-center text-white/60"
+														className="py-6 sm:py-8 text-center text-white/60"
 													>
 														You haven't done
 														anything yet — get
@@ -293,17 +301,18 @@ export default function UserDashboardPage() {
 									</table>
 								</div>
 								{totalPages > 1 && (
-									<div className="flex flex-col items-center gap-4 mt-12">
-										<div className="flex items-center gap-2">
+									<div className="flex flex-col items-center gap-3 sm:gap-4 mt-8 sm:mt-12">
+										<div className="flex items-center gap-1 sm:gap-2">
 											<button
 												onClick={() =>
 													setPage(page - 1)
 												}
 												disabled={page === 1}
-												className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
+												className="p-1.5 sm:p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
 											>
 												<FontAwesomeIcon
 													icon={faChevronLeft}
+													className="text-sm sm:text-base"
 												/>
 											</button>
 											<div className="flex items-center gap-1">
@@ -335,7 +344,7 @@ export default function UserDashboardPage() {
 																			pageNum
 																		)
 																	}
-																	className={`px-4 py-2 rounded-lg transition-colors cursor-pointer ${
+																	className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors cursor-pointer text-xs sm:text-sm ${
 																		isCurrentPage
 																			? 'bg-[#27BBFF] text-[#101014]'
 																			: 'bg-[#13151A] border border-[#2C2F36] text-gray-400 hover:bg-[#1E2025]'
@@ -352,7 +361,7 @@ export default function UserDashboardPage() {
 															return (
 																<span
 																	key={i}
-																	className="px-4 py-2 text-gray-400"
+																	className="px-3 sm:px-4 py-1.5 sm:py-2 text-gray-400 text-xs sm:text-sm"
 																>
 																	...
 																</span>
@@ -367,10 +376,11 @@ export default function UserDashboardPage() {
 													setPage(page + 1)
 												}
 												disabled={page === totalPages}
-												className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
+												className="p-1.5 sm:p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
 											>
 												<FontAwesomeIcon
 													icon={faChevronRight}
+													className="text-sm sm:text-base"
 												/>
 											</button>
 										</div>
