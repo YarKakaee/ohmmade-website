@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { generateUsername, isValidUsername } from '@/lib/usernameUtils';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabaseServer';
 
 const prisma = new PrismaClient();
 
