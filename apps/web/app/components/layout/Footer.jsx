@@ -306,7 +306,8 @@ export default function Footer() {
 
 						{/* Brand Assets Download */}
 						<a
-							href="/brand-assets.zip"
+							href="/ohmmade-brand-assets.zip"
+							download="ohmmade-brand.zip"
 							className="flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-200 text-xs sm:text-sm"
 						>
 							<FontAwesomeIcon
