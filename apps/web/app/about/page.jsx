@@ -18,9 +18,9 @@ const team = [
 		bio: '2nd year Software Engineering student at Western who lives for building cool stuff — both hardware and software. Built OhmMade from the ground up and leads all design and dev.',
 		img: '/assets/Yar.jpeg',
 		socials: {
-			github: 'https://github.com/YarUsername',
-			linkedin: 'https://linkedin.com/in/YarUsername',
-			instagram: 'https://instagram.com/YarUsername',
+			github: 'https://github.com/YarKakaee',
+			linkedin: 'https://linkedin.com/in/yar-kakaee',
+			instagram: 'https://instagram.com/yar.kakaee',
 		},
 	},
 	{
