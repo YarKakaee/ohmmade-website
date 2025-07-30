@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 
 export async function GET(request) {
+	const prisma = getPrismaClient();
 	const { searchParams } = new URL(request.url);
 	const q = searchParams.get('q')?.trim();
 	if (!q) {

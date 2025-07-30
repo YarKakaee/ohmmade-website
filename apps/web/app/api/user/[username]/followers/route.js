@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 
 export async function GET(request, { params }) {
 	try {
+		const prisma = getPrismaClient();
 		const { username } = await params;
 
 		if (!username) {

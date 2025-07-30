@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 
 export async function GET(request) {
 	try {
+		const prisma = getPrismaClient();
 		const { searchParams } = new URL(request.url);
 		const userId = searchParams.get('userId');
 		const page = parseInt(searchParams.get('page')) || 1;

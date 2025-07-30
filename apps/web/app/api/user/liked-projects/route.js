@@ -1,9 +1,10 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 
 export async function GET(req) {
 	try {
+		const prisma = getPrismaClient();
 		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,

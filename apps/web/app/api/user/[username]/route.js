@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 import { awardWatts, canPerformAction } from '@/lib/watts';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 
 export async function GET(request, { params }) {
 	try {
+		const prisma = getPrismaClient();
 		const { username } = await params;
 
 		if (!username) {
