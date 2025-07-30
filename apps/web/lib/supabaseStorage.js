@@ -1,11 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-	process.env.NEXT_PUBLIC_SUPABASE_URL,
-	process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
 export async function uploadImage(file) {
+	const supabase = createClient(
+		process.env.NEXT_PUBLIC_SUPABASE_URL,
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+	);
 	try {
 		const fileExt = file.name.split('.').pop();
 		const fileName = `${Math.random()}.${fileExt}`;

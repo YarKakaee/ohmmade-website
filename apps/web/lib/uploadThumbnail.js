@@ -1,12 +1,11 @@
 // utils/uploadThumbnail.js
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-	process.env.NEXT_PUBLIC_SUPABASE_URL,
-	process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
 export async function uploadThumbnail(file, userId) {
+	const supabase = createClient(
+		process.env.NEXT_PUBLIC_SUPABASE_URL,
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+	);
 	const fileExt = file.name.split('.').pop();
 	const filePath = `thumbnails/${userId}-${Date.now()}.${fileExt}`;
 
