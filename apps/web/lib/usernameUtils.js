@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import prisma from '@/prisma/client';
 
 export async function generateUsername(name) {
 	// If no name is provided, use a fallback

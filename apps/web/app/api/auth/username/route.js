@@ -1,15 +1,16 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/prisma/client';
 import { generateUsername, isValidUsername } from '@/lib/usernameUtils';
-import { createClient } from '@/lib/supabaseServer';
-
-const prisma = new PrismaClient();
+import { createClient } from '@supabase/supabase-js';
 
 // POST endpoint to ensure a user has a username
 export async function POST(request) {
 	try {
 		// Create server-side Supabase client
-		const supabase = createClient();
+		const supabase = createClient(
+			process.env.NEXT_PUBLIC_SUPABASE_URL,
+			process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+		);
 
 		// Get the current authenticated user
 		const {

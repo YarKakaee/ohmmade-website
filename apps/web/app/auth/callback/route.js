@@ -2,10 +2,8 @@
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/prisma/client';
 import { generateUsername } from '@/lib/usernameUtils';
-
-const prisma = new PrismaClient();
 
 export async function GET(req) {
 	const requestUrl = new URL(req.url);
