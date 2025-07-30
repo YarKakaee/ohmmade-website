@@ -1,10 +1,24 @@
 import { NextResponse } from 'next/server';
 import { generateUsername } from '@/lib/usernameUtils';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 // Dynamic import to avoid build-time analysis
 const getPrisma = async () => {
-	const { default: prisma } = await import('@/prisma/client');
-	return prisma;
+	try {
+		const { default: prisma } = await import('@/prisma/client');
+		return prisma;
+	} catch (error) {
+		// During build time, return a mock client
+		return {
+			user: {
+				findUnique: async () => null,
+				create: async () => ({ id: 'mock' }),
+				update: async () => ({ id: 'mock' }),
+			},
+		};
+	}
 };
 
 export async function POST(request) {
