@@ -5,10 +5,18 @@
 		"build": {
 			"dependsOn": ["^build", "db:generate"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
-			"outputs": [".next/**", "!.next/cache/**"]
+			"outputs": [".next/**", "!.next/cache/**"],
+			"env": [
+				"DATABASE_URL",
+				"DIRECT_URL",
+				"SUPABASE_SERVICE_ROLE_KEY",
+				"NEXT_PUBLIC_SUPABASE_URL",
+				"NEXT_PUBLIC_SUPABASE_ANON_KEY"
+			]
 		},
 		"db:generate": {
-			"cache": false
+			"cache": false,
+			"env": ["DATABASE_URL", "DIRECT_URL"]
 		},
 		"lint": {
 			"dependsOn": ["^lint"]
@@ -18,7 +26,14 @@
 		},
 		"dev": {
 			"cache": false,
-			"persistent": true
+			"persistent": true,
+			"env": [
+				"DATABASE_URL",
+				"DIRECT_URL",
+				"SUPABASE_SERVICE_ROLE_KEY",
+				"NEXT_PUBLIC_SUPABASE_URL",
+				"NEXT_PUBLIC_SUPABASE_ANON_KEY"
+			]
 		}
 	}
 }
