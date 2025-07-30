@@ -689,82 +689,56 @@ export default function ExploreProjectsPage() {
 
 					{/* Pagination */}
 					{totalPages > 1 && (
-						<div className="flex flex-col items-center gap-3 sm:gap-4 mt-8 sm:mt-12">
-							<div className="flex items-center gap-1 sm:gap-2">
-								<button
-									onClick={() =>
-										handlePageChange(currentPage - 1)
-									}
-									disabled={currentPage === 1}
-									className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
-								>
-									<FontAwesomeIcon icon={faChevronLeft} />
-								</button>
-								<div className="flex items-center gap-1">
-									{[...Array(totalPages)].map((_, i) => {
-										const page = i + 1;
-										const isCurrentPage =
-											currentPage === page;
-										const isNearCurrentPage =
-											Math.abs(currentPage - page) <= 2;
-										const isFirstPage = page === 1;
-										const isLastPage = page === totalPages;
+						<div className="flex justify-center items-center gap-2 mt-8 sm:mt-12">
+							{/* Previous Button */}
+							<button
+								onClick={() =>
+									handlePageChange(currentPage - 1)
+								}
+								disabled={currentPage === 1}
+								className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+									currentPage === 1
+										? 'text-white/30 cursor-not-allowed'
+										: 'text-white/60 hover:text-white hover:bg-[#1C1C20] cursor-pointer'
+								}`}
+							>
+								Previous
+							</button>
 
-										if (
-											isFirstPage ||
-											isLastPage ||
-											isNearCurrentPage
-										) {
-											return (
-												<button
-													key={i}
-													onClick={() =>
-														handlePageChange(page)
-													}
-													className={`px-4 py-2 rounded-lg transition-colors cursor-pointer ${
-														isCurrentPage
-															? 'bg-[#27BBFF] text-[#101014]'
-															: 'bg-[#13151A] border border-[#2C2F36] text-gray-400 hover:bg-[#1E2025]'
-													}`}
-												>
-													{page}
-												</button>
-											);
-										} else if (
-											page === currentPage - 3 ||
-											page === currentPage + 3
-										) {
-											return (
-												<span
-													key={i}
-													className="px-4 py-2 text-gray-400"
-												>
-													...
-												</span>
-											);
-										}
-										return null;
-									})}
-								</div>
-								<button
-									onClick={() =>
-										handlePageChange(currentPage + 1)
-									}
-									disabled={currentPage === totalPages}
-									className="p-2 rounded-lg bg-[#13151A] border border-[#2C2F36] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1E2025] transition-colors cursor-pointer"
-								>
-									<FontAwesomeIcon icon={faChevronRight} />
-								</button>
+							{/* Page Numbers */}
+							<div className="flex items-center gap-1">
+								{Array.from(
+									{ length: totalPages },
+									(_, i) => i + 1
+								).map((page) => (
+									<button
+										key={page}
+										onClick={() => handlePageChange(page)}
+										className={`w-8 h-8 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+											currentPage === page
+												? 'bg-[#27BBFF] text-[#101014]'
+												: 'text-white/60 hover:text-white hover:bg-[#1C1C20]'
+										}`}
+									>
+										{page}
+									</button>
+								))}
 							</div>
-							<p className="text-xs sm:text-sm text-white/60">
-								Showing{' '}
-								{Math.min(
-									(currentPage - 1) * pageSize + 1,
-									totalItems
-								)}{' '}
-								- {Math.min(currentPage * pageSize, totalItems)}{' '}
-								of {totalItems} projects
-							</p>
+
+							{/* Next Button */}
+							<button
+								onClick={() =>
+									handlePageChange(currentPage + 1)
+								}
+								disabled={currentPage === totalPages}
+								className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+									currentPage === totalPages
+										? 'text-white/30 cursor-not-allowed'
+										: 'text-white/60 hover:text-white hover:bg-[#1C1C20] cursor-pointer'
+								}`}
+							>
+								Next
+							</button>
 						</div>
 					)}
 				</LayoutContainer>

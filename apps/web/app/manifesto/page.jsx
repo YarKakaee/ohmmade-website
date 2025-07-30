@@ -268,7 +268,7 @@ function WrittenContent() {
 	return (
 		<div className="bg-[#101014] text-white">
 			{/* Hero section - full height with just the first line */}
-			<section className="h-screen bg-[#101014] text-white flex items-center justify-center px-6 relative overflow-hidden z-10">
+			<section className="h-screen bg-[#101014] text-white flex items-center justify-center px-4 sm:px-6 relative overflow-hidden z-10">
 				<motion.div
 					className="absolute inset-0 z-0"
 					style={{
@@ -290,7 +290,7 @@ function WrittenContent() {
 							type: 'spring',
 							stiffness: 100,
 						}}
-						className="text-4xl md:text-4xl lg:text-5xl font-bold text-white leading-tight"
+						className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight"
 					>
 						We were tired of seeing projects go{' '}
 						<span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 relative inline-block">
@@ -318,20 +318,20 @@ function WrittenContent() {
 			</section>
 
 			{/* Rest of the written content */}
-			<section className="bg-[#101014] text-white py-20 px-0">
+			<section className="bg-[#101014] text-white py-12 sm:py-16 md:py-20 px-0">
 				<LayoutContainer>
 					<div className="max-w-5xl mx-auto">
 						<motion.div
 							initial="hidden"
 							whileInView="visible"
 							viewport={{ once: true, amount: 0.3 }}
-							className="space-y-16 text-left"
+							className="space-y-10 sm:space-y-12 md:space-y-16 text-left"
 						>
 							{/* Manifesto pill */}
 							<motion.div
 								variants={fadeInUp}
 								custom={0}
-								className="inline-block px-3 py-1 rounded-xl border border-[#333333] bg-[#1A1A1E] text-[#BBBBBB] text-sm font-medium mt-10"
+								className="inline-block px-3 py-1 rounded-xl border border-[#333333] bg-[#1A1A1E] text-[#BBBBBB] text-xs sm:text-sm font-medium mt-6 sm:mt-10"
 							>
 								/ MANIFESTO
 							</motion.div>
@@ -340,7 +340,7 @@ function WrittenContent() {
 							<motion.p
 								variants={fadeInUp}
 								custom={1}
-								className="text-lg text-white/80 leading-relaxed"
+								className="text-base sm:text-lg text-white/80 leading-relaxed"
 							>
 								Every year, students spend months building
 								something real. Circuits. Sensors. Code. Guts.
@@ -348,11 +348,11 @@ function WrittenContent() {
 							</motion.p>
 
 							{/* The Problem */}
-							<div className="space-y-6">
+							<div className="space-y-4 sm:space-y-6">
 								<motion.p
 									variants={fadeInUp}
 									custom={2}
-									className="text-lg text-white/80 leading-relaxed"
+									className="text-base sm:text-lg text-white/80 leading-relaxed"
 								>
 									They stay up late, debug, redesign, test
 									again. They present it. Maybe post it. Then
@@ -361,7 +361,7 @@ function WrittenContent() {
 								<motion.p
 									variants={fadeInUp}
 									custom={3}
-									className="text-lg text-white/80 leading-relaxed"
+									className="text-base sm:text-lg text-white/80 leading-relaxed"
 								>
 									The prototype gets boxed. The files get
 									lost. And the work? Forgotten.
@@ -369,7 +369,7 @@ function WrittenContent() {
 								<motion.p
 									variants={fadeInUp}
 									custom={4}
-									className="text-lg text-white/80 leading-relaxed"
+									className="text-base sm:text-lg text-white/80 leading-relaxed"
 								>
 									That's how it's always been.{' '}
 									<span className="bg-[#27BBFF] px-2 py-1 rounded font-semibold text-[#101014]">
@@ -383,7 +383,7 @@ function WrittenContent() {
 							<motion.p
 								variants={fadeInUp}
 								custom={5}
-								className="text-lg text-white/80 leading-relaxed flex items-center gap-2"
+								className="text-base sm:text-lg text-white/80 leading-relaxed flex flex-col sm:flex-row items-center gap-2"
 							>
 								We built{' '}
 								<Image
@@ -391,7 +391,7 @@ function WrittenContent() {
 									alt="OhmMade Logo Banner"
 									width={114}
 									height={120}
-									className="object-contain drop-shadow-lg mb-1"
+									className="object-contain drop-shadow-lg mb-1 w-20 sm:w-auto"
 									priority
 								/>
 								to break that cycle.
@@ -399,18 +399,18 @@ function WrittenContent() {
 							<motion.h2
 								variants={fadeInUp}
 								custom={6}
-								className="text-2xl font-bold text-white leading-tight"
+								className="text-xl sm:text-2xl font-bold text-white leading-tight"
 							>
 								Because what you built is bigger than a grade.
 							</motion.h2>
 
 							{/* Main Manifesto */}
-							<div className="space-y-8">
-								<div className="space-y-6">
+							<div className="space-y-6 sm:space-y-8">
+								<div className="space-y-4 sm:space-y-6">
 									<motion.p
 										variants={fadeInUp}
 										custom={7}
-										className="text-lg text-white/80 leading-relaxed"
+										className="text-base sm:text-lg text-white/80 leading-relaxed"
 									>
 										This platform is for the{' '}
 										<span className="bg-[#27BBFF] px-2 py-1 rounded font-semibold text-[#101014]">
@@ -422,7 +422,7 @@ function WrittenContent() {
 									<motion.p
 										variants={fadeInUp}
 										custom={8}
-										className="text-lg text-white/80 leading-relaxed"
+										className="text-base sm:text-lg text-white/80 leading-relaxed"
 									>
 										It's for that first-year team who built
 										a laser tripwire and had nowhere to
@@ -431,7 +431,7 @@ function WrittenContent() {
 									<motion.p
 										variants={fadeInUp}
 										custom={9}
-										className="text-lg text-white/80 leading-relaxed"
+										className="text-base sm:text-lg text-white/80 leading-relaxed"
 									>
 										It's for the engineering labs, the class
 										competitions, the ideas that only exist
@@ -440,7 +440,7 @@ function WrittenContent() {
 									<motion.p
 										variants={fadeInUp}
 										custom={10}
-										className="text-lg text-white/80 leading-relaxed"
+										className="text-base sm:text-lg text-white/80 leading-relaxed"
 									>
 										We're here to give those projects a
 										proper home. To let students{' '}
@@ -453,11 +453,11 @@ function WrittenContent() {
 							</div>
 
 							{/* Closing Statement */}
-							<div className="space-y-6 pt-4">
+							<div className="space-y-4 sm:space-y-6 pt-4">
 								<motion.p
 									variants={fadeInUp}
 									custom={11}
-									className="text-lg text-white/80 leading-relaxed"
+									className="text-base sm:text-lg text-white/80 leading-relaxed"
 								>
 									No more demo-day black holes. No more
 									brilliant ideas buried in shared drives.
@@ -465,7 +465,7 @@ function WrittenContent() {
 								<motion.p
 									variants={fadeInUp}
 									custom={12}
-									className="text-lg text-white/80 leading-relaxed"
+									className="text-base sm:text-lg text-white/80 leading-relaxed"
 								>
 									No more "what if we actually built this?"
 									You already did. Now show the world.
@@ -586,7 +586,7 @@ export default function AboutPage() {
 										duration: 0.9,
 										ease: 'anticipate',
 									}}
-									className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl flex flex-col md:flex-row items-center justify-center px-4"
+									className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl flex flex-col md:flex-row items-center justify-center px-4 sm:px-6"
 									style={{
 										pointerEvents: 'auto',
 										color: slide.textColor,
@@ -594,7 +594,7 @@ export default function AboutPage() {
 								>
 									{/* Left: Image with blurred glow */}
 									<motion.div
-										className="relative w-full md:w-1/2 flex justify-center items-center mb-10 md:mb-0"
+										className="relative w-full md:w-1/2 flex justify-center items-center mb-8 sm:mb-10 md:mb-0"
 										style={{ perspective: 900 }}
 									>
 										<motion.div
@@ -604,7 +604,7 @@ export default function AboutPage() {
 												repeat: Infinity,
 												repeatType: 'reverse',
 											}}
-											className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 w-64 h-64 md:w-80 md:h-80 overflow-hidden blur-2xl opacity-60"
+											className="hidden sm:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 overflow-hidden blur-2xl opacity-60"
 											style={{
 												filter: 'brightness(1) blur(80px)',
 											}}
@@ -630,7 +630,7 @@ export default function AboutPage() {
 												scale: 1.08,
 												rotateY: 10,
 											}}
-											className="relative z-10 w-40 h-40 md:w-90 md:h-90 rounded-2xl overflow-hidden shadow-2xl"
+											className="relative z-10 w-32 h-32 sm:w-40 sm:h-40 md:w-90 md:h-90 rounded-2xl overflow-hidden shadow-2xl"
 										>
 											<Image
 												src={slide.img}
@@ -648,18 +648,18 @@ export default function AboutPage() {
 											duration: 0.7,
 											ease: 'anticipate',
 										}}
-										className="w-full md:w-1/2 px-8 md:px-16 flex flex-col items-center md:items-start text-center md:text-left"
+										className="w-full md:w-1/2 px-4 sm:px-8 md:px-16 flex flex-col items-center md:items-start text-center md:text-left"
 									>
-										<h2 className="text-3xl md:text-4xl font-extrabold mb-3 drop-shadow-lg">
+										<h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 drop-shadow-lg">
 											{slide.name}
 										</h2>
-										<h3 className="text-lg font-medium mb-4 text-white/70">
+										<h3 className="text-base sm:text-lg font-medium mb-4 text-white/70">
 											{slide.title}
 										</h3>
-										<p className="text-white/80 text-base mb-6 max-w-xl">
+										<p className="text-white/80 text-sm sm:text-base mb-6 max-w-xl">
 											{slide.bio}
 										</p>
-										<div className="flex gap-5 mt-2">
+										<div className="flex gap-4 sm:gap-5 mt-2">
 											{Object.entries(slide.socials).map(
 												([key, url]) => {
 													const icon =
@@ -699,14 +699,14 @@ export default function AboutPage() {
 										duration: 0.7,
 										ease: 'anticipate',
 									}}
-									className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl flex flex-col items-center justify-center text-center px-4"
+									className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl flex flex-col items-center justify-center text-center px-4 sm:px-6"
 									style={{
 										pointerEvents: 'auto',
 										color: slide.textColor,
 									}}
 								>
 									<motion.h2
-										className="text-2xl font-medium mb-4 drop-shadow-lg text-white/90"
+										className="text-xl sm:text-2xl font-medium mb-4 drop-shadow-lg text-white/90"
 										initial={{ opacity: 0, y: 40 }}
 										animate={{ opacity: 1, y: 0 }}
 										transition={{
@@ -733,12 +733,12 @@ export default function AboutPage() {
 											alt="OhmMade Logo Banner"
 											width={380}
 											height={120}
-											className="object-contain drop-shadow-lg"
+											className="object-contain drop-shadow-lg w-64 sm:w-auto"
 											priority
 										/>
 									</motion.div>
 									<motion.div
-										className="flex gap-4 mt-4"
+										className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4"
 										initial={{ opacity: 0, y: 30 }}
 										animate={{ opacity: 1, y: 0 }}
 										transition={{
