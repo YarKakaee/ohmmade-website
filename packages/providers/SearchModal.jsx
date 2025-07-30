@@ -13,7 +13,6 @@ import {
 const SEARCH_TYPES = [
 	{ value: 'projects', label: 'Projects' },
 	{ value: 'users', label: 'Users' },
-	{ value: 'discussions', label: 'Discussions' },
 ];
 
 export default function SearchModal({ isOpen, onClose, mode = 'projects' }) {
@@ -193,19 +192,14 @@ export default function SearchModal({ isOpen, onClose, mode = 'projects' }) {
 																	type.value ===
 																	searchType
 																}
-																className={`px-4 py-2 text-sm cursor-pointer hover:bg-[#28282F] text-white/90 ${type.value === searchType ? 'font-bold bg-[#28282F]' : ''} ${type.value === 'discussions' ? 'opacity-50 cursor-not-allowed' : ''}`}
+																className={`px-4 py-2 text-sm cursor-pointer hover:bg-[#28282F] text-white/90 ${type.value === searchType ? 'font-bold bg-[#28282F]' : ''}`}
 																onClick={() => {
-																	if (
-																		type.value !==
-																		'discussions'
-																	) {
-																		setSearchType(
-																			type.value
-																		);
-																		setShowTypeMenu(
-																			false
-																		);
-																	}
+																	setSearchType(
+																		type.value
+																	);
+																	setShowTypeMenu(
+																		false
+																	);
 																}}
 															>
 																{type.label}
@@ -226,9 +220,7 @@ export default function SearchModal({ isOpen, onClose, mode = 'projects' }) {
 											placeholder={`Search ${searchType}...`}
 											value={query}
 											onChange={handleInputChange}
-											disabled={
-												searchType === 'discussions'
-											}
+											disabled={false}
 											autoFocus
 											onFocus={() =>
 												setShowTypeMenu(false)
