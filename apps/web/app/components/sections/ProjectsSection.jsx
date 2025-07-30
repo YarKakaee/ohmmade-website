@@ -1,5 +1,5 @@
 import categoryColors from '@/lib/constants/categoryColors';
-import prisma from '@/prisma/client'; // Adjust this path if needed
+import getPrismaClient from '@/prisma/client';
 import ProjectCard from '../common/ProjectCard';
 import ProjectsHeader from '../common/ProjectHeader';
 import LayoutContainer from '@ohmmade/ui/layout-container';
@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 export default async function ProjectsSection() {
+	const prisma = await getPrismaClient();
 	const featuredProjects = await prisma.project.findMany({
 		where: { featured: true, status: 'published' },
 		orderBy: { createdAt: 'desc' },

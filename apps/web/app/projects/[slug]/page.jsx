@@ -1,7 +1,7 @@
 import CodexViewer from '@/app/components/codex/CodexViewer';
 import LayoutContainer from '@ohmmade/ui/layout-container';
 import ProjectSlugHeader from '@/app/components/common/ProjectSlugHeader';
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 import {
 	faCheck,
 	faClock,
@@ -14,6 +14,7 @@ import ClientProjectSlugHeader from './ClientProjectSlugHeader';
 
 export default async function ProjectPage({ params }) {
 	const { slug } = await params;
+	const prisma = await getPrismaClient();
 
 	const project = await prisma.project.findUnique({
 		where: { slug },
@@ -137,6 +138,7 @@ export default async function ProjectPage({ params }) {
 
 export async function generateMetadata({ params }) {
 	const { slug } = await params;
+	const prisma = await getPrismaClient();
 
 	const project = await prisma.project.findUnique({
 		where: { slug },

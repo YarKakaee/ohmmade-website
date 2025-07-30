@@ -1,6 +1,6 @@
 // /app/api/projects/route.js
 
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 import { NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
@@ -9,6 +9,7 @@ import { generateUsername } from '@/lib/usernameUtils';
 import { Prisma } from '@prisma/client';
 
 export async function GET(request) {
+	const prisma = await getPrismaClient();
 	const { searchParams } = new URL(request.url);
 	const page = parseInt(searchParams.get('page')) || 1;
 	const limit = parseInt(searchParams.get('limit')) || 12;
@@ -211,6 +212,7 @@ export async function GET(request) {
 
 export async function POST(req) {
 	try {
+		const prisma = await getPrismaClient();
 		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,
@@ -264,6 +266,7 @@ export async function POST(req) {
 
 export async function PUT(req) {
 	try {
+		const prisma = await getPrismaClient();
 		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,
