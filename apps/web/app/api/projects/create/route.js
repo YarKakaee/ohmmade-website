@@ -1,12 +1,13 @@
 // /app/api/projects/create/route.js
 import { NextResponse } from 'next/server';
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 import { createActivity } from '@/lib/activity';
 import { generateUsername } from '@/lib/usernameUtils';
 import { awardWatts } from '@/lib/watts';
 
 export async function POST(req) {
 	try {
+		const prisma = getPrismaClient();
 		const body = await req.json();
 
 		let username = body.username;

@@ -1,4 +1,4 @@
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { createActivity } from '@/lib/activity';
@@ -6,6 +6,7 @@ import { generateUsername } from '@/lib/usernameUtils';
 
 export async function POST(req, { params }) {
 	try {
+		const prisma = getPrismaClient();
 		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,

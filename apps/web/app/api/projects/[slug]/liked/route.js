@@ -1,10 +1,11 @@
 // app/api/projects/[slug]/liked/route.js
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 import { NextResponse } from 'next/server';
 
 export async function GET(req, { params }) {
+	const prisma = getPrismaClient();
 	const { slug } = await params;
 	const cookieStore = await cookies();
 	const supabase = createRouteHandlerClient({
