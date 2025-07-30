@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
 import { generateUsername } from '@/lib/usernameUtils';
-import prisma from '@/prisma/client';
+
+// Dynamic import to avoid build-time analysis
+const getPrisma = async () => {
+	const { default: prisma } = await import('@/prisma/client');
+	return prisma;
+};
 
 export async function POST(request) {
 	try {
+		const prisma = await getPrisma();
+
 		const requestData = await request.json();
 		console.log('Webhook received:', requestData.type);
 

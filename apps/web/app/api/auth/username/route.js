@@ -1,11 +1,18 @@
 import { NextResponse } from 'next/server';
 import { generateUsername, isValidUsername } from '@/lib/usernameUtils';
 import { supabase } from '@/lib/supabaseServer';
-import prisma from '@/prisma/client';
+
+// Dynamic import to avoid build-time analysis
+const getPrisma = async () => {
+	const { default: prisma } = await import('@/prisma/client');
+	return prisma;
+};
 
 // POST endpoint to ensure a user has a username
 export async function POST(request) {
 	try {
+		const prisma = await getPrisma();
+
 		// Use server-side Supabase client
 
 		// Get the current authenticated user
@@ -76,6 +83,8 @@ export async function POST(request) {
 // GET endpoint to check if a username is available
 export async function GET(request) {
 	try {
+		const prisma = await getPrisma();
+
 		const { searchParams } = new URL(request.url);
 		const username = searchParams.get('username');
 
