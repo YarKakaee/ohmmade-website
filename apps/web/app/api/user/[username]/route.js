@@ -4,6 +4,8 @@ import { awardWatts, canPerformAction } from '@/lib/watts';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request, { params }) {
 	try {
 		const prisma = getPrismaClient();

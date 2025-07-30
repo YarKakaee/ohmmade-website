@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import getPrismaClient from '@/prisma/client';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request) {
 	try {
 		const prisma = getPrismaClient(); // Force cache refresh

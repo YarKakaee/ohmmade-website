@@ -4,6 +4,8 @@ import { cookies } from 'next/headers';
 import { createActivity } from '@/lib/activity';
 import { generateUsername } from '@/lib/usernameUtils';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req, { params }) {
 	try {
 		const prisma = getPrismaClient();

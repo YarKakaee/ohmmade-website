@@ -1,9 +1,9 @@
+import { awardWatts } from '@/lib/watts';
+import getPrismaClient from '@/prisma/client';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import getPrismaClient from '@/prisma/client';
-import bcrypt from 'bcryptjs';
-import { uploadImage } from '@/lib/supabaseStorage';
-import { awardWatts } from '@/lib/watts';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
 	try {

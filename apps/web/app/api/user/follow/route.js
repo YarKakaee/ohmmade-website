@@ -4,6 +4,8 @@ import { cookies } from 'next/headers';
 import getPrismaClient from '@/prisma/client';
 import { awardWatts } from '@/lib/watts';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request) {
 	try {
 		const prisma = getPrismaClient();

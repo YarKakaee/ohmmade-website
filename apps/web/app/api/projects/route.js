@@ -8,6 +8,8 @@ import { createActivity } from '@/lib/activity';
 import { generateUsername } from '@/lib/usernameUtils';
 import { Prisma } from '@prisma/client';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request) {
 	const prisma = getPrismaClient();
 	const { searchParams } = new URL(request.url);

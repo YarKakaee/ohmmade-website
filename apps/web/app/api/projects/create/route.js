@@ -5,6 +5,8 @@ import { createActivity } from '@/lib/activity';
 import { generateUsername } from '@/lib/usernameUtils';
 import { awardWatts } from '@/lib/watts';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req) {
 	try {
 		const prisma = getPrismaClient();

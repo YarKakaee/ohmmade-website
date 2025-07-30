@@ -3,6 +3,8 @@ import getPrismaClient from '@/prisma/client';
 import { generateUsername, isValidUsername } from '@/lib/usernameUtils';
 import { createClient } from '@supabase/supabase-js';
 
+export const dynamic = 'force-dynamic';
+
 // POST endpoint to ensure a user has a username
 export async function POST(request) {
 	try {

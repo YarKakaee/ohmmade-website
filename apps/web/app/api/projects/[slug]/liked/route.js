@@ -4,6 +4,8 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import getPrismaClient from '@/prisma/client';
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req, { params }) {
 	const prisma = getPrismaClient();
 	const { slug } = await params;

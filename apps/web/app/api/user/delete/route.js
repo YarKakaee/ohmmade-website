@@ -2,6 +2,8 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import getPrismaClient from '@/prisma/client';
 
+export const dynamic = 'force-dynamic';
+
 export async function DELETE(req) {
 	try {
 		const prisma = getPrismaClient();
