@@ -8,7 +8,6 @@
 		".": "./index.js"
 	},
 	"scripts": {
-		"build": "echo 'No build step needed for providers'",
 		"dev": "echo 'No dev step needed for providers'",
 		"lint": "echo 'No lint step needed for providers'"
 	},

@@ -7,7 +7,6 @@
 		"./styles.css": "./styles.css"
 	},
 	"scripts": {
-		"build": "echo 'No build step needed for tailwind-config'",
 		"dev": "echo 'No dev step needed for tailwind-config'",
 		"lint": "echo 'No lint step needed for tailwind-config'"
 	},
