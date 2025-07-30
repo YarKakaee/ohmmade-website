@@ -3,7 +3,7 @@ import getPrismaClient from '@/prisma/client';
 
 export async function GET(request) {
 	try {
-		const prisma = getPrismaClient();
+		const prisma = getPrismaClient(); // Force cache refresh
 		const { searchParams } = new URL(request.url);
 		const userId = searchParams.get('userId');
 		const page = parseInt(searchParams.get('page')) || 1;
