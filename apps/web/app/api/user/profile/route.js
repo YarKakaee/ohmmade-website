@@ -1,12 +1,13 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 import bcrypt from 'bcryptjs';
 import { uploadImage } from '@/lib/supabaseStorage';
 import { awardWatts } from '@/lib/watts';
 
 export async function GET(req) {
 	try {
+		const prisma = getPrismaClient();
 		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,
@@ -62,6 +63,7 @@ export async function GET(req) {
 
 export async function PUT(req) {
 	try {
+		const prisma = getPrismaClient();
 		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,

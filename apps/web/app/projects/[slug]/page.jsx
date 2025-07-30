@@ -14,7 +14,7 @@ import ClientProjectSlugHeader from './ClientProjectSlugHeader';
 
 export default async function ProjectPage({ params }) {
 	const { slug } = await params;
-	const prisma = await getPrismaClient();
+	const prisma = getPrismaClient();
 
 	const project = await prisma.project.findUnique({
 		where: { slug },
@@ -138,7 +138,7 @@ export default async function ProjectPage({ params }) {
 
 export async function generateMetadata({ params }) {
 	const { slug } = await params;
-	const prisma = await getPrismaClient();
+	const prisma = getPrismaClient();
 
 	const project = await prisma.project.findUnique({
 		where: { slug },

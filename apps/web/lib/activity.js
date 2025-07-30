@@ -1,7 +1,7 @@
 import getPrismaClient from '@/prisma/client';
 
 export async function createActivity(userId, type, projectId = null) {
-	const prisma = await getPrismaClient();
+	const prisma = getPrismaClient();
 	try {
 		const activity = await prisma.userActivity.create({
 			data: {
@@ -26,7 +26,7 @@ export async function createActivity(userId, type, projectId = null) {
 }
 
 export async function getUserActivities(userId, limit = 10) {
-	const prisma = await getPrismaClient();
+	const prisma = getPrismaClient();
 	try {
 		const activities = await prisma.userActivity.findMany({
 			where: {

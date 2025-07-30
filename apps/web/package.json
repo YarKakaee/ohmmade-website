@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "pnpm prisma generate --schema=../../prisma/schema.prisma && mkdir -p ./node_modules/.prisma && ln -sf ../../node_modules/.prisma/client ./node_modules/.prisma/client && next build",
+		"build": "pnpm prisma generate --schema=../../prisma/schema.prisma --generator=client --output=./node_modules/.prisma/client && next build",
 		"start": "next start",
 		"lint": "next lint",
 		"db:generate": "prisma generate --schema=../../prisma/schema.prisma"
