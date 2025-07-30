@@ -1,30 +1,11 @@
 import { NextResponse } from 'next/server';
 import { generateUsername } from '@/lib/usernameUtils';
+import { PrismaClient } from '@prisma/client';
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
-
-// Dynamic import to avoid build-time analysis
-const getPrisma = async () => {
-	try {
-		const { default: prisma } = await import('@/prisma/client');
-		return prisma;
-	} catch (error) {
-		// During build time, return a mock client
-		return {
-			user: {
-				findUnique: async () => null,
-				create: async () => ({ id: 'mock' }),
-				update: async () => ({ id: 'mock' }),
-			},
-		};
-	}
-};
+const prisma = new PrismaClient();
 
 export async function POST(request) {
 	try {
-		const prisma = await getPrisma();
-
 		const requestData = await request.json();
 		console.log('Webhook received:', requestData.type);
 

@@ -1,25 +1,8 @@
 import { NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
 import { createClient } from '@supabase/supabase-js';
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
-
-// Dynamic import to avoid build-time analysis
-const getPrisma = async () => {
-	try {
-		const { default: prisma } = await import('@/prisma/client');
-		return prisma;
-	} catch (error) {
-		// During build time, return a mock client
-		return {
-			user: {
-				findUnique: async () => null,
-				create: async () => ({ id: 'mock' }),
-				update: async () => ({ id: 'mock' }),
-			},
-		};
-	}
-};
+const prisma = new PrismaClient();
 
 export async function POST(request) {
 	try {
@@ -31,8 +14,6 @@ export async function POST(request) {
 				{ status: 400 }
 			);
 		}
-
-		const prisma = await getPrisma();
 
 		// Generate a unique username from the name
 		const baseUsername = name
