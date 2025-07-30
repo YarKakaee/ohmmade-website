@@ -76,10 +76,10 @@ export default function ProjectSlugHeader({ project, user, setAuthModalOpen }) {
 	);
 
 	return (
-		<section className="relative w-full min-h-[90vh] flex items-center justify-center mt-10">
-			<div className="flex flex-col lg:flex-row items-center justify-between w-full gap-12">
+		<section className="relative w-full min-h-[100vh] flex items-center justify-center pt-16 sm:pt-10">
+			<div className="flex flex-col-reverse lg:flex-row items-center justify-between w-full gap-8 sm:gap-12">
 				{/* Left: Info */}
-				<div className="w-full lg:w-1/2 space-y-5">
+				<div className="w-full lg:w-1/2 space-y-4 sm:space-y-5">
 					{/* Badges */}
 					<div className="flex flex-wrap gap-3">
 						<span className="bg-[#9224CA] text-white text-xs font-semibold px-3 py-1 rounded-full">
@@ -106,12 +106,12 @@ export default function ProjectSlugHeader({ project, user, setAuthModalOpen }) {
 					</p>
 
 					{/* Title */}
-					<h1 className="text-white text-[32px] sm:text-[36px] font-extrabold leading-tight">
+					<h1 className="text-white text-2xl sm:text-[32px] lg:text-[36px] font-extrabold leading-tight">
 						{project.title}
 					</h1>
 
 					{/* Description */}
-					<p className="text-white/70 text-sm sm:text-[15px] max-w-[670px]">
+					<p className="text-white/70 text-sm sm:text-[15px] max-w-[670px] leading-relaxed">
 						{project.description}
 					</p>
 
@@ -161,8 +161,8 @@ export default function ProjectSlugHeader({ project, user, setAuthModalOpen }) {
 					</div>
 				</div>
 				{/* Right: Thumbnail */}
-				<div className="flex-shrink-0">
-					<div className="relative w-[630px] h-[400px] rounded-lg overflow-hidden border border-white/10 shadow-lg">
+				<div className="flex-shrink-0 w-full lg:w-auto">
+					<div className="relative w-full lg:w-[630px] h-[250px] sm:h-[300px] lg:h-[400px] rounded-lg overflow-hidden border border-white/10 shadow-lg">
 						<Image
 							src={project.thumbnailUrl}
 							alt={project.title}
