@@ -5,6 +5,9 @@ import { NextResponse } from 'next/server';
 import getPrismaClient from '@/prisma/client';
 import { generateUsername } from '@/lib/usernameUtils';
 
+// Force dynamic rendering to prevent prerendering
+export const dynamic = 'force-dynamic';
+
 export async function GET(req) {
 	const prisma = getPrismaClient();
 	const requestUrl = new URL(req.url);
