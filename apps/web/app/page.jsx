@@ -4,6 +4,8 @@ import ProjectsSection from './components/sections/ProjectsSection';
 import Scrollytelling from './components/sections/Scrollytelling';
 import './globals.css';
 
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
 	return (
 		<section>
