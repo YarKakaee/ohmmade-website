@@ -1,14 +1,11 @@
-import { PrismaClient } from '@prisma/client';
-
 let prisma;
 
-if (process.env.NODE_ENV === 'production') {
-	prisma = new PrismaClient();
-} else {
-	if (!globalThis.prismaGlobal) {
-		globalThis.prismaGlobal = new PrismaClient();
+async function getPrismaClient() {
+	if (!prisma) {
+		const { PrismaClient } = await import('@prisma/client');
+		prisma = new PrismaClient();
 	}
-	prisma = globalThis.prismaGlobal;
+	return prisma;
 }
 
-export default prisma;
+export default getPrismaClient;

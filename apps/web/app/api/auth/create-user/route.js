@@ -1,9 +1,9 @@
+import getPrismaClient from '@/prisma/client';
 import { NextResponse } from 'next/server';
-import prisma from '@/prisma/client';
-import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request) {
 	try {
+		const prisma = await getPrismaClient();
 		const { id, email, name, image } = await request.json();
 
 		if (!id || !email || !name) {

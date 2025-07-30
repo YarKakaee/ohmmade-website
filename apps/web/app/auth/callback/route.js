@@ -2,10 +2,11 @@
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 import { generateUsername } from '@/lib/usernameUtils';
 
 export async function GET(req) {
+	const prisma = await getPrismaClient();
 	const requestUrl = new URL(req.url);
 	const code = requestUrl.searchParams.get('code');
 

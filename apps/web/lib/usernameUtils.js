@@ -1,6 +1,7 @@
-import prisma from '@/prisma/client';
+import getPrismaClient from '@/prisma/client';
 
 export async function generateUsername(name) {
+	const prisma = await getPrismaClient();
 	// If no name is provided, use a fallback
 	if (!name || name.trim() === '') {
 		name = 'user';
@@ -39,6 +40,7 @@ export async function generateUsername(name) {
 }
 
 export async function isUsernameTaken(username) {
+	const prisma = await getPrismaClient();
 	const existingUser = await prisma.user.findUnique({
 		where: { username },
 	});
