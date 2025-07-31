@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req, { params }) {
-	const prisma = getPrismaClient();
+	const prisma = await getPrismaClient();
 	const { slug } = await params;
 	const cookieStore = await cookies();
 	const supabase = createRouteHandlerClient({

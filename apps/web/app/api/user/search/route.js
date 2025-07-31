@@ -4,7 +4,7 @@ import getPrismaClient from '@/prisma/client';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
-	const prisma = getPrismaClient();
+	const prisma = await getPrismaClient();
 	const { searchParams } = new URL(request.url);
 	const q = searchParams.get('q')?.trim();
 	if (!q) {

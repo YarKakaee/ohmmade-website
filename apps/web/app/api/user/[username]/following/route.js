@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request, { params }) {
 	try {
-		const prisma = getPrismaClient();
+		const prisma = await getPrismaClient();
 		const { username } = await params;
 
 		if (!username) {

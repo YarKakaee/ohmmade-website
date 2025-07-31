@@ -9,7 +9,7 @@ import { generateUsername } from '@/lib/usernameUtils';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
-	const prisma = getPrismaClient();
+	const prisma = await getPrismaClient();
 	const requestUrl = new URL(req.url);
 	const code = requestUrl.searchParams.get('code');
 

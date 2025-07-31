@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req) {
 	try {
-		const prisma = getPrismaClient();
+		const prisma = await getPrismaClient();
 		const body = await req.json();
 
 		let username = body.username;

@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
 	try {
-		const prisma = getPrismaClient(); // Force cache refresh
+		const prisma = await getPrismaClient(); // Force cache refresh
 		const { searchParams } = new URL(request.url);
 		const userId = searchParams.get('userId');
 		const page = parseInt(searchParams.get('page')) || 1;
