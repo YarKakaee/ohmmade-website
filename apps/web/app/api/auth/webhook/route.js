@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
 	try {
-		const prisma = await getPrismaClient();
+		const prisma = getPrismaClient();
 		const requestData = await request.json();
 		console.log('Webhook received:', requestData.type);
 

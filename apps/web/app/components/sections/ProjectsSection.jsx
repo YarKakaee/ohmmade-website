@@ -11,7 +11,7 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 export const dynamic = 'force-dynamic';
 
 export default async function ProjectsSection() {
-	const prisma = await getPrismaClient();
+	const prisma = getPrismaClient();
 	const featuredProjects = await prisma.project.findMany({
 		where: { featured: true, status: 'published' },
 		orderBy: { createdAt: 'desc' },

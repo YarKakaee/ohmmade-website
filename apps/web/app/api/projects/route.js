@@ -11,7 +11,7 @@ import { Prisma } from '@prisma/client';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
-	const prisma = await getPrismaClient();
+	const prisma = getPrismaClient();
 	const { searchParams } = new URL(request.url);
 	const page = parseInt(searchParams.get('page')) || 1;
 	const limit = parseInt(searchParams.get('limit')) || 12;
@@ -214,7 +214,7 @@ export async function GET(request) {
 
 export async function POST(req) {
 	try {
-		const prisma = await getPrismaClient();
+		const prisma = getPrismaClient();
 		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,
@@ -268,7 +268,7 @@ export async function POST(req) {
 
 export async function PUT(req) {
 	try {
-		const prisma = await getPrismaClient();
+		const prisma = getPrismaClient();
 		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,

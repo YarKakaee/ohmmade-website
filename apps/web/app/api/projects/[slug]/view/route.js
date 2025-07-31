@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req, { params }) {
 	try {
-		const prisma = await getPrismaClient();
+		const prisma = getPrismaClient();
 		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,

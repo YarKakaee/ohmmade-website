@@ -1,9 +1,10 @@
+import { PrismaClient } from '@prisma/client';
+
 let prisma;
 
-async function getPrismaClient() {
+function getPrismaClient() {
 	if (!prisma) {
 		try {
-			const { PrismaClient } = await import('@prisma/client');
 			prisma = new PrismaClient({
 				log: ['error', 'warn'],
 			});

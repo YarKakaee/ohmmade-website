@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 // POST endpoint to ensure a user has a username
 export async function POST(request) {
 	try {
-		const prisma = await getPrismaClient();
+		const prisma = getPrismaClient();
 		// Create server-side Supabase client
 		const supabase = createClient(
 			process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -83,7 +83,7 @@ export async function POST(request) {
 // GET endpoint to check if a username is available
 export async function GET(request) {
 	try {
-		const prisma = await getPrismaClient();
+		const prisma = getPrismaClient();
 		const { searchParams } = new URL(request.url);
 		const username = searchParams.get('username');
 

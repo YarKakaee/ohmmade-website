@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
 	try {
-		const prisma = await getPrismaClient();
+		const prisma = getPrismaClient();
 		const { id, email, name, image } = await request.json();
 
 		if (!id || !email || !name) {

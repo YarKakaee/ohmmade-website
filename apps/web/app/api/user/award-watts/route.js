@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
 	try {
-		const prisma = await getPrismaClient();
+		const prisma = getPrismaClient();
 		const supabase = createServerComponentClient({ cookies });
 		const {
 			data: { session },

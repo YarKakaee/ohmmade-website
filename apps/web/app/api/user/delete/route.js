@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export async function DELETE(req) {
 	try {
-		const prisma = await getPrismaClient();
+		const prisma = getPrismaClient();
 		const cookieStore = await cookies();
 		const supabase = createRouteHandlerClient({
 			cookies: () => cookieStore,
