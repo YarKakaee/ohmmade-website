@@ -4,8 +4,8 @@ import ProjectsSection from './components/sections/ProjectsSection';
 import Scrollytelling from './components/sections/Scrollytelling';
 import './globals.css';
 
-// Force dynamic rendering since ProjectsSection uses Prisma
-export const dynamic = 'force-dynamic';
+// Revalidate every 5 minutes for fresh content
+export const revalidate = 300;
 
 export default function Home() {
 	return (

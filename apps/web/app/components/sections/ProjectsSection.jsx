@@ -7,8 +7,8 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
-// Force dynamic rendering to prevent prerendering
-export const dynamic = 'force-dynamic';
+// Revalidate every 5 minutes for fresh featured projects
+export const revalidate = 300;
 
 export default async function ProjectsSection() {
 	const prisma = getPrismaClient();

@@ -1,14 +1,16 @@
 {
 	"name": "web",
 	"version": "1.0.0",
+	"prisma": {
+		"schema": "../../prisma/schema.prisma"
+	},
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "pnpm prisma generate --schema=../../prisma/schema.prisma && mkdir -p ./node_modules/.prisma && ln -sf ../../node_modules/.prisma/client ./node_modules/.prisma/client && next build",
+		"build": "cd ../.. && pnpm prisma generate && cd apps/web && mkdir -p ./node_modules/.prisma && ln -sf ../../node_modules/.prisma/client ./node_modules/.prisma/client && next build",
 		"start": "next start",
 		"lint": "next lint",
-		"db:generate": "prisma generate --schema=../../prisma/schema.prisma",
-		"postinstall": "prisma generate --schema=../../prisma/schema.prisma"
+		"db:generate": "prisma generate --schema=../../prisma/schema.prisma"
 	},
 	"dependencies": {
 		"@calumk/editorjs-codeflask": "^1.0.10",
