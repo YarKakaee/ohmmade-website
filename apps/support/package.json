@@ -21,7 +21,7 @@
 		"@ohmmade/assets": "workspace:*",
 		"@ohmmade/providers": "workspace:*",
 		"@ohmmade/ui": "workspace:*",
-		"@prisma/client": "^6.12.0",
+		"@prisma/client": "^6.13.0",
 		"@supabase/auth-helpers-nextjs": "^0.10.0",
 		"@supabase/auth-helpers-react": "^0.5.0",
 		"@supabase/supabase-js": "^2.49.4",
@@ -38,7 +38,7 @@
 	},
 	"devDependencies": {
 		"@tailwindcss/postcss": "^4",
-		"prisma": "^6.12.0",
+		"prisma": "^6.13.0",
 		"tailwindcss": "^4"
 	}
 }
