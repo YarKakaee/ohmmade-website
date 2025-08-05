@@ -7,11 +7,10 @@
 	},
 	"scripts": {
 		"dev": "next dev",
-		"build": "pnpm prisma generate && next build",
+		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"db:generate": "prisma generate --schema=../../prisma/schema.prisma",
-		"postinstall": "pnpm prisma generate"
+		"db:generate": "prisma generate --schema=../../prisma/schema.prisma"
 	},
 	"dependencies": {
 		"@calumk/editorjs-codeflask": "^1.0.10",
