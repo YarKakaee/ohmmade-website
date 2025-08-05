@@ -3,16 +3,6 @@ generator client_web {
   output   = "../apps/web/node_modules/.prisma/client"
 }
 
-generator client_admin {
-  provider = "prisma-client-js"
-  output   = "../apps/admin/node_modules/.prisma/client"
-}
-
-generator client_support {
-  provider = "prisma-client-js"
-  output   = "../apps/support/node_modules/.prisma/client"
-}
-
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
