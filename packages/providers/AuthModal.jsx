@@ -204,10 +204,15 @@ const AuthModal = ({ isOpen, onClose, mode = 'login' }) => {
 		setError(null);
 		setSuccess(null);
 
+		// Use environment variable for redirect URL, fallback to window.location.origin for development
+		const redirectUrl =
+			process.env.NEXT_PUBLIC_AUTH_REDIRECT_URL ||
+			`${window.location.origin}/auth/callback`;
+
 		const { data, error } = await supabase.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
-				redirectTo: `${window.location.origin}/auth/callback`,
+				redirectTo: redirectUrl,
 			},
 		});
 
