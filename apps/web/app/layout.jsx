@@ -7,6 +7,7 @@ import {
 } from '@ohmmade/providers';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
+import { Analytics } from '@vercel/analytics/next';
 import Footer from './components/layout/Footer';
 import Nav from './components/layout/Nav';
 import { metadataGenerators, generateStructuredData } from '@/lib/seo';
@@ -76,6 +77,7 @@ export default function RootLayout({ children }) {
 						</SearchModalProvider>
 					</AuthModalProvider>
 				</SupabaseProvider>
+				<Analytics />
 			</body>
 		</html>
 	);

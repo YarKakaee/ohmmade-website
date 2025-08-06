@@ -5,6 +5,7 @@ import { SupabaseProvider } from '@ohmmade/providers';
 import Nav from './components/layout/Nav';
 import Footer from './components/layout/Footer';
 import { Toaster } from 'react-hot-toast';
+import { Analytics } from '@vercel/analytics/next';
 import { generateStructuredData } from '@/lib/seo';
 
 const inter = Inter({
@@ -104,6 +105,7 @@ export default function RootLayout({ children }) {
 						<Footer />
 					</AuthModalProvider>
 				</SupabaseProvider>
+				<Analytics />
 			</body>
 		</html>
 	);
