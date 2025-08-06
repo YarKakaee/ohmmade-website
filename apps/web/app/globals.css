@@ -2,6 +2,15 @@
 @import '@ohmmade/tailwind-config/styles.css';
 @import '@ohmmade/ui/styles.css';
 
+/* Ensure dark background for iOS overscroll */
+html {
+	background-color: #101014;
+}
+
+body {
+	background-color: #101014;
+}
+
 .ce-toolbar__plus {
 	color: white !important;
 	background-color: transparent !important;

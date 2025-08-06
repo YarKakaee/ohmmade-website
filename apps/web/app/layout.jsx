@@ -60,7 +60,7 @@ export default function RootLayout({ children }) {
 					}}
 				/>
 			</head>
-			<body className={`${inter.className} antialiased`}>
+			<body className={`${inter.className} antialiased bg-[#101014]`}>
 				<SupabaseProvider>
 					<AuthModalProvider>
 						<SearchModalProvider>
