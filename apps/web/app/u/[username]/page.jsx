@@ -340,27 +340,31 @@ export default function UserProfilePage() {
 					className="bg-[#13151A]/50 backdrop-blur-sm border border-[#3A3A3C]/60 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 mb-8 sm:mb-12"
 				>
 					<div className="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8">
-						{/* Avatar */}
-						<div className="relative group flex justify-center w-full md:w-auto">
-							<div className="w-28 h-28 sm:w-32 md:w-37 sm:h-32 md:h-37 rounded-full overflow-hidden border-2 border-[#3A3A3C]/60">
-								{user.image ? (
-									<Image
-										src={user.image}
-										alt={user.name}
-										width={128}
-										height={128}
-										className="w-full h-full object-cover"
-									/>
-								) : (
-									<div className="w-full h-full bg-gradient-to-br from-[#27BBFF] to-[#1E40AF] flex items-center justify-center text-white text-2xl sm:text-3xl font-bold">
-										{user.name?.[0]?.toUpperCase() || 'U'}
-									</div>
-								)}
+						{/* Avatar and Rank Container */}
+						<div className="flex flex-col items-center w-full md:w-auto">
+							{/* Avatar */}
+							<div className="relative group flex justify-center">
+								<div className="w-28 h-28 sm:w-32 md:w-37 sm:h-32 md:h-37 rounded-full overflow-hidden border-2 border-[#3A3A3C]/60">
+									{user.image ? (
+										<Image
+											src={user.image}
+											alt={user.name}
+											width={128}
+											height={128}
+											className="w-full h-full object-cover"
+										/>
+									) : (
+										<div className="w-full h-full bg-gradient-to-br from-[#27BBFF] to-[#1E40AF] flex items-center justify-center text-white text-2xl sm:text-3xl font-bold">
+											{user.name?.[0]?.toUpperCase() ||
+												'U'}
+										</div>
+									)}
+								</div>
 							</div>
-						</div>
-						{/* User Rank under avatar */}
-						<div className="mt-3 sm:mt-5 flex justify-center md:justify-start">
-							<UserRank user={user} />
+							{/* User Rank under avatar */}
+							<div className="mt-3 sm:mt-5 flex justify-center">
+								<UserRank user={user} />
+							</div>
 						</div>
 
 						{/* User Info */}
