@@ -259,7 +259,7 @@ export default function Nav() {
 													</div>
 													<div className="py-2">
 														<Link
-															href={`/u/${userProfile?.username}`}
+															href={`https://ohmmade.ca/u/${userProfile?.username}`}
 															onClick={() =>
 																setShowUserDropdown(
 																	false
@@ -274,7 +274,7 @@ export default function Nav() {
 															<span>Profile</span>
 														</Link>
 														<Link
-															href="/dashboard"
+															href="https://ohmmade.ca/dashboard"
 															onClick={() =>
 																setShowUserDropdown(
 																	false
