@@ -3,7 +3,61 @@
 import { useMemo } from 'react';
 import { useTypewriter } from 'react-simple-typewriter';
 
-const phrases = [
+// Mobile-friendly phrases (keep under 30 characters for mobile)
+const mobilePhrases = [
+	'Ask about your circuit...',
+	'Need help debugging?',
+	'How to upload images?',
+	'LED resistor values?',
+	'Publishing guidelines?',
+	'How does leveling work?',
+	'Common error fixes...',
+	'Microcontroller help?',
+	'Start a discussion...',
+	'Link GitHub repo?',
+	'Track project stats?',
+	'Why was it flagged?',
+	'Edit or delete post?',
+	'Embed YouTube videos?',
+	'Account settings?',
+	'Getting featured?',
+	'Marked as duplicate?',
+	'Change profile picture?',
+	'Upload thumbnails?',
+	'Follow creators?',
+	'Experience levels?',
+	'Filter projects?',
+	'Report comments?',
+	'View history?',
+	'Comment not showing?',
+	'Change project URL?',
+	'Best tags to use?',
+	'Delete account?',
+	"Can't like posts?",
+	'Moderation help?',
+	'Suggest features?',
+	'Bookmark projects?',
+	'Submit bugs?',
+	'Re-publish projects?',
+	'Organize collections?',
+	'Private projects?',
+	'Reply notifications?',
+	'Accepted answers?',
+	'Markdown guide?',
+	'Upload files?',
+	'Post not in search?',
+	'Highlight tutorial steps?',
+	'Comment removed?',
+	'Add collaborators?',
+	'Track engagement?',
+	'Ranking system?',
+	'Question guidelines?',
+	'Past announcements?',
+	'Verify account?',
+];
+
+// Full-length phrases for desktop
+const desktopPhrases = [
 	'Ask a question about your circuit...',
 	'Need help debugging your Raspberry Pi project?',
 	'How do I upload images to my tutorial?',
@@ -41,7 +95,7 @@ const phrases = [
 	'How do I organize my projects into collections?',
 	'Can I make a project private?',
 	'How do I get notified when someone replies to my question?',
-	'What happens when I mark an answer as “Accepted”?',
+	'What happens when I mark an answer as "Accepted"?',
 	'Is there a markdown guide for tutorials?',
 	'Can I upload files like .zip or .ino?',
 	"Why didn't my new post show up in search?",
@@ -56,10 +110,19 @@ const phrases = [
 ];
 
 export default function AnimatedPlaceholder() {
+	// Determine if we're on mobile based on window width
+	const isMobile = useMemo(() => {
+		if (typeof window === 'undefined') return false;
+		return window.innerWidth < 768; // md breakpoint in Tailwind
+	}, []);
+
+	// Choose phrases based on screen size
+	const phrasesToUse = isMobile ? mobilePhrases : desktopPhrases;
+
 	// Shuffle the phrases array only once when component mounts
 	const shuffledPhrases = useMemo(() => {
-		return [...phrases].sort(() => Math.random() - 0.5);
-	}, []);
+		return [...phrasesToUse].sort(() => Math.random() - 0.5);
+	}, [phrasesToUse]);
 
 	const [text] = useTypewriter({
 		words: shuffledPhrases,
@@ -70,7 +133,7 @@ export default function AnimatedPlaceholder() {
 	});
 
 	return (
-		<span className="text-white/60">
+		<span className="text-white/60 text-sm sm:text-base truncate whitespace-nowrap">
 			{text}
 			<span
 				className="text-white/60"

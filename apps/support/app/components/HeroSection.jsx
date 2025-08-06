@@ -240,7 +240,7 @@ export default function HeroSection({
 						{/* Main Heading */}
 						<motion.h1
 							variants={fadeInUp}
-							className={`text-3xl sm:text-[42px] font-[900] leading-tight text-white ${interTight.className} mb-12`}
+							className={`text-2xl sm:text-[42px] font-[900] leading-tight text-white ${interTight.className} mb-12`}
 						>
 							{isLoading || isLoadingProfile ? (
 								<>
@@ -277,7 +277,7 @@ export default function HeroSection({
 						{/* Search Bar */}
 						<motion.div
 							variants={searchBarVariants}
-							className="relative max-w-xl mx-auto w-full"
+							className="relative max-w-xl mx-auto w-full px-6 sm:px-0"
 						>
 							<form onSubmit={handleSearch}>
 								<input
@@ -288,22 +288,25 @@ export default function HeroSection({
 									}
 									onFocus={() => setIsSearchFocused(true)}
 									onBlur={() => setIsSearchFocused(false)}
-									className="w-full px-5 py-4 rounded-2xl bg-white/10 backdrop-blur-md text-white placeholder:text-white/60 border border-white/20 shadow-[0_8px_32px_0_rgba(53,172,71,0.15)] focus:outline-none focus:ring-2 focus:ring-[#35AC47]/50 focus:border-[#35AC47]/50 transition-all duration-300 text-base"
+									className="w-full px-6 sm:px-6 py-4 rounded-2xl bg-white/10 backdrop-blur-md text-white placeholder:text-white/60 border border-white/20 shadow-[0_8px_32px_0_rgba(53,172,71,0.15)] focus:outline-none focus:ring-2 focus:ring-[#35AC47]/50 focus:border-[#35AC47]/50 transition-all duration-300 text-base"
+									style={{ fontSize: '14px' }} // Prevent zoom on iOS
 								/>
 								{!isSearchFocused && !searchQuery && (
-									<div className="absolute left-5 top-1/2 transform -translate-y-1/2 pointer-events-none">
-										<AnimatedPlaceholder />
+									<div className="absolute inset-0 flex items-center justify-start px-12 sm:px-6 pointer-events-none">
+										<div className="max-w-[calc(100%-2.5rem)] overflow-hidden">
+											<AnimatedPlaceholder />
+										</div>
 									</div>
 								)}
 								<button
 									type="submit"
 									disabled={isSearching}
-									className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors duration-200 disabled:opacity-50"
+									className="absolute right-12 sm:right-4 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors duration-200 disabled:opacity-50"
 								>
 									{isSearching ? (
-										<div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-[#35AC47]"></div>
+										<div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-t-2 border-b-2 border-[#35AC47]"></div>
 									) : (
-										<Search className="w-5 h-5" />
+										<Search className="w-4 h-4 sm:w-5 sm:h-5" />
 									)}
 								</button>
 							</form>
