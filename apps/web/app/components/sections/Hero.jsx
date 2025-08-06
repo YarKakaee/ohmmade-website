@@ -286,7 +286,7 @@ export default function Hero() {
 								className="w-full sm:w-auto"
 							>
 								<Link
-									href="/learn"
+									href="/projects/publish"
 									className="relative inline-flex items-center justify-center bg-[#27BBFF] text-[#101014] px-4 sm:px-5 py-3 rounded-md text-sm font-semibold shadow-[0_4px_24px_0_rgba(39,187,255,0.25)] transition-all duration-300 before:absolute before:inset-0 before:rounded-md before:blur before:opacity-50 before:bg-gradient-to-r before:from-[#27BBFF] before:to-[#6EE7FF] before:z-[-1] overflow-hidden w-full sm:w-auto"
 								>
 									Start Your First Project
