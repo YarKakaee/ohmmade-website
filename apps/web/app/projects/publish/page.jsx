@@ -222,7 +222,7 @@ export default function PublishProjectPage() {
 					{/* Main Content Area */}
 					<div className="flex flex-col lg:flex-row">
 						{/* Left: Editor */}
-						<div className="w-full lg:w-4/6 lg:border-r lg:border-white/60 min-h-[500px] sm:min-h-[600px] p-4 sm:p-6 lg:p-8 text-white/50 relative z-50">
+						<div className="w-full lg:w-4/6 lg:border-r lg:border-white/60 min-h-[500px] sm:min-h-[600px] p-4 sm:p-6 lg:p-8 text-white/50 relative">
 							<CodexEditorWrapper ref={editorRef} />
 						</div>
 
@@ -284,7 +284,7 @@ export default function PublishProjectPage() {
 
 							{/* Form Fields */}
 							<div className="px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-5 text-[11px] sm:text-[12.5px] text-white relative z-30">
-								<div className="mb-2 sm:mb-0">
+								<div className="mb-2 sm:mb-4">
 									<label className="block mb-1.5 text-white/60">
 										Category / Microcontroller{' '}
 										<span className="text-[#FFC008]">
@@ -428,7 +428,7 @@ export default function PublishProjectPage() {
 									/>
 								</div>
 
-								<div className="mb-2 sm:mb-0">
+								<div className="mb-2 sm:mb-4">
 									<label className="block mb-1.5 text-white/60">
 										Difficulty Level{' '}
 										<span className="text-[#FFC008]">
