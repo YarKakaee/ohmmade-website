@@ -9,62 +9,56 @@ import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import Footer from './components/layout/Footer';
 import Nav from './components/layout/Nav';
+import { metadataGenerators, generateStructuredData } from '@/lib/seo';
 import './globals.css';
 
 config.autoAddCss = false;
 
 const inter = Inter({
 	subsets: ['latin'],
+	display: 'swap',
+	preload: true,
 });
 
-export const metadata = {
-	title: 'OhmMade | Turning One-Time Projects To Lifelong Impact.',
-	description:
-		'OhmMade is where makers publish, discover, and share electronics projects with the world. From Raspberry Pi builds to Arduino tutorials, OhmMade gives you the tools to showcase your work, inspire others, and explore step-by-step guides — all in one beginner-friendly, beautifully designed platform.',
-	keywords: [
-		'OhmMade',
-		'electronics projects',
-		'Arduino',
-		'Raspberry Pi',
-		'microcontroller',
-		'engineering',
-		'maker',
-		'DIY electronics',
-		'tutorials',
-		'project sharing',
-	],
-	metadataBase: new URL('https://ohmmade.ca'),
-	icons: {
-		icon: '/favicon.ico',
-	},
-	openGraph: {
-		title: 'OhmMade | Electronics Made Simple. Projects Worth Sharing.',
-		description:
-			'OhmMade is where makers publish, discover, and share electronics projects with the world. From Raspberry Pi builds to Arduino tutorials, OhmMade gives you the tools to showcase your work, inspire others, and explore step-by-step guides — all in one beginner-friendly, beautifully designed platform.',
-		url: 'https://ohmmade.ca',
-		siteName: 'OhmMade',
-		images: [
-			{
-				url: '/assets/og-image.png',
-				width: 1200,
-				height: 630,
-				alt: 'OhmMade Image',
-			},
-		],
-		type: 'website',
-	},
-	twitter: {
-		card: 'summary_large_image',
-		title: 'OhmMade | Electronics Made Simple. Projects Worth Sharing.',
-		description:
-			'Discover, build, and share your electronics projects with OhmMade.',
-		images: ['/assets/og-image.png'],
-	},
-};
+export const metadata = metadataGenerators.home();
 
 export default function RootLayout({ children }) {
+	const structuredData = [
+		generateStructuredData('organization'),
+		generateStructuredData('website'),
+	];
+
 	return (
 		<html lang="en">
+			<head>
+				{/* Preconnect to external domains for performance */}
+				<link rel="preconnect" href="https://fonts.googleapis.com" />
+				<link
+					rel="preconnect"
+					href="https://fonts.gstatic.com"
+					crossOrigin="anonymous"
+				/>
+				<link
+					rel="preconnect"
+					href="https://ujaylejhopvncyjvduvj.supabase.co"
+				/>
+
+				{/* DNS prefetch for performance */}
+				<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+				<link rel="dns-prefetch" href="//fonts.gstatic.com" />
+				<link
+					rel="dns-prefetch"
+					href="//ujaylejhopvncyjvduvj.supabase.co"
+				/>
+
+				{/* Structured Data */}
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify(structuredData),
+					}}
+				/>
+			</head>
 			<body className={`${inter.className} antialiased`}>
 				<SupabaseProvider>
 					<AuthModalProvider>

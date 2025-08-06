@@ -5,6 +5,7 @@ import { SupabaseProvider } from '@ohmmade/providers';
 import Nav from './components/layout/Nav';
 import Footer from './components/layout/Footer';
 import { Toaster } from 'react-hot-toast';
+import { generateStructuredData } from '@/lib/seo';
 
 const inter = Inter({
 	subsets: ['latin'],
@@ -54,8 +55,39 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+	const structuredData = [generateStructuredData('organization')];
+
 	return (
 		<html lang="en">
+			<head>
+				{/* Preconnect to external domains for performance */}
+				<link rel="preconnect" href="https://fonts.googleapis.com" />
+				<link
+					rel="preconnect"
+					href="https://fonts.gstatic.com"
+					crossOrigin="anonymous"
+				/>
+				<link
+					rel="preconnect"
+					href="https://ujaylejhopvncyjvduvj.supabase.co"
+				/>
+
+				{/* DNS prefetch for performance */}
+				<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+				<link rel="dns-prefetch" href="//fonts.gstatic.com" />
+				<link
+					rel="dns-prefetch"
+					href="//ujaylejhopvncyjvduvj.supabase.co"
+				/>
+
+				{/* Structured Data */}
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify(structuredData),
+					}}
+				/>
+			</head>
 			<body className={`${inter.className} antialiased`}>
 				<SupabaseProvider>
 					<AuthModalProvider>
