@@ -418,70 +418,285 @@ export default function ExploreProjectsPage() {
 							</AnimatePresence>
 						</div>
 
-						{/* Mobile Filters */}
-						{filtersOpen && (
-							<div className="lg:hidden w-full mb-6 sm:mb-8">
-								<div className="bg-[#1C1C20] border border-[#2C2F36] rounded-lg p-4 sm:p-6">
-									<h3 className="text-white text-lg sm:text-[20px] font-bold mb-4 sm:mb-6">
-										Filters
-									</h3>
-									<div className="space-y-4 sm:space-y-6 text-sm">
-										{/* Author Filter */}
-										<div>
-											<p className="mb-3 font-medium text-white">
-												Author
-											</p>
-											<div className="space-y-2">
-												<label className="flex items-center gap-2 cursor-pointer text-white/60 text-sm">
-													<input
-														type="checkbox"
-														checked={filters.author.includes(
-															'ohmmade'
-														)}
-														onChange={() =>
-															handleFilterChange(
-																'author',
+						{/* Mobile Filters Modal */}
+						<AnimatePresence>
+							{filtersOpen && (
+								<div className="lg:hidden fixed inset-0 z-50 flex items-end justify-center">
+									{/* Backdrop */}
+									<motion.div
+										initial={{ opacity: 0 }}
+										animate={{ opacity: 1 }}
+										exit={{ opacity: 0 }}
+										onClick={() => setFiltersOpen(false)}
+										className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+									/>
+
+									{/* Modal Content */}
+									<motion.div
+										initial={{ y: '100%', opacity: 0 }}
+										animate={{ y: 0, opacity: 1 }}
+										exit={{ y: '100%', opacity: 0 }}
+										transition={{
+											type: 'spring',
+											damping: 25,
+											stiffness: 500,
+										}}
+										className="relative w-full max-w-lg mx-4 mb-4 bg-[#1C1C20] border border-[#2C2F36] rounded-t-2xl max-h-[80vh] overflow-hidden"
+									>
+										{/* Header */}
+										<div className="flex items-center justify-between p-4 border-b border-[#2C2F36]">
+											<h3 className="text-white text-lg font-bold">
+												Filters
+											</h3>
+											<button
+												onClick={() =>
+													setFiltersOpen(false)
+												}
+												className="w-8 h-8 rounded-full bg-[#2C2F36] text-white/60 hover:text-white hover:bg-[#3A3A3C] transition-colors flex items-center justify-center cursor-pointer"
+											>
+												✕
+											</button>
+										</div>
+
+										{/* Filter Content */}
+										<div className="overflow-y-auto max-h-[60vh] p-4 space-y-6">
+											{/* Author Filter */}
+											<div>
+												<p className="mb-3 font-medium text-white">
+													Author
+												</p>
+												<div className="space-y-3">
+													<label className="flex items-center gap-3 cursor-pointer text-white/60 text-sm p-2 rounded-lg hover:bg-[#2C2F36] transition-colors">
+														<input
+															type="checkbox"
+															checked={filters.author.includes(
 																'ohmmade'
-															)
-														}
-														className="hidden peer"
-													/>
-													<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
-														<FontAwesomeIcon
-															icon={faCheck}
-															className="text-[#101014] text-[11px] hidden peer-checked:block"
+															)}
+															onChange={() =>
+																handleFilterChange(
+																	'author',
+																	'ohmmade'
+																)
+															}
+															className="hidden peer"
 														/>
-													</span>
-													OhmMade
-												</label>
-												<label className="flex items-center gap-2 cursor-pointer text-white/60 text-sm">
-													<input
-														type="checkbox"
-														checked={filters.author.includes(
-															'community'
-														)}
-														onChange={() =>
-															handleFilterChange(
-																'author',
+														<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+															<FontAwesomeIcon
+																icon={faCheck}
+																className="text-[#101014] text-[11px] hidden peer-checked:block"
+															/>
+														</span>
+														OhmMade
+													</label>
+													<label className="flex items-center gap-3 cursor-pointer text-white/60 text-sm p-2 rounded-lg hover:bg-[#2C2F36] transition-colors">
+														<input
+															type="checkbox"
+															checked={filters.author.includes(
 																'community'
-															)
-														}
-														className="hidden peer"
-													/>
-													<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
-														<FontAwesomeIcon
-															icon={faCheck}
-															className="text-[#101014] text-[11px] hidden peer-checked:block"
+															)}
+															onChange={() =>
+																handleFilterChange(
+																	'author',
+																	'community'
+																)
+															}
+															className="hidden peer"
 														/>
-													</span>
-													Community
-												</label>
+														<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+															<FontAwesomeIcon
+																icon={faCheck}
+																className="text-[#101014] text-[11px] hidden peer-checked:block"
+															/>
+														</span>
+														Community
+													</label>
+												</div>
+											</div>
+
+											{/* Category Filter */}
+											<div>
+												<p className="mb-3 font-medium text-white">
+													Category / Microcontroller
+												</p>
+												<div className="space-y-3">
+													{Object.keys(
+														categoryColors
+													).map((cat) => (
+														<label
+															key={cat}
+															className="flex items-center gap-3 cursor-pointer text-white/60 text-sm p-2 rounded-lg hover:bg-[#2C2F36] transition-colors"
+														>
+															<input
+																type="checkbox"
+																checked={filters.category.includes(
+																	cat
+																)}
+																onChange={() =>
+																	handleFilterChange(
+																		'category',
+																		cat
+																	)
+																}
+																className="hidden peer"
+															/>
+															<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+																<FontAwesomeIcon
+																	icon={
+																		faCheck
+																	}
+																	className="text-[#101014] text-[11px] hidden peer-checked:block"
+																/>
+															</span>
+															{cat}
+														</label>
+													))}
+												</div>
+											</div>
+
+											{/* Difficulty Filter */}
+											<div>
+												<p className="mb-3 font-medium text-white">
+													Difficulty Level
+												</p>
+												<div className="space-y-3">
+													{difficultyLevels.map(
+														(level) => (
+															<label
+																key={level}
+																className="flex items-center gap-3 cursor-pointer text-white/60 text-sm p-2 rounded-lg hover:bg-[#2C2F36] transition-colors"
+															>
+																<input
+																	type="checkbox"
+																	checked={filters.difficulty.includes(
+																		level
+																	)}
+																	onChange={() =>
+																		handleFilterChange(
+																			'difficulty',
+																			level
+																		)
+																	}
+																	className="hidden peer"
+																/>
+																<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+																	<FontAwesomeIcon
+																		icon={
+																			faCheck
+																		}
+																		className="text-[#101014] text-[11px] hidden peer-checked:block"
+																	/>
+																</span>
+																{level}
+															</label>
+														)
+													)}
+												</div>
+											</div>
+
+											{/* Component Filter */}
+											<div>
+												<p className="mb-3 font-medium text-white">
+													Component(s) Used
+												</p>
+												<div className="space-y-3">
+													{componentList.map(
+														(component) => (
+															<label
+																key={component}
+																className="flex items-center gap-3 cursor-pointer text-white/60 text-sm p-2 rounded-lg hover:bg-[#2C2F36] transition-colors"
+															>
+																<input
+																	type="checkbox"
+																	checked={filters.components.includes(
+																		component
+																	)}
+																	onChange={() =>
+																		handleFilterChange(
+																			'components',
+																			component
+																		)
+																	}
+																	className="hidden peer"
+																/>
+																<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+																	<FontAwesomeIcon
+																		icon={
+																			faCheck
+																		}
+																		className="text-[#101014] text-[11px] hidden peer-checked:block"
+																	/>
+																</span>
+																{component}
+															</label>
+														)
+													)}
+												</div>
+											</div>
+
+											{/* Language Filter */}
+											<div>
+												<p className="mb-3 font-medium text-white">
+													Language(s) Used
+												</p>
+												<div className="space-y-3">
+													{languageList.map(
+														(language) => (
+															<label
+																key={language}
+																className="flex items-center gap-3 cursor-pointer text-white/60 text-sm p-2 rounded-lg hover:bg-[#2C2F36] transition-colors"
+															>
+																<input
+																	type="checkbox"
+																	checked={filters.languages.includes(
+																		language
+																	)}
+																	onChange={() =>
+																		handleFilterChange(
+																			'languages',
+																			language
+																		)
+																	}
+																	className="hidden peer"
+																/>
+																<span className="w-5 h-5 rounded-md border border-[#5C5C5E] bg-[#101014] peer-checked:bg-[#27BBFF] peer-checked:border-[#27BBFF] transition-all duration-150 flex items-center justify-center">
+																	<FontAwesomeIcon
+																		icon={
+																			faCheck
+																		}
+																		className="text-[#101014] text-[11px] hidden peer-checked:block"
+																	/>
+																</span>
+																{language}
+															</label>
+														)
+													)}
+												</div>
 											</div>
 										</div>
-									</div>
+
+										{/* Footer Actions */}
+										<div className="p-4 border-t border-[#2C2F36] bg-[#1A1A1E]">
+											<div className="flex gap-3">
+												<button
+													onClick={handleClearFilters}
+													className="flex-1 px-4 py-3 text-sm font-medium rounded-lg border border-[#3A3A3C] text-white/60 hover:text-white hover:bg-[#2C2F36] transition-colors cursor-pointer"
+												>
+													Clear All
+												</button>
+												<button
+													onClick={() =>
+														setFiltersOpen(false)
+													}
+													className="flex-1 px-4 py-3 text-sm font-medium rounded-lg bg-[#27BBFF] text-[#101014] hover:brightness-110 transition-all cursor-pointer"
+												>
+													Apply Filters
+												</button>
+											</div>
+										</div>
+									</motion.div>
 								</div>
-							</div>
-						)}
+							)}
+						</AnimatePresence>
 
 						{/* Desktop Filters Sidebar */}
 						{filtersOpen && (
