@@ -6,6 +6,7 @@ import {
 	faSignOutAlt,
 	faTachometerAlt,
 	faUser,
+	faHome,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
@@ -147,8 +148,9 @@ export default function Nav() {
 
 						{/* Right: User */}
 						<div className="flex items-center flex-shrink-0 ml-auto z-10">
+							{/* Back to Home - Text on desktop, icon on mobile */}
 							<motion.button
-								className="text-white text-[14px] font-medium px-4 py-2 rounded-full cursor-pointer mr-4"
+								className="text-white text-[14px] font-medium px-4 py-2 rounded-full cursor-pointer mr-4 hidden sm:block"
 								whileHover={{
 									color: '#ACACAD',
 									scale: 1.02,
@@ -167,13 +169,37 @@ export default function Nav() {
 								</Link>
 							</motion.button>
 
+							{/* Home Icon - Mobile only */}
+							<motion.button
+								className="text-white text-[14px] font-medium px-3 py-2 rounded-full cursor-pointer mr-3 mt-1 sm:hidden"
+								whileHover={{
+									color: '#ACACAD',
+									scale: 1.02,
+								}}
+								whileTap={{
+									scale: 0.98,
+								}}
+								transition={{
+									type: 'spring',
+									stiffness: 400,
+									damping: 25,
+								}}
+							>
+								<Link href="https://ohmmade.ca">
+									<FontAwesomeIcon
+										icon={faHome}
+										className="text-lg text-white/90"
+									/>
+								</Link>
+							</motion.button>
+
 							{/* User Auth Section */}
 							{isProfileLoading ? (
 								<div className="flex items-center gap-2">
 									<div className="w-[28px] h-[28px] rounded-full bg-[#1C1C20] border border-[#3A3A3C]/60 flex items-center justify-center">
 										<div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white/40"></div>
 									</div>
-									<div className="w-16 h-4 bg-[#1C1C20] rounded animate-pulse"></div>
+									<div className="w-16 h-4 bg-[#1C1C20] rounded animate-pulse hidden sm:block"></div>
 								</div>
 							) : user ? (
 								<div className="relative" ref={userRef}>
@@ -199,7 +225,7 @@ export default function Nav() {
 												)}
 											</div>
 										)}
-										<span className="text-[14px] font-medium">
+										<span className="text-[14px] font-medium hidden sm:block">
 											{userProfile?.name || 'User'}
 										</span>
 									</button>
