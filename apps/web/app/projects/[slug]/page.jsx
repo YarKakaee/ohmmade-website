@@ -13,6 +13,29 @@ import { Suspense } from 'react';
 import ClientProjectSlugHeader from './ClientProjectSlugHeader';
 import { metadataGenerators, generateStructuredData } from '@/lib/seo';
 
+// Generate static params for all published projects
+export async function generateStaticParams() {
+	const prisma = getPrismaClient();
+
+	try {
+		const projects = await prisma.project.findMany({
+			where: {
+				published: true,
+			},
+			select: {
+				slug: true,
+			},
+		});
+
+		return projects.map((project) => ({
+			slug: project.slug,
+		}));
+	} catch (error) {
+		console.error('Error generating static params for projects:', error);
+		return [];
+	}
+}
+
 export async function generateMetadata({ params }) {
 	const { slug } = await params;
 	const prisma = getPrismaClient();

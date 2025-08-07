@@ -1,6 +1,29 @@
 import { metadataGenerators } from '@/lib/seo';
 import getPrismaClient from '@/prisma/client';
 
+// Generate static params for all users
+export async function generateStaticParams() {
+	const prisma = getPrismaClient();
+
+	try {
+		const users = await prisma.user.findMany({
+			where: {
+				username: { not: null },
+			},
+			select: {
+				username: true,
+			},
+		});
+
+		return users.map((user) => ({
+			username: user.username,
+		}));
+	} catch (error) {
+		console.error('Error generating static params for users:', error);
+		return [];
+	}
+}
+
 // Generate metadata for user profile pages
 export async function generateMetadata({ params }) {
 	const { username } = await params;
