@@ -13,6 +13,9 @@
 		"db:generate": "prisma generate --schema=../../prisma/schema.prisma"
 	},
 	"dependencies": {
+		"@blocknote/core": "^0.35.0",
+		"@blocknote/mantine": "^0.35.0",
+		"@blocknote/react": "^0.35.0",
 		"@calumk/editorjs-codeflask": "^1.0.10",
 		"@editorjs/code": "^2.9.3",
 		"@editorjs/editorjs": "^2.30.8",
