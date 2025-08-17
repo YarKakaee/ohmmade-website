@@ -172,7 +172,7 @@ export default function Hero() {
 				transition={{ duration: 1, ease: 'easeOut' }}
 				className="absolute inset-0 pointer-events-none z-0"
 			>
-				<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[1100px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 sm:blur-[125px] blur-[80px] opacity-70 transform-gpu mt-38 sm:mt-0">
+				<div className="absolute w-full sm:w-[800px] md:w-[1000px] lg:w-[700px] max-w-full left-1/2 -translate-x-1/2 translate-y-1/6 sm:blur-[125px] blur-[80px] opacity-70 transform-gpu mt-38 sm:mt-0">
 					<Image
 						src="https://ujaylejhopvncyjvduvj.supabase.co/storage/v1/object/public/ohmmade-assets//heroimageohmmade.webp"
 						alt="Abstract light pattern"
@@ -216,7 +216,7 @@ export default function Hero() {
 								style={{ position: 'relative' }}
 							>
 								<span
-									className="absolute inset-x-1 sm:inset-x-2 inset-y-0.5 sm:inset-y-1 bg-gradient-to-r from-purple-400 to-pink-600 blur-xl sm:blur-2xl opacity-50 pointer-events-none -z-10"
+									className="absolute inset-x-1 sm:inset-x-2 inset-y-0.5 sm:inset-y-1 bg-gradient-to-r from-purple-400 to-pink-600 blur-xl sm:blur-3xl opacity-50 pointer-events-none -z-10"
 									aria-hidden="true"
 								/>
 								Lifelong Impact.
