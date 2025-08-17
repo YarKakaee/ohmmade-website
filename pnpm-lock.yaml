@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  yjs: ^13.6.12
+
 importers:
 
   .:
@@ -209,27 +212,6 @@ importers:
       '@blocknote/react':
         specifier: ^0.35.0
         version: 0.35.0(@types/hast@3.0.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@calumk/editorjs-codeflask':
-        specifier: ^1.0.10
-        version: 1.0.10(prismjs@1.30.0)
-      '@editorjs/code':
-        specifier: ^2.9.3
-        version: 2.9.3
-      '@editorjs/editorjs':
-        specifier: ^2.30.8
-        version: 2.30.8
-      '@editorjs/header':
-        specifier: ^2.8.8
-        version: 2.8.8
-      '@editorjs/image':
-        specifier: ^2.10.2
-        version: 2.10.3
-      '@editorjs/list':
-        specifier: ^2.0.6
-        version: 2.0.8
-      '@editorjs/paragraph':
-        specifier: ^2.11.7
-        version: 2.11.7
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.1.8)(react@19.1.0)
@@ -275,9 +257,6 @@ importers:
       '@radix-ui/react-dialog':
         specifier: ^1.1.7
         version: 1.1.14(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@rxpm/editor-js-code':
-        specifier: ^0.0.1
-        version: 0.0.1
       '@supabase/auth-helpers-nextjs':
         specifier: ^0.10.0
         version: 0.10.0(@supabase/supabase-js@2.52.0)
@@ -293,12 +272,6 @@ importers:
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(next@15.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
-      ace-builds:
-        specifier: ^1.39.1
-        version: 1.43.2
-      ace-code-editorjs:
-        specifier: ^1.0.3
-        version: 1.0.3(@editorjs/editorjs@2.30.8)(ace-builds@1.43.2)
       axios:
         specifier: ^1.8.4
         version: 1.10.0
@@ -323,9 +296,6 @@ importers:
       next:
         specifier: 15.2.4
         version: 15.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      prismjs:
-        specifier: ^1.24.1
-        version: 1.30.0
       react:
         specifier: ^19.0.0
         version: 19.1.0
@@ -495,13 +465,6 @@ packages:
       react: ^18.0 || ^19.0 || >= 19.0.0-rc
       react-dom: ^18.0 || ^19.0 || >= 19.0.0-rc
 
-  '@calumk/editorjs-codeflask@1.0.10':
-    resolution: {integrity: sha512-rf0MGy7SkSFQ6yJxdyaK8RcqpiX6foII6vZc11MuoC4gSWRWJhM9oZ8jr0SK5vG3qiQK97IT1DUaNkV9e0Wp6w==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-
-  '@codexteam/icons@0.0.4':
-    resolution: {integrity: sha512-V8N/TY2TGyas4wLrPIFq7bcow68b3gu8DfDt1+rrHPtXxcexadKauRJL6eQgfG7Z0LCrN4boLRawR4S9gjIh/Q==}
-
   '@codexteam/icons@0.0.5':
     resolution: {integrity: sha512-s6H2KXhLz2rgbMZSkRm8dsMJvyUNZsEjxobBEg9ztdrb1B2H3pEzY6iTwI4XUPJWJ3c3qRKwV4TrO3J5jUdoQA==}
 
@@ -522,9 +485,6 @@ packages:
 
   '@editorjs/list@2.0.8':
     resolution: {integrity: sha512-/EJNvpeJYa1YDtYa85ug9R3sbDyI5ZlMHQ2bIh5S9iPa19qXe45jk6kgcew+jMNQq3j4NS4Q6YeeFbU1QkNMWw==}
-
-  '@editorjs/paragraph@2.11.7':
-    resolution: {integrity: sha512-qD6bbWvRc4VvP0mXDOm+hOhzzhUYR9ZjcAvgCuKWcCbUMpCvhVF1s8NX40zdjekPi6JEnuHTamCncTrSzVsVhw==}
 
   '@emnapi/runtime@1.4.4':
     resolution: {integrity: sha512-hHyapA4A3gPaDCNfiqyZUStTMqIkKRshqPIuDOXv1hcBnD4U3l8cP0T1HMCfGRxQ6V64TGCcoswChANyOAwbQg==}
@@ -1346,9 +1306,6 @@ packages:
   '@remirror/core-constants@3.0.0':
     resolution: {integrity: sha512-42aWfPrimMfDKDi4YegyS7x+/0tlzaqwPQCULLanv3DMIlu96KTJR0fM5isWX2UViOqlGnX6YFgqWepcX+XMNg==}
 
-  '@rxpm/editor-js-code@0.0.1':
-    resolution: {integrity: sha512-77HVNevLuy4N+T0MOvbv7MTePr08RGwm9vf/sRubVmD5oE+in0iXGFwNYRGM5YnznA2Vk8mFSLQGF8tQYVGV/g==}
-
   '@shikijs/types@3.2.1':
     resolution: {integrity: sha512-/NTWAk4KE2M8uac0RhOsIhYQf4pdU0OywQuYDGIGAJ6Mjunxl2cGiuLkvu4HLCMn+OTTLRWkjZITp+aYJv60yA==}
 
@@ -1638,9 +1595,6 @@ packages:
   '@types/phoenix@1.6.6':
     resolution: {integrity: sha512-PIzZZlEppgrpoT2QgbnDU+MMzuR6BbCjllj0bM70lWoejMeNJAxCchxnv7J3XFkI8MpygtRpzXrIlmWUBclP5A==}
 
-  '@types/prismjs@1.26.5':
-    resolution: {integrity: sha512-AUZTa7hQ2KY5L7AmtSiqxlhWxb4ina0yd8hNbl4TWuqnv/pFP0nDMb3YrfSBf4hJVGLh2YEIBfKaBW/9UEl6IQ==}
-
   '@types/prop-types@15.7.15':
     resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
 
@@ -1689,15 +1643,6 @@ packages:
         optional: true
       vue-router:
         optional: true
-
-  ace-builds@1.43.2:
-    resolution: {integrity: sha512-3wzJUJX0RpMc03jo0V8Q3bSb/cKPnS7Nqqw8fVHsCCHweKMiTIxT3fP46EhjmVy6MCuxwP801ere+RW245phGw==}
-
-  ace-code-editorjs@1.0.3:
-    resolution: {integrity: sha512-FaxcZInqduJK5YfqMB5t8WAAeGTf6/XQF9JpTjxwmoXPV9fmkZGM+FmMw5OAW0OWCwqS/kPClvSHglIRSJPy2g==}
-    peerDependencies:
-      '@editorjs/editorjs': ^2.27.2
-      ace-builds: ^1.23.1
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -1823,9 +1768,6 @@ packages:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
 
-  codeflask@1.4.1:
-    resolution: {integrity: sha512-4vb2IbE/iwvP0Uubhd2ixVeysm3KNC2pl7SoDaisxq1juhZzvap3qbaX7B2CtpQVvv5V9sjcQK8hO0eTcY0V9Q==}
-
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
     engines: {node: '>=7.0.0'}
@@ -1871,31 +1813,9 @@ packages:
   crelt@1.0.6:
     resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
 
-  cross-env@7.0.3:
-    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
-    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
-    hasBin: true
-
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
-
-  css-loader@6.11.0:
-    resolution: {integrity: sha512-CTJ+AEQJjq5NzLga5pE39qdiSV56F8ywCIsqNIRF0r7BDgWsN25aazToqAFg7ZrtA/U016xudB3ffgweORxX7g==}
-    engines: {node: '>= 12.13.0'}
-    peerDependencies:
-      '@rspack/core': 0.x || 1.x
-      webpack: ^5.0.0
-    peerDependenciesMeta:
-      '@rspack/core':
-        optional: true
-      webpack:
-        optional: true
-
-  cssesc@3.0.0:
-    resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
-    engines: {node: '>=4'}
-    hasBin: true
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
@@ -2246,12 +2166,6 @@ packages:
 
   html-whitespace-sensitive-tag-names@3.0.1:
     resolution: {integrity: sha512-q+310vW8zmymYHALr1da4HyXUQ0zgiIwIicEfotYPWGN0OJVEN/58IJ3A4GBYcEq3LGAZqKb+ugvP0GNB9CEAA==}
-
-  icss-utils@5.1.0:
-    resolution: {integrity: sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==}
-    engines: {node: ^10 || ^12 || >= 14}
-    peerDependencies:
-      postcss: ^8.1.0
 
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
@@ -2677,9 +2591,6 @@ packages:
       sass:
         optional: true
 
-  nice-select2@2.3.1:
-    resolution: {integrity: sha512-wOEsRs67mAqhWPKg4ytclTyV3LzgfNGCMLPu/cYmpNoSTmuGcvitx+6+OWEsl7m7pZKgxVnL/V8Msr7NLeGdtA==}
-
   node-fetch-native@1.6.7:
     resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
 
@@ -2770,34 +2681,6 @@ packages:
   pkg-types@2.2.0:
     resolution: {integrity: sha512-2SM/GZGAEkPp3KWORxQZns4M+WSeXbC2HEvmOIJe3Cmiv6ieAJvdVhDldtHqM5J1Y7MrR1XhkBT/rMlhh9FdqQ==}
 
-  postcss-modules-extract-imports@3.1.0:
-    resolution: {integrity: sha512-k3kNe0aNFQDAZGbin48pL2VNidTF0w4/eASDsxlyspobzU3wZQLOGj7L9gfRe0Jo9/4uud09DsjFNH7winGv8Q==}
-    engines: {node: ^10 || ^12 || >= 14}
-    peerDependencies:
-      postcss: ^8.1.0
-
-  postcss-modules-local-by-default@4.2.0:
-    resolution: {integrity: sha512-5kcJm/zk+GJDSfw+V/42fJ5fhjL5YbFDl8nVdXkJPLLW+Vf9mTD5Xe0wqIaDnLuL2U6cDNpTr+UQ+v2HWIBhzw==}
-    engines: {node: ^10 || ^12 || >= 14}
-    peerDependencies:
-      postcss: ^8.1.0
-
-  postcss-modules-scope@3.2.1:
-    resolution: {integrity: sha512-m9jZstCVaqGjTAuny8MdgE88scJnCiQSlSrOWcTQgM2t32UBe+MUmFSO5t7VMSfAf/FJKImAxBav8ooCHJXCJA==}
-    engines: {node: ^10 || ^12 || >= 14}
-    peerDependencies:
-      postcss: ^8.1.0
-
-  postcss-modules-values@4.0.0:
-    resolution: {integrity: sha512-RDxHkAiEGI78gS2ofyvCsu7iycRv7oqw5xMWn9iMoR0N/7mf9D50ecQqUo5BZ9Zh2vH4bCUR/ktCqbB9m8vJjQ==}
-    engines: {node: ^10 || ^12 || >= 14}
-    peerDependencies:
-      postcss: ^8.1.0
-
-  postcss-selector-parser@7.1.0:
-    resolution: {integrity: sha512-8sLjZwK0R+JlxlYcTuVnyT2v+htpdrjDOKuMcOVdYjt52Lh8hWRYpxBPoKx/Zg+bcjc3wx6fmQevMmUztS/ccA==}
-    engines: {node: '>=4'}
-
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
@@ -2827,15 +2710,6 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
-
-  prismjs-components-importer@0.1.0:
-    resolution: {integrity: sha512-r+XHZW6IdECmNfzVT3H1fE/YQoEKtciMBJ9eSjz8jbp9RqlX3uTKvvn8knBJGmGDl4kbeBJjog5h0BhXAAUwsg==}
-    peerDependencies:
-      prismjs: 1.24.1
-
-  prismjs@1.30.0:
-    resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
-    engines: {node: '>=6'}
 
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
@@ -3395,9 +3269,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  util-deprecate@1.0.2:
-    resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
-
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
@@ -3458,13 +3329,13 @@ packages:
       prosemirror-state: ^1.2.3
       prosemirror-view: ^1.9.10
       y-protocols: ^1.0.1
-      yjs: ^13.5.38
+      yjs: ^13.6.12
 
   y-protocols@1.0.6:
     resolution: {integrity: sha512-vHRF2L6iT3rwj1jub/K5tYcTT/mEYDUppgNPXwp8fmLpui9f7Yeq3OEtTLVF012j39QnV+KEQpNqoN7CWU7Y9Q==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
     peerDependencies:
-      yjs: ^13.0.0
+      yjs: ^13.6.12
 
   yallist@5.0.0:
     resolution: {integrity: sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw==}
@@ -3641,18 +3512,6 @@ snapshots:
       - sugar-high
       - supports-color
 
-  '@calumk/editorjs-codeflask@1.0.10(prismjs@1.30.0)':
-    dependencies:
-      codeflask: 1.4.1
-      nice-select2: 2.3.1
-      prismjs-components-importer: 0.1.0(prismjs@1.30.0)
-    transitivePeerDependencies:
-      - '@rspack/core'
-      - prismjs
-      - webpack
-
-  '@codexteam/icons@0.0.4': {}
-
   '@codexteam/icons@0.0.5': {}
 
   '@codexteam/icons@0.3.3': {}
@@ -3675,10 +3534,6 @@ snapshots:
   '@editorjs/list@2.0.8':
     dependencies:
       '@codexteam/icons': 0.3.3
-
-  '@editorjs/paragraph@2.11.7':
-    dependencies:
-      '@codexteam/icons': 0.0.4
 
   '@emnapi/runtime@1.4.4':
     dependencies:
@@ -4394,10 +4249,6 @@ snapshots:
 
   '@remirror/core-constants@3.0.0': {}
 
-  '@rxpm/editor-js-code@0.0.1':
-    dependencies:
-      '@codexteam/icons': 0.0.5
-
   '@shikijs/types@3.2.1':
     dependencies:
       '@shikijs/vscode-textmate': 10.0.2
@@ -4696,8 +4547,6 @@ snapshots:
 
   '@types/phoenix@1.6.6': {}
 
-  '@types/prismjs@1.26.5': {}
-
   '@types/prop-types@15.7.15': {}
 
   '@types/react-transition-group@4.4.12(@types/react@19.1.8)':
@@ -4727,14 +4576,6 @@ snapshots:
     optionalDependencies:
       next: 15.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0
-
-  ace-builds@1.43.2: {}
-
-  ace-code-editorjs@1.0.3(@editorjs/editorjs@2.30.8)(ace-builds@1.43.2):
-    dependencies:
-      '@codexteam/icons': 0.3.3
-      '@editorjs/editorjs': 2.30.8
-      ace-builds: 1.43.2
 
   acorn-jsx@5.3.2(acorn@8.15.0):
     dependencies:
@@ -4865,11 +4706,6 @@ snapshots:
 
   clsx@2.1.1: {}
 
-  codeflask@1.4.1:
-    dependencies:
-      '@types/prismjs': 1.26.5
-      prismjs: 1.30.0
-
   color-convert@2.0.1:
     dependencies:
       color-name: 1.1.4
@@ -4914,28 +4750,11 @@ snapshots:
 
   crelt@1.0.6: {}
 
-  cross-env@7.0.3:
-    dependencies:
-      cross-spawn: 7.0.6
-
   cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-
-  css-loader@6.11.0:
-    dependencies:
-      icss-utils: 5.1.0(postcss@8.5.6)
-      postcss: 8.5.6
-      postcss-modules-extract-imports: 3.1.0(postcss@8.5.6)
-      postcss-modules-local-by-default: 4.2.0(postcss@8.5.6)
-      postcss-modules-scope: 3.2.1(postcss@8.5.6)
-      postcss-modules-values: 4.0.0(postcss@8.5.6)
-      postcss-value-parser: 4.2.0
-      semver: 7.7.2
-
-  cssesc@3.0.0: {}
 
   csstype@3.1.3: {}
 
@@ -5364,10 +5183,6 @@ snapshots:
   html-void-elements@3.0.0: {}
 
   html-whitespace-sensitive-tag-names@3.0.1: {}
-
-  icss-utils@5.1.0(postcss@8.5.6):
-    dependencies:
-      postcss: 8.5.6
 
   ignore@5.3.2: {}
 
@@ -5924,14 +5739,6 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  nice-select2@2.3.1:
-    dependencies:
-      cross-env: 7.0.3
-      css-loader: 6.11.0
-    transitivePeerDependencies:
-      - '@rspack/core'
-      - webpack
-
   node-fetch-native@1.6.7: {}
 
   node-releases@2.0.19: {}
@@ -6022,32 +5829,6 @@ snapshots:
       exsolve: 1.0.7
       pathe: 2.0.3
 
-  postcss-modules-extract-imports@3.1.0(postcss@8.5.6):
-    dependencies:
-      postcss: 8.5.6
-
-  postcss-modules-local-by-default@4.2.0(postcss@8.5.6):
-    dependencies:
-      icss-utils: 5.1.0(postcss@8.5.6)
-      postcss: 8.5.6
-      postcss-selector-parser: 7.1.0
-      postcss-value-parser: 4.2.0
-
-  postcss-modules-scope@3.2.1(postcss@8.5.6):
-    dependencies:
-      postcss: 8.5.6
-      postcss-selector-parser: 7.1.0
-
-  postcss-modules-values@4.0.0(postcss@8.5.6):
-    dependencies:
-      icss-utils: 5.1.0(postcss@8.5.6)
-      postcss: 8.5.6
-
-  postcss-selector-parser@7.1.0:
-    dependencies:
-      cssesc: 3.0.0
-      util-deprecate: 1.0.2
-
   postcss-value-parser@4.2.0: {}
 
   postcss@8.4.31:
@@ -6074,12 +5855,6 @@ snapshots:
       typescript: 5.8.3
     transitivePeerDependencies:
       - magicast
-
-  prismjs-components-importer@0.1.0(prismjs@1.30.0):
-    dependencies:
-      prismjs: 1.30.0
-
-  prismjs@1.30.0: {}
 
   prop-types@15.8.1:
     dependencies:
@@ -6686,8 +6461,6 @@ snapshots:
   use-sync-external-store@1.5.0(react@19.1.0):
     dependencies:
       react: 19.1.0
-
-  util-deprecate@1.0.2: {}
 
   uuid@8.3.2: {}
 

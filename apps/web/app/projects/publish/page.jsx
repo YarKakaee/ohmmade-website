@@ -111,10 +111,50 @@ export default function PublishProjectPage() {
 			return;
 		}
 
+		// Check if editor has content
+		if (!editorRef.current) {
+			toast.error(
+				'Editor not ready. Please wait a moment and try again.'
+			);
+			return;
+		}
+
 		try {
 			setIsPublishing(true);
 
 			const editorData = await editorRef.current.save();
+
+			// Validate editor content
+			if (
+				!editorData ||
+				!editorData.content ||
+				editorData.content.length === 0
+			) {
+				toast.error(
+					'Please add some content to your project before publishing.'
+				);
+				return;
+			}
+
+			// Check if content is just empty blocks
+			const hasRealContent = editorData.content.some((block) => {
+				if (block.type === 'paragraph' || block.type === 'heading') {
+					return (
+						block.content &&
+						block.content.some(
+							(item) => item.text && item.text.trim().length > 0
+						)
+					);
+				}
+				return true; // Other block types (images, videos, etc.) are considered content
+			});
+
+			if (!hasRealContent) {
+				toast.error(
+					'Please add some meaningful content to your project before publishing.'
+				);
+				return;
+			}
 
 			const slugBase = title.trim().toLowerCase().replace(/\s+/g, '-');
 			const slug = `${slugBase}-${Math.floor(
@@ -125,7 +165,7 @@ export default function PublishProjectPage() {
 				? tags.map((t) => String(t).trim())
 				: [];
 
-			await axios.post('/api/projects/create', {
+			const projectData = {
 				title: title,
 				description: description,
 				category,
@@ -141,23 +181,45 @@ export default function PublishProjectPage() {
 				email: user.email,
 				status: 'published',
 				componentsUsed: components,
-			});
+			};
 
-			toast.success('Project published successfully! 🎉');
+			console.log('Publishing project with data:', projectData);
 
-			// Clear everything
-			await editorRef.current.clear();
-			setTitle('');
-			setDescription('');
-			setCategory('');
-			setDifficultyLevel('');
-			setTimeToBuild('');
-			setTags([]);
-			setThumbnailUrl(null);
-			setComponents([]);
+			const response = await axios.post(
+				'/api/projects/create',
+				projectData
+			);
+
+			if (response.data.success) {
+				toast.success('Project published successfully! 🎉');
+
+				// Clear everything
+				await editorRef.current.clear();
+				setTitle('');
+				setDescription('');
+				setCategory('');
+				setDifficultyLevel('');
+				setTimeToBuild('');
+				setTags([]);
+				setThumbnailUrl(null);
+				setComponents([]);
+
+				// Redirect to the published project
+				router.push(`/projects/${response.data.project.slug}`);
+			} else {
+				throw new Error('Project creation failed');
+			}
 		} catch (err) {
 			console.error('Error publishing project:', err);
-			toast.error('Something went wrong while publishing.');
+			if (err.response?.data?.error) {
+				toast.error(`Publishing failed: ${err.response.data.error}`);
+			} else if (err.message) {
+				toast.error(`Publishing failed: ${err.message}`);
+			} else {
+				toast.error(
+					'Something went wrong while publishing. Please try again.'
+				);
+			}
 		} finally {
 			setIsPublishing(false);
 		}
@@ -196,7 +258,7 @@ export default function PublishProjectPage() {
 									)
 								}
 								placeholder="Enter your project title here..."
-								className="w-full bg-[#1C1C20] backdrop-blur-xl border border-[#2C2F36] rounded-2xl px-8 py-6 text-white placeholder-white/40 focus:outline-none focus:border-[#27BBFF] focus:ring-4 focus:ring-[#27BBFF]/20 transition-all duration-300 text-2xl font-bold text-center"
+								className="w-full bg-[#13151A] backdrop-blur-xl border border-[#3A3A3C]/60 rounded-2xl px-8 py-6 text-white placeholder-white/40 focus:outline-none focus:border-[#27BBFF] focus:ring-4 focus:ring-[#27BBFF]/20 transition-all duration-300 text-2xl font-semibold text-center"
 								style={{ fontSize: '16px' }}
 							/>
 							<div className="absolute right-6 top-1/2 transform -translate-y-1/2">
@@ -211,7 +273,7 @@ export default function PublishProjectPage() {
 					<div className="flex flex-col xl:flex-row gap-8 max-w-7xl mx-auto">
 						{/* Left: Editor */}
 						<div className="w-full xl:w-2/3">
-							<div className="bg-[#1C1C20] backdrop-blur-xl border border-[#2C2F36] rounded-2xl p-6 overflow-hidden">
+							<div className="bg-[#13151A] backdrop-blur-xl border border-[#3A3A3C]/60 rounded-2xl p-6 overflow-hidden">
 								{/* Editor Header */}
 								<div className="flex items-center justify-between mb-6 pb-4 border-b border-[#2C2F36]">
 									<div className="flex items-center gap-3">
@@ -240,7 +302,7 @@ export default function PublishProjectPage() {
 						{/* Right: Sidebar */}
 						<div className="w-full xl:w-1/3 space-y-6">
 							{/* Publishing Guidelines Card */}
-							<div className="bg-gradient-to-br from-[#1C1C20] to-[#2C2F36] border border-[#3A3A3C] rounded-2xl p-6">
+							<div className="bg-[#13151A] border border-[#3A3A3C]/60 rounded-2xl p-6">
 								<div className="flex items-center gap-3 mb-4">
 									<div className="w-8 h-8 bg-gradient-to-br from-[#FFC008] to-[#bb8f0e] rounded-lg flex items-center justify-center">
 										<FontAwesomeIcon
@@ -310,7 +372,7 @@ export default function PublishProjectPage() {
 							</div>
 
 							{/* Form Fields */}
-							<div className="bg-[#1C1C20]/60 backdrop-blur-xl border border-[#2C2F36] rounded-2xl p-6 space-y-6">
+							<div className="bg-[#13151A] backdrop-blur-xl border border-[#3A3A3C]/60 rounded-2xl p-6 space-y-6">
 								{/* Category Selection */}
 								<div>
 									<label className="block mb-3 text-white font-semibold text-sm">
@@ -321,12 +383,11 @@ export default function PublishProjectPage() {
 									</label>
 									<div className="relative">
 										<select
-											className="w-full bg-[#2C2F36] border border-[#3A3A3C] rounded-xl px-4 py-3 text-white/80 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200 font-medium appearance-none"
+											className="cursor-pointer text-sm w-full bg-[#2C2F36] border border-[#3A3A3C]/60 rounded-xl px-4 py-3 text-white/80 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200 font-medium appearance-none"
 											value={category}
 											onChange={(e) =>
 												setCategory(e.target.value)
 											}
-											style={{ fontSize: '16px' }}
 										>
 											<option value="" disabled>
 												Select category...
@@ -355,7 +416,7 @@ export default function PublishProjectPage() {
 										</span>
 									</label>
 									<textarea
-										className="text-sm w-full bg-[#2C2F36] border border-[#3A3A3C] rounded-xl px-4 py-3 resize-none h-24 text-white/80 placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200"
+										className="text-sm w-full bg-[#2C2F36] border border-[#3A3A3C]/60 rounded-xl px-4 py-3 resize-none h-24 text-white/80 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200"
 										value={description}
 										onChange={(e) =>
 											setDescription(
@@ -495,14 +556,13 @@ export default function PublishProjectPage() {
 									</label>
 									<div className="relative">
 										<select
-											className="w-full bg-[#2C2F36] border border-[#3A3A3C] rounded-xl px-4 py-3 text-white/80 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200 font-medium appearance-none"
+											className="cursor-pointer text-sm w-full bg-[#2C2F36] border border-[#3A3A3C]/60 rounded-xl px-4 py-3 text-white/80 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200 font-medium appearance-none"
 											value={difficultyLevel}
 											onChange={(e) =>
 												setDifficultyLevel(
 													e.target.value
 												)
 											}
-											style={{ fontSize: '16px' }}
 										>
 											<option value="">
 												Select difficulty...
@@ -537,8 +597,7 @@ export default function PublishProjectPage() {
 														e.target.value
 													)
 												}
-												className="flex-1 bg-[#2C2F36] border border-[#3A3A3C] rounded-lg px-3 py-2 text-white/80 placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200"
-												style={{ fontSize: '16px' }}
+												className="text-sm flex-1 bg-[#2C2F36] border border-[#3A3A3C]/60 rounded-xl px-3 py-3 text-white/80 placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200"
 											/>
 											<button
 												type="button"
@@ -567,14 +626,14 @@ export default function PublishProjectPage() {
 														input.focus();
 													}, 0);
 												}}
-												className="px-3 py-2 bg-[#2C2F36] hover:bg-[#3A3A3C] text-white rounded-lg text-sm transition-all duration-200 font-medium"
+												className="cursor-pointer px-3 py-2 bg-[#2C2F36] hover:bg-[#3A3A3C] text-white rounded-lg text-sm transition-all duration-200 font-medium"
 											>
 												Ω
 											</button>
 											<button
 												type="button"
 												onClick={handleAddComponent}
-												className="bg-[#27BBFF] text-[#101014] px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"
+												className="cursor-pointer bg-[#27BBFF] text-[#101014] px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"
 											>
 												Add
 											</button>
@@ -586,7 +645,7 @@ export default function PublishProjectPage() {
 												{components.map((item, idx) => (
 													<div
 														key={idx}
-														className="flex items-center justify-between bg-[#2C2F36] rounded-lg px-3 py-2"
+														className="flex items-center justify-between bg-[#2C2F36] border border-[#3A3A3C]/60 rounded-xl px-3 py-2"
 													>
 														<span className="text-white text-sm">
 															{item}
@@ -598,7 +657,7 @@ export default function PublishProjectPage() {
 																	idx
 																)
 															}
-															className="text-red-400 hover:text-red-300 transition-colors p-1"
+															className="cursor-pointer text-red-400 hover:text-red-300 transition-colors p-1"
 														>
 															<FontAwesomeIcon
 																icon={
@@ -626,7 +685,7 @@ export default function PublishProjectPage() {
 										onChange={(e) =>
 											setTimeToBuild(e.target.value)
 										}
-										className="w-full bg-[#2C2F36] border border-[#3A3A3C] rounded-xl px-4 py-3 text-white/80 placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200"
+										className="text-sm w-full bg-[#2C2F36] border border-[#3A3A3C]/60 rounded-xl px-4 py-3 text-white/80 placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200"
 									/>
 								</div>
 
@@ -648,14 +707,13 @@ export default function PublishProjectPage() {
 												onChange={(e) =>
 													setNewTag(e.target.value)
 												}
-												className="flex-1 bg-[#2C2F36] border border-[#3A3A3C] rounded-lg px-3 py-2 text-white/80 placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200"
-												style={{ fontSize: '16px' }}
+												className="text-sm flex-1 bg-[#2C2F36] border border-[#3A3A3C]/60 rounded-xl px-3 py-3 text-white/80 placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200"
 											/>
 											<button
 												type="button"
 												onClick={handleAddTag}
 												disabled={tags.length >= 6}
-												className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+												className={`cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
 													tags.length >= 6
 														? 'bg-[#2C2F36] text-white/40 cursor-not-allowed'
 														: 'bg-[#27BBFF] text-[#101014] hover:scale-105'
@@ -671,7 +729,7 @@ export default function PublishProjectPage() {
 												{tags.map((item, idx) => (
 													<div
 														key={idx}
-														className="flex items-center gap-2 bg-[#27BBFF]/20 border border-[#27BBFF]/30 rounded-lg px-3 py-1"
+														className="flex items-center gap-2 bg-[#27BBFF]/20 border border-[#27BBFF]/30 rounded-xl px-3 py-1"
 													>
 														<span className="text-[#27BBFF] text-sm font-medium">
 															{item}
@@ -683,7 +741,7 @@ export default function PublishProjectPage() {
 																	idx
 																)
 															}
-															className="text-[#27BBFF] transition-colors"
+															className="cursor-pointer text-[#27BBFF] transition-colors"
 														>
 															×
 														</button>
@@ -691,42 +749,41 @@ export default function PublishProjectPage() {
 												))}
 											</div>
 										)}
+										<div className="text-center mt-6">
+											<button
+												onClick={handlePublish}
+												disabled={isPublishing}
+												className={`w-full cursor-pointer px-8 py-3 text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 ${
+													isPublishing
+														? 'bg-[#27BBFF] opacity-50 cursor-not-allowed'
+														: 'bg-[#27BBFF] text-[#101014] shadow-lg hover:shadow-lg hover:shadow-[#27BBFF]/25'
+												}`}
+											>
+												{isPublishing ? (
+													<div className="flex items-center justify-center gap-3">
+														<FontAwesomeIcon
+															icon={faSpinner}
+															spin
+															className="text-xl"
+														/>
+														<span className="font-semibold">
+															Publishing Your
+															Project...
+														</span>
+													</div>
+												) : (
+													<div className="flex items-center justify-center gap-3">
+														<span className="font-semibold">
+															Publish Project
+														</span>
+													</div>
+												)}
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-
-					{/* Publish Button */}
-					<div className="text-center mt-12">
-						<button
-							onClick={handlePublish}
-							disabled={isPublishing}
-							className={`px-12 py-4 text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 ${
-								isPublishing
-									? 'bg-[#27BBFF] opacity-50 cursor-not-allowed'
-									: 'bg-gradient-to-r from-[#27BBFF] to-[#1E40AF] text-[#101014] shadow-lg hover:shadow-xl hover:shadow-[#27BBFF]/25 cursor-pointer'
-							}`}
-						>
-							{isPublishing ? (
-								<div className="flex items-center gap-3">
-									<FontAwesomeIcon
-										icon={faSpinner}
-										spin
-										className="text-xl"
-									/>
-									<span>Publishing Your Project...</span>
-								</div>
-							) : (
-								<div className="flex items-center gap-3">
-									<FontAwesomeIcon
-										icon={faLightbulb}
-										className="text-xl"
-									/>
-									<span>Publish Project</span>
-								</div>
-							)}
-						</button>
 					</div>
 				</LayoutContainer>
 			</section>
