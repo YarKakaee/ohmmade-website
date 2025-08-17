@@ -47,6 +47,7 @@ export default function PublishProjectPage() {
 	const tagInputRef = useRef(null);
 	const [components, setComponents] = useState([]);
 	const [newComponent, setNewComponent] = useState('');
+	const [isDragOver, setIsDragOver] = useState(false);
 	const editorRef = useRef(null);
 
 	useEffect(() => {
@@ -76,8 +77,12 @@ export default function PublishProjectPage() {
 	if (checkingSession) return null;
 
 	const handleAddTag = () => {
-		if (!newTag.trim() || tags.length >= 6) return;
-		setTags([...tags, newTag.trim()]);
+		const trimmedTag = newTag.trim();
+		if (!trimmedTag || tags.length >= 6) return;
+		// Check for duplicates (case-insensitive)
+		if (tags.some((tag) => tag.toLowerCase() === trimmedTag.toLowerCase()))
+			return;
+		setTags([...tags, trimmedTag]);
 		setNewTag('');
 	};
 
@@ -86,13 +91,94 @@ export default function PublishProjectPage() {
 	};
 
 	const handleAddComponent = () => {
-		if (!newComponent.trim()) return;
-		setComponents([...components, newComponent.trim()]);
+		const trimmedComponent = newComponent.trim();
+		if (!trimmedComponent) return;
+		// Check for duplicates (case-insensitive)
+		if (
+			components.some(
+				(component) =>
+					component.toLowerCase() === trimmedComponent.toLowerCase()
+			)
+		)
+			return;
+		setComponents([...components, trimmedComponent]);
 		setNewComponent('');
 	};
 
 	const handleRemoveComponent = (index) => {
 		setComponents(components.filter((_, i) => i !== index));
+	};
+
+	const handleComponentKeyPress = (e) => {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			handleAddComponent();
+		}
+	};
+
+	const handleTagKeyPress = (e) => {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			handleAddTag();
+		}
+	};
+
+	const handleThumbnailUpload = async (file) => {
+		if (!file || !file.type.startsWith('image/')) {
+			toast.error('Please select a valid image file.');
+			return;
+		}
+
+		const fileExt = file.name.split('.').pop();
+		const filePath = `thumbnails/${Date.now()}.${fileExt}`;
+
+		try {
+			const { error: uploadError } = await supabase.storage
+				.from('project-thumbnails')
+				.upload(filePath, file, {
+					cacheControl: '3600',
+					upsert: true,
+					contentType: file.type,
+				});
+
+			if (uploadError) {
+				toast.error('Upload failed. Please try again.');
+				return;
+			}
+
+			const { data: publicUrlData } = supabase.storage
+				.from('project-thumbnails')
+				.getPublicUrl(filePath);
+
+			setThumbnailUrl(publicUrlData.publicUrl);
+			toast.success('Image uploaded successfully!');
+		} catch (error) {
+			toast.error('Upload failed. Please try again.');
+		}
+	};
+
+	const handleDragOver = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setIsDragOver(true);
+	};
+
+	const handleDragLeave = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setIsDragOver(false);
+	};
+
+	const handleDrop = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setIsDragOver(false);
+
+		const files = e.dataTransfer?.files;
+		if (files && files.length > 0) {
+			const file = files[0];
+			handleThumbnailUpload(file);
+		}
 	};
 
 	const MAX_TITLE_LENGTH = 32;
@@ -466,7 +552,14 @@ export default function PublishProjectPage() {
 									<div className="space-y-3">
 										<label
 											htmlFor="thumbnail-upload"
-											className="block border-2 border-dashed border-[#3A3A3C] hover:border-[#27BBFF] rounded-xl p-6 text-center cursor-pointer hover:bg-[#2C2F36]/50 transition-all duration-200 group"
+											className={`block border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 group ${
+												isDragOver
+													? 'border-[#27BBFF] bg-[#27BBFF]/10'
+													: 'border-[#3A3A3C] hover:border-[#27BBFF] hover:bg-[#2C2F36]/50'
+											}`}
+											onDragOver={handleDragOver}
+											onDragLeave={handleDragLeave}
+											onDrop={handleDrop}
 										>
 											<div className="w-12 h-12 bg-[#2C2F36] group-hover:bg-[#27BBFF]/20 rounded-xl flex items-center justify-center mx-auto mb-3 transition-all duration-200">
 												<FontAwesomeIcon
@@ -475,7 +568,9 @@ export default function PublishProjectPage() {
 												/>
 											</div>
 											<p className="text-white/60 group-hover:text-white text-sm font-medium transition-all duration-200">
-												Click to upload or drag & drop
+												{isDragOver
+													? 'Drop image here'
+													: 'Click to upload or drag & drop'}
 											</p>
 											<p className="text-white/40 text-xs mt-1">
 												Recommended: 1580×1060
@@ -494,7 +589,7 @@ export default function PublishProjectPage() {
 													onClick={() =>
 														setThumbnailUrl(null)
 													}
-													className="absolute top-2 right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs transition-colors"
+													className="absolute top-2 right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs transition-colors cursor-pointer"
 												>
 													×
 												</button>
@@ -507,57 +602,10 @@ export default function PublishProjectPage() {
 										type="file"
 										accept="image/*"
 										className="hidden"
-										onChange={async (e) => {
+										onChange={(e) => {
 											const file = e.target.files?.[0];
-											if (!file) return;
-
-											const fileExt = file.name
-												.split('.')
-												.pop();
-											const filePath = `thumbnails/${Date.now()}.${fileExt}`;
-
-											try {
-												const { error: uploadError } =
-													await supabase.storage
-														.from(
-															'project-thumbnails'
-														)
-														.upload(
-															filePath,
-															file,
-															{
-																cacheControl:
-																	'3600',
-																upsert: true,
-																contentType:
-																	file.type,
-															}
-														);
-
-												if (uploadError) {
-													toast.error(
-														'Upload failed. Please try again.'
-													);
-													return;
-												}
-
-												const { data: publicUrlData } =
-													supabase.storage
-														.from(
-															'project-thumbnails'
-														)
-														.getPublicUrl(filePath);
-
-												setThumbnailUrl(
-													publicUrlData.publicUrl
-												);
-												toast.success(
-													'Image uploaded successfully!'
-												);
-											} catch (error) {
-												toast.error(
-													'Upload failed. Please try again.'
-												);
+											if (file) {
+												handleThumbnailUpload(file);
 											}
 										}}
 									/>
@@ -613,6 +661,9 @@ export default function PublishProjectPage() {
 													setNewComponent(
 														e.target.value
 													)
+												}
+												onKeyDown={
+													handleComponentKeyPress
 												}
 												className="text-sm flex-1 bg-[#2C2F36] border border-[#3A3A3C]/60 rounded-xl px-3 py-3 text-white/80 placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200"
 											/>
@@ -724,6 +775,7 @@ export default function PublishProjectPage() {
 												onChange={(e) =>
 													setNewTag(e.target.value)
 												}
+												onKeyDown={handleTagKeyPress}
 												className="text-sm flex-1 bg-[#2C2F36] border border-[#3A3A3C]/60 rounded-xl px-3 py-3 text-white/80 placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#27BBFF] focus:border-[#27BBFF] transition-all duration-200"
 											/>
 											<button

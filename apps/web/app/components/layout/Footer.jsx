@@ -42,6 +42,7 @@ export default function Footer() {
 	const communityLinks = [
 		{ name: 'Help Center', href: 'https://support.ohmmade.ca' },
 		{ name: 'Contact Us', href: 'mailto:help@ohmmade.ca' },
+		{ name: 'Changelog', href: '/changelog' },
 		{
 			name: 'Profile Guidelines',
 			href: 'https://support.ohmmade.ca/articles/profile-guidelines',
