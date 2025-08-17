@@ -23,7 +23,7 @@ import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Nav() {
@@ -31,6 +31,7 @@ export default function Nav() {
 	const { isLoading } = useCustomSession();
 	const supabaseClient = useSupabaseClient();
 	const router = useRouter();
+	const pathname = usePathname();
 	const userRef = useRef(null);
 
 	const [user, setUser] = useState(session?.user || null);
@@ -80,14 +81,19 @@ export default function Nav() {
 			});
 	}, [session]);
 
-	// Floating nav logic
+	// Floating nav logic - sync with banner threshold
 	useEffect(() => {
 		let ticking = false;
 		const handleScroll = () => {
 			if (!ticking) {
 				window.requestAnimationFrame(() => {
 					const currentY = window.scrollY;
-					setAtTop(currentY === 0);
+					// Use same threshold as banner (50px) when on homepage
+					if (pathname === '/') {
+						setAtTop(currentY <= 50);
+					} else {
+						setAtTop(currentY === 0);
+					}
 					ticking = false;
 				});
 				ticking = true;
@@ -95,12 +101,17 @@ export default function Nav() {
 		};
 		window.addEventListener('scroll', handleScroll);
 		return () => window.removeEventListener('scroll', handleScroll);
-	}, []);
+	}, [pathname]);
 
 	useEffect(() => {
 		const currentY = window.scrollY;
-		setAtTop(currentY === 0);
-	}, []);
+		// Use same threshold as banner (50px) when on homepage
+		if (pathname === '/') {
+			setAtTop(currentY <= 50);
+		} else {
+			setAtTop(currentY === 0);
+		}
+	}, [pathname]);
 
 	useEffect(() => {
 		const handleClickOutside = (e) => {
@@ -208,7 +219,12 @@ export default function Nav() {
 
 	return (
 		<>
-			<header className="fixed top-0 left-0 w-full z-50 flex justify-center pointer-events-none">
+			<header
+				className="fixed left-0 w-full z-50 flex justify-center pointer-events-none transition-all duration-300"
+				style={{
+					top: pathname === '/' && atTop ? '48px' : '0px',
+				}}
+			>
 				<LayoutContainer className="w-full pointer-events-auto mt-4">
 					<div
 						className={`transition-all duration-700 ease-in-out

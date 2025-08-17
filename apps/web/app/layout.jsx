@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast';
 import { Analytics } from '@vercel/analytics/next';
 import Footer from './components/layout/Footer';
 import Nav from './components/layout/Nav';
+import ConditionalVersionBanner from './components/layout/ConditionalVersionBanner';
 import { metadataGenerators, generateStructuredData } from '@/lib/seo';
 import './globals.css';
 
@@ -64,6 +65,7 @@ export default function RootLayout({ children }) {
 				<SupabaseProvider>
 					<AuthModalProvider>
 						<SearchModalProvider>
+							<ConditionalVersionBanner />
 							<Nav />
 							{children}
 							<Toaster
