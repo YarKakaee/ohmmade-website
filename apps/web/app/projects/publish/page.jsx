@@ -1,5 +1,5 @@
 'use client';
-import BlocknoteEditor from '@/app/components/editor/BlocknoteEditor';
+import CodexEditorWrapper from '@/app/components/codex/CodexEditorWrapper';
 import LayoutContainer from '@ohmmade/ui/layout-container';
 import { useAuthModal } from '@ohmmade/providers';
 import { supabase } from '@/lib/supabaseClient';
@@ -26,7 +26,6 @@ import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
 const interTight = Inter_Tight({ subsets: ['latin'] });
-
 export default function PublishProjectPage() {
 	const { session, isLoading } = useSessionContext();
 	const router = useRouter();
@@ -294,8 +293,8 @@ export default function PublishProjectPage() {
 									</div>
 								</div>
 
-								{/* Blocknote Editor */}
-								<BlocknoteEditor ref={editorRef} />
+								{/* Editor.js Wrapper */}
+								<CodexEditorWrapper ref={editorRef} />
 							</div>
 						</div>
 

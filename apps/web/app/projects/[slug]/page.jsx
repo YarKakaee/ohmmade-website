@@ -1,4 +1,4 @@
-import BlocknoteViewer from '@/app/components/editor/BlocknoteViewer';
+import CodexViewer from '@/app/components/codex/CodexViewer';
 import LayoutContainer from '@ohmmade/ui/layout-container';
 import ProjectSlugHeader from '@/app/components/common/ProjectSlugHeader';
 import getPrismaClient from '@/prisma/client';
@@ -115,7 +115,7 @@ export default async function ProjectPage({ params }) {
 							<div className="grid grid-cols-1 lg:grid-cols-4 gap-8 sm:gap-12">
 								{/* Left: Content */}
 								<div className="lg:col-span-3">
-									<BlocknoteViewer data={project.content} />
+									<CodexViewer data={project.content} />
 								</div>
 
 								{/* Right: Metadata */}
@@ -205,31 +205,6 @@ export default async function ProjectPage({ params }) {
 												</div>
 											</div>
 										)}
-
-									{/* Stats */}
-									<div className="space-y-4">
-										<h3 className="text-lg font-semibold text-white">
-											Project Stats
-										</h3>
-										<div className="grid grid-cols-2 gap-3">
-											<div className="text-center p-4 bg-[#1A1A1E] rounded-lg border border-white/5">
-												<div className="text-2xl font-bold text-[#27BBFF]">
-													{project.views}
-												</div>
-												<div className="text-sm text-white/60">
-													Views
-												</div>
-											</div>
-											<div className="text-center p-4 bg-[#1A1A1E] rounded-lg border border-white/5">
-												<div className="text-2xl font-bold text-[#10B981]">
-													{project.likes}
-												</div>
-												<div className="text-sm text-white/60">
-													Likes
-												</div>
-											</div>
-										</div>
-									</div>
 
 									{/* Author Info */}
 									{project.author && (

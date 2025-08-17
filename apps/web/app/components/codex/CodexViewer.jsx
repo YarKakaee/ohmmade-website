@@ -21,6 +21,32 @@ export default function CodexViewer({ data }) {
 
 			if (!isMounted) return;
 
+			// Add custom CSS for hiding empty image captions
+			if (!document.getElementById('editor-image-caption-styles')) {
+				const style = document.createElement('style');
+				style.id = 'editor-image-caption-styles';
+				style.textContent = `
+					/* Hide empty image captions in read-only mode */
+					#codex-viewer .image-tool__caption[data-placeholder]:empty {
+						display: none !important;
+					}
+					#codex-viewer .image-tool__caption:empty {
+						display: none !important;
+					}
+					#codex-viewer .image-tool__caption:not(:empty) {
+						margin-top: 8px;
+						padding: 8px 12px;
+						background: rgba(255, 255, 255, 0.05);
+						border-radius: 8px;
+						font-size: 14px;
+						color: rgba(255, 255, 255, 0.7);
+						font-style: italic;
+						border-left: 3px solid #27BBFF;
+					}
+				`;
+				document.head.appendChild(style);
+			}
+
 			new EditorJS({
 				holder: 'codex-viewer',
 				readOnly: true, // ✅ Read-only mode
@@ -33,6 +59,21 @@ export default function CodexViewer({ data }) {
 					code: CodeTool,
 				},
 			});
+
+			// After initialization, hide empty captions
+			setTimeout(() => {
+				const viewer = document.getElementById('codex-viewer');
+				if (viewer) {
+					const captions = viewer.querySelectorAll(
+						'.image-tool__caption'
+					);
+					captions.forEach((caption) => {
+						if (!caption.textContent.trim()) {
+							caption.style.display = 'none';
+						}
+					});
+				}
+			}, 500);
 		};
 
 		init();

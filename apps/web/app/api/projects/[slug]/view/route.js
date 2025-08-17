@@ -58,49 +58,22 @@ export async function POST(req, { params }) {
 
 			let viewAdded = false;
 			try {
-				// Check if user has already viewed this project
-				const existingView = await prisma.userView.findUnique({
-					where: {
-						userId_projectId: {
-							userId: user.id,
-							projectId: project.id,
-						},
+				await prisma.userView.create({
+					data: {
+						userId: user.id,
+						projectId: project.id,
 					},
 				});
-
-				if (!existingView) {
-					// This is a new view - create the record and increment count
-					await prisma.userView.create({
-						data: {
-							userId: user.id,
-							projectId: project.id,
-						},
-					});
-
-					// Increment project views for new views
-					await prisma.project.update({
-						where: { id: project.id },
-						data: { views: { increment: 1 } },
-					});
-					await createActivity(user.id, 'PROJECT_VIEWED', project.id);
-					viewAdded = true;
-				} else {
-					// User has already viewed this project - update timestamp but don't increment count
-					await prisma.userView.update({
-						where: {
-							userId_projectId: {
-								userId: user.id,
-								projectId: project.id,
-							},
-						},
-						data: {
-							createdAt: new Date(),
-						},
-					});
-				}
+				// Only increment and track if a new view was created
+				await prisma.project.update({
+					where: { id: project.id },
+					data: { views: { increment: 1 } },
+				});
+				await createActivity(user.id, 'PROJECT_VIEWED', project.id);
+				viewAdded = true;
 			} catch (e) {
-				console.error('Error handling user view:', e);
-				// If there's still an error, don't fail the request
+				if (e.code !== 'P2002') throw e; // Only ignore unique constraint error
+				// If already exists, do nothing
 			}
 			return new Response(JSON.stringify({ viewAdded }), {
 				status: 200,
