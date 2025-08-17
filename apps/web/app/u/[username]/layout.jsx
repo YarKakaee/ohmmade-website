@@ -8,7 +8,9 @@ export async function generateStaticParams() {
 	try {
 		const users = await prisma.user.findMany({
 			where: {
-				username: { not: null },
+				NOT: {
+					username: null,
+				},
 			},
 			select: {
 				username: true,
