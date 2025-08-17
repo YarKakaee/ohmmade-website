@@ -123,11 +123,11 @@ export default function PublishProjectPage() {
 
 			const editorData = await editorRef.current.save();
 
-			// Validate editor content
+			// Validate editor content - Editor.js format
 			if (
 				!editorData ||
-				!editorData.content ||
-				editorData.content.length === 0
+				!editorData.blocks ||
+				editorData.blocks.length === 0
 			) {
 				toast.error(
 					'Please add some content to your project before publishing.'
@@ -135,17 +135,35 @@ export default function PublishProjectPage() {
 				return;
 			}
 
-			// Check if content is just empty blocks
-			const hasRealContent = editorData.content.some((block) => {
-				if (block.type === 'paragraph' || block.type === 'heading') {
+			// Check if content is just empty blocks - Editor.js format
+			const hasRealContent = editorData.blocks.some((block) => {
+				if (block.type === 'paragraph' || block.type === 'header') {
+					// Editor.js paragraph/header structure
 					return (
-						block.content &&
-						block.content.some(
-							(item) => item.text && item.text.trim().length > 0
-						)
+						block.data &&
+						block.data.text &&
+						block.data.text.trim().length > 0
 					);
 				}
-				return true; // Other block types (images, videos, etc.) are considered content
+				if (block.type === 'list') {
+					// Editor.js list structure
+					return (
+						block.data &&
+						block.data.items &&
+						block.data.items.length > 0 &&
+						block.data.items.some((item) => item.trim().length > 0)
+					);
+				}
+				if (block.type === 'code') {
+					// Editor.js code block structure
+					return (
+						block.data &&
+						block.data.code &&
+						block.data.code.trim().length > 0
+					);
+				}
+				// Other block types (images, files, custom blocks) are considered content
+				return true;
 			});
 
 			if (!hasRealContent) {

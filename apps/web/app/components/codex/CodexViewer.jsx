@@ -18,6 +18,9 @@ export default function CodexViewer({ data }) {
 			const CustomCodeSnippet = (
 				await import('@/app/components/codex/CustomCodeSnippet')
 			).default;
+			const CustomFileTool = (
+				await import('@/app/components/codex/CustomFileTool')
+			).default;
 
 			if (!isMounted) return;
 
@@ -57,6 +60,7 @@ export default function CodexViewer({ data }) {
 					image: ImageTool,
 					codeSnippet: CustomCodeSnippet,
 					code: CodeTool,
+					file: CustomFileTool,
 				},
 			});
 

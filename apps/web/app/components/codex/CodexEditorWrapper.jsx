@@ -30,9 +30,12 @@ const CodexEditorWrapper = forwardRef((props, ref) => {
 			const CodeTool = (await import('@editorjs/code')).default;
 			const ImageTool = (await import('@editorjs/image')).default;
 
-			// 💡 Import your custom code snippet plugin
+			// 💡 Import your custom plugins
 			const CustomCodeSnippet = (
 				await import('@/app/components/codex/CustomCodeSnippet')
+			).default;
+			const CustomFileTool = (
+				await import('@/app/components/codex/CustomFileTool')
 			).default;
 
 			if (!isMounted) return;
@@ -51,6 +54,7 @@ const CodexEditorWrapper = forwardRef((props, ref) => {
 						},
 					},
 					codeSnippet: CustomCodeSnippet,
+					file: CustomFileTool,
 				},
 				placeholder: 'Start adding content here...',
 			});
