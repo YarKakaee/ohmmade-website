@@ -174,17 +174,59 @@ const Editor = forwardRef((props, ref) => {
 		},
 		clear: async () => {
 			try {
+				// Try the most reliable method first
 				if (typeof editor.clearBlocks === 'function') {
 					editor.clearBlocks();
 				} else if (typeof editor.clear === 'function') {
 					editor.clear();
 				} else if (typeof editor.removeBlocks === 'function') {
-					editor.removeBlocks();
+					// Try to get blocks using available methods
+					try {
+						let blocks = [];
+						if (typeof editor.getJSON === 'function') {
+							const json = editor.getJSON();
+							blocks = json?.content || [];
+						} else if (typeof editor.getDocument === 'function') {
+							const doc = editor.getDocument();
+							blocks = doc?.content || [];
+						}
+
+						if (blocks && blocks.length > 0) {
+							editor.removeBlocks(blocks);
+						}
+					} catch (removeError) {
+						console.error('Error removing blocks:', removeError);
+						// Fallback: try to clear the editor content another way
+						if (
+							editor._tiptapEditor &&
+							typeof editor._tiptapEditor.clear === 'function'
+						) {
+							editor._tiptapEditor.clear();
+						}
+					}
 				} else if (
 					editor._tiptapEditor &&
 					typeof editor._tiptapEditor.clear === 'function'
 				) {
 					editor._tiptapEditor.clear();
+				} else if (typeof editor.replaceBlocks === 'function') {
+					// Alternative: replace all blocks with an empty array
+					try {
+						let blocks = [];
+						if (typeof editor.getJSON === 'function') {
+							const json = editor.getJSON();
+							blocks = json?.content || [];
+						} else if (typeof editor.getDocument === 'function') {
+							const doc = editor.getDocument();
+							blocks = doc?.content || [];
+						}
+
+						if (blocks && blocks.length > 0) {
+							editor.replaceBlocks(blocks, []);
+						}
+					} catch (replaceError) {
+						console.error('Error replacing blocks:', replaceError);
+					}
 				} else {
 					console.error('Clear method not available on editor');
 				}

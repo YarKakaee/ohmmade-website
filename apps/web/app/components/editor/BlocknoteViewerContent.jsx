@@ -191,6 +191,28 @@ export default function BlocknoteViewerContent({ data }) {
 												<pre class="bg-[#1c1c20] border border-[#2c2f36] rounded-lg p-4 font-mono text-sm text-white overflow-x-auto"><code class="hljs language-${mappedLanguage}">${escapedContent}</code></pre>
 											</div>`
 										);
+									} else if (blockType === 'bulletListItem') {
+										// Handle bullet list items
+										htmlBlocks.push(
+											`<li class="text-white mb-2 leading-relaxed list-disc ml-6">${textContent}</li>`
+										);
+									} else if (
+										blockType === 'numberedListItem'
+									) {
+										// Handle numbered list items
+										htmlBlocks.push(
+											`<li class="text-white mb-2 leading-relaxed list-decimal ml-6">${textContent}</li>`
+										);
+									} else if (blockType === 'bulletList') {
+										// Handle bullet list container
+										htmlBlocks.push(
+											`<ul class="text-white mb-4 leading-relaxed list-disc ml-6 space-y-2">${textContent}</ul>`
+										);
+									} else if (blockType === 'numberedList') {
+										// Handle numbered list container
+										htmlBlocks.push(
+											`<ol class="text-white mb-4 leading-relaxed list-decimal ml-6 space-y-2">${textContent}</ol>`
+										);
 									} else {
 										// Default to paragraph
 										htmlBlocks.push(
@@ -421,6 +443,41 @@ export default function BlocknoteViewerContent({ data }) {
 				}
 				.blocknote-viewer-container a:hover {
 					color: #1e40af !important;
+				}
+				/* List styles */
+				.blocknote-viewer-container ul {
+					list-style-type: disc !important;
+					margin: 16px 0 !important;
+					padding-left: 24px !important;
+				}
+				.blocknote-viewer-container ol {
+					list-style-type: decimal !important;
+					margin: 16px 0 !important;
+					padding-left: 24px !important;
+				}
+				.blocknote-viewer-container li {
+					margin: 8px 0 !important;
+					line-height: 1.6 !important;
+					color: #ffffff !important;
+				}
+				.blocknote-viewer-container ul li {
+					list-style-type: disc !important;
+				}
+				.blocknote-viewer-container ol li {
+					list-style-type: decimal !important;
+				}
+				/* Nested list styles */
+				.blocknote-viewer-container ul ul {
+					margin: 8px 0 !important;
+				}
+				.blocknote-viewer-container ol ol {
+					margin: 8px 0 !important;
+				}
+				.blocknote-viewer-container ul ol {
+					margin: 8px 0 !important;
+				}
+				.blocknote-viewer-container ol ul {
+					margin: 8px 0 !important;
 				}
 			`}</style>
 		</div>

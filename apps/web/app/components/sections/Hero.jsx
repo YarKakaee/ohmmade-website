@@ -166,7 +166,7 @@ export default function Hero() {
 				))}
 
 			{/* Gradient Background Image */}
-			<motion.div
+			{/* <motion.div
 				initial={{ opacity: 0, scale: 0.8 }}
 				animate={{ opacity: 1, scale: 1 }}
 				transition={{ duration: 1, ease: 'easeOut' }}
@@ -182,7 +182,7 @@ export default function Hero() {
 						priority
 					/>
 				</div>
-			</motion.div>
+			</motion.div> */}
 
 			<LayoutContainer>
 				<motion.div
@@ -216,7 +216,7 @@ export default function Hero() {
 								style={{ position: 'relative' }}
 							>
 								<span
-									className="absolute inset-x-1 sm:inset-x-2 inset-y-0.5 sm:inset-y-1 bg-gradient-to-r from-purple-400 to-pink-600 blur-xl sm:blur-2xl opacity-50 pointer-events-none -z-10"
+									className="absolute inset-x-1 sm:inset-x-2 inset-y-0.5 sm:inset-y-1 bg-gradient-to-r from-purple-400 to-pink-600 blur-xl sm:blur-3xl opacity-50 pointer-events-none -z-10"
 									aria-hidden="true"
 								/>
 								Lifelong Impact.
