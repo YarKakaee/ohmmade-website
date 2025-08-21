@@ -170,6 +170,7 @@ export const metadataGenerators = {
 						width: 1200,
 						height: 630,
 						alt: fullTitle,
+						type: 'image/png',
 					},
 				],
 				locale: 'en_US',

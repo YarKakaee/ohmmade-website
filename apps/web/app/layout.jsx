@@ -53,6 +53,19 @@ export default function RootLayout({ children }) {
 					href="//ujaylejhopvncyjvduvj.supabase.co"
 				/>
 
+				{/* Explicit OG image meta tags for better social media support */}
+				<meta
+					property="og:image"
+					content="https://ohmmade.ca/assets/og-image.png"
+				/>
+				<meta property="og:image:width" content="1200" />
+				<meta property="og:image:height" content="630" />
+				<meta property="og:image:type" content="image/png" />
+				<meta
+					name="twitter:image"
+					content="https://ohmmade.ca/assets/og-image.png"
+				/>
+
 				{/* Structured Data */}
 				<script
 					type="application/ld+json"
