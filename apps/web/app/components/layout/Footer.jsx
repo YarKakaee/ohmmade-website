@@ -127,7 +127,7 @@ export default function Footer() {
 							</p>
 
 							{/* Social Media Links */}
-							<div className="flex gap-3 mb-6 sm:mb-10">
+							<div className="flex gap-3 mb-6">
 								{socialLinks.map((item, idx) => (
 									<motion.a
 										key={idx}
@@ -156,6 +156,20 @@ export default function Footer() {
 									All systems online
 								</span>
 							</div>
+							<a
+								href="https://asterra.ca"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="block w-fit"
+							>
+								<Image
+									src="/assets/asterra.png"
+									alt="Asterra"
+									width={568}
+									height={89}
+									className="h-7 w-auto transition-opacity duration-200 hover:opacity-80"
+								/>
+							</a>
 						</motion.div>
 
 						{/* Right: Navigation Columns */}
